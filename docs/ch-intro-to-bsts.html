@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 7 Пакет bsts | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 7 Пакет bsts | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 7 Пакет bsts | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-intro-to-prophet.html"/>
+<link rel="next" href="ch-structural-changes.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-intro-to-bsts" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 7</span> Пакет <code>bsts</code></h1>
+<p>Эта глава посвящена еще одному мощному инструменту для моделирования и прогнозирования временных рядов — пакету <code>bsts</code>, который был разработан сотрудником компании Google Стивеном Скоттом (<a href="https://sites.google.com/view/stevethebayesian">Steven L. Stott</a>). В основе этого пакета лежит методология, известная в литературе под несколькими названиями: “байесовские структурные модели временных рядов” (Bayesian structural time series models), “модели пространства состояний” (state-space models), “динамические линейные модели” (dynamic linear models), модели на основе фильтра Калмана (Kalma filter models) и др. Подобно пакету <code>prophet</code>, <code>bsts</code> делает упор на прогнозирование временных рядов, представленных дневными данными, и позволяет включать в модели сторонние предикторы (в частности, эффекты “праздников”). Оба пакета используют принципы байесовской статистики для оценивания параметров моделей. Однако в отличие от пакета <code>prophet</code>, который выполняет подгонку единой обобщенной аддитивной модели (см. разд. <a href="ch-intro-to-prophet.html#sec-how-prophet-works">6.1</a>), в пакете <code>bsts</code> присходит байесовское усреднение предсказаний ансамбля, состоящего из большого количества моделей. Лежащая в основе <code>bsts</code> методология является более общей и гибкой.</p>
+<div id="sec-how-bsts-works" class="section level2">
+<h2><span class="header-section-number">7.1</span> Методология</h2>
+<p>Полное изложение реализованной в пакете <code>bsts</code> методологии можно найти в статье <span class="citation">Scott and Varian (<a href="ch-literature.html#ref-scott_varian_2014" role="doc-biblioref">2014</a>)</span>. Здесь мы ограничимся лишь кратким ее описанием, необходимым для уверенной работы с функциями этого пакета и их параметрами.</p>
+<p>Пусть <span class="math inline">\(y_t\)</span> — это значение некоторой количественной переменной, учтенной в момент времени <span class="math inline">\(t\)</span>. Структурная модель временного ряда задается двумя уравнениями: <span class="math display">\[\begin{aligned} &amp; y_t = Z_{t}^\intercal \alpha_t + \epsilon_t \qquad \epsilon_t \sim \mathcal{N}(0, H_T),\\ &amp; \alpha_{t+1} = T_t\alpha_t + R_t\eta_t \qquad \eta_t \sim \mathcal{N}(0, Q_T). \end{aligned}\]</span></p>
+<p>Предполагается, что в каждый момент времени <span class="math inline">\(t\)</span> изучаемая динамическая система может находится в некотором ненаблюдаемом в явном виде (латентном) состоянии <span class="math inline">\(\alpha_t\)</span>. Первое из приведенных уравнений связывает наблюдаемые данные с вектором таких латентных состояний и называется <em>уравнением наблюдений</em> (observation equation). Второе уравнение задает процесс перехода из одного латентного состояния в другое и называется <em>уравнением переходов</em> (transition equation). Состояние системы в каждый момент времени определяется только ее состоянием в предыдущий момент, т.е. динамика системы имеет <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%BF%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81">марковский</a> характер (рис. <a href="ch-intro-to-bsts.html#fig:state-space-obs">7.1</a>). Остатки <span class="math inline">\(\epsilon_t\)</span> и <span class="math inline">\(\eta_t\)</span> независимы друг от друга и имеют нормальное распределение со средним 0. Матрицы <span class="math inline">\(Z_t\)</span>, <span class="math inline">\(T_t\)</span> и <span class="math inline">\(R_t\)</span> называются <em>структурными параметрами</em> и обычно содержат как известные значения (индикаторные переменные 1 и 0), так и неизвестные параметры. Модели, которые можно описать с помощью приведенных двух уравнений, называют <em>моделями пространства состояний</em>. В этой форме можно представить очень широкий круг моделей, включая, например, все разновидности <a href="https://ru.wikipedia.org/wiki/ARIMA">ARIMA</a> <span class="citation">(Цыплаков <a href="ch-literature.html#ref-tsyplakov_2011" role="doc-biblioref">2011</a>)</span>.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:state-space-obs"></span>
+<img src="figures/state_spaces.png" alt="Схематичное представление модели пространства состояний для конечного временного ряда с \(T\) наблюдениями (см. объяснения в тексте)" width="100%" />
+<p class="caption">
+РИСУНОК 7.1: Схематичное представление модели пространства состояний для конечного временного ряда с <span class="math inline">\(T\)</span> наблюдениями (см. объяснения в тексте)
+</p>
+</div>
+<p><em>Структурные модели временных рядов</em> — это одно из семейств моделей пространства состояний. В структурных моделях временной ряд представлен в виде суммы ненаблюдаемыех компонент, которые можно интерпретировать как тренд, сезонность, эффекты предикторов и т.д. Эти компоненты служат своего рода “строительными блоками”, которые исследователь может сочетать в соответствии с решаемой задачей и особенностями данных. Так, для временных рядов базовую структурную модель (basic structural model) с предикторами можно представить следующим образом: <span class="math display">\[ \begin{aligned} &amp; y_t = \underbrace{\mu_t}_{\text{тренд}} + \underbrace{\gamma_t}_{\text{сезонность}} + \underbrace{\beta^\intercal \boldsymbol{x}_t}_{\text{предикторы}} + \epsilon_t,\\ &amp; \mu_{t} = \mu_{t-1} + \delta_{t-1} + u_t,\\ &amp; \delta_{t} = \delta_{t-1} + v_t,\\ &amp; \gamma_{t} = -\sum_{s=1}^{S-1} \gamma_{t-s} + w_t, \end{aligned}\]</span> где <span class="math inline">\(\mu_{t}\)</span> — это текущее значение тренда модели, а <span class="math inline">\(\delta_t\)</span> — его коэффициент прироста. Сезонная компонента <span class="math inline">\(\gamma_t\)</span> представлена в виде <span class="math inline">\(S-1\)</span> индикаторных переменных с изменяющимися во времени коэффициентами. В данном случае <span class="math inline">\(\eta_t = (u_t, v_t, w_t)\)</span> объединяет независимые нормально распределенные случайные колебания, <span class="math inline">\(Q_T\)</span> — <a href="https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D0%B0%D0%B3%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D0%BC%D0%B0%D1%82%D1%80%D0%B8%D1%86%D0%B0">диагональная матрица</a>, диагональ которой содержит <span class="math inline">\(\sigma_{u}^2\)</span>, <span class="math inline">\(\sigma_{v}^2\)</span> и <span class="math inline">\(\sigma_{w}^2\)</span>, а <span class="math inline">\(H_T\)</span> — это скаляр <span class="math inline">\(\sigma_{\epsilon}^2\)</span>. Оцениванию на основе данных подлежат дисперсии <span class="math inline">\(\sigma_{u}^2\)</span>, <span class="math inline">\(\sigma_{v}^2\)</span>, <span class="math inline">\(\sigma_{w}^2\)</span>, <span class="math inline">\(\sigma_{\epsilon}^2\)</span>, а также коэффициенты регрессии <span class="math inline">\(\beta\)</span>.</p>
+<p>Подгонка структурных моделей временных рядов выполняется с использованием <a href="https://ru.wikipedia.org/wiki/%D0%A4%D0%B8%D0%BB%D1%8C%D1%82%D1%80_%D0%9A%D0%B0%D0%BB%D0%BC%D0%B0%D0%BD%D0%B0">фильтра Калмана</a> и метода Монте–Карло по схеме марковских цепей (Markov Chain Monte Carlo, <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a>). Для оценивания и одновременной регуляризации коэффициентов регрессии применяется т.н. метод “spike–and–slap” (найти подходящий аналог этому термину на русском языке сложно, поэтому оставим его без перевода). Вкратце, этот метод заключается в присваивании каждому коэффициенту регрессии определенной высокой априорной вероятности того, что он равен нулю (“вероятность включения” в модель, inclusion probability). Используя наблюденные данные и <a href="https://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BE%D1%80%D0%B5%D0%BC%D0%B0_%D0%91%D0%B0%D0%B9%D0%B5%D1%81%D0%B0">теорему Байеса</a>, вероятности включения обновляют. В дальнейшем при MCMC–сэмплировании коэффициентов из полученных апостериорных распределений многие симулированные коэффициенты оказываются в точности равными нулю. Такой механизм регуляризации позволяет эффективно выполнить селекцию наиболее важных предикторов и параллельно избавиться от <a href="https://ru.wikipedia.org/wiki/%D0%9C%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BA%D0%BE%D0%BB%D0%BB%D0%B8%D0%BD%D0%B5%D0%B0%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C">мультиколлинеарности</a>, благодаря чему в байесовские структурные модели можно включать большое количество предикторов без риска переобучения.</p>
+</div>
+<div id="sec-bsts-function" class="section level2">
+<h2><span class="header-section-number">7.2</span> Функция <code>bsts()</code></h2>
+<p>Функция <code>bsts()</code> генерирует упомянутые выше MCMC–выборки параметров структурных моделей временных рядов из соответствующих апостериорных распределений. Эта функция имеет следующие аргументы:</p>
+<ul>
+<li><code>formula</code> — стандартная для R формула модели. Если предикторы в модели отсутствуют, то вместо формулы можно просто указать числовой вектор со значениями моделируемого временного ряда или объект класса <code>zoo</code>, <code>xts</code> или <code>ts</code>. Зависимая переменная <em>может</em> содержать пропущенные значения, но предикторы — нет.</li>
+<li><code>state.specification</code> — список, элементы которого содержат спецификации компонент модели. Эти спецификации создаются с помощью функций, чье имя начинается с приставки <code>Add</code> (например, <code>AddLocalLinerTrend()</code>, <code>AddSeasonal()</code>, <code>AddAr()</code> — см. примеры ниже).</li>
+<li><code>family</code> — параметр, определяющий “семейство” создаваемой модели в обычном для R смысле. По умолчанию предполагается, что моделируемая зависимая переменная является количественной и что ее остатки имеют гауссово распределение (<code>"gaussian"</code>). Кроме того, в пакете <code>bsts</code> имеется возможность моделировать счетные (<code>family = "poisson"</code>) и бинарные отклики (<code>family = "logit"</code>), а также количественные переменные, в которых имеют место наблюдения–выбросы (<code>family = "student"</code>). Бинарный отклик можно подать в виде вектора со значениями <code>0/1</code>, <code>TRUE/FALSE</code> или <code>-1/1</code>. Если бинарный отклик представлен числом положительных и отрицательных исходов, то его подают в виде матрицы с двумя столбцами (в первом столбце содержатся положительные исходы). Отклик со счетными данными (<code>family = "poisson"</code>), зарегистрированными в учетных единицах одинакового размера (например, на 1 м<sup>2</sup>) или продолжительности (например, за 1 ч), подают в виде вектора. Если же регистрация таких данных была выполнена в учетных единицах разного размера или продолжительности, то отклик подают в виде матрицы с двумя столбцами, первый из которых содержит результаты подсчета, а второй — размер или продолжительность учетной единицы.</li>
+<li><code>data</code> — необязательный аргумент, задающий объект (таблица, список или окружение) с переменными, которые входят в формулу модели (аргумент <code>formula</code>).</li>
+<li><code>prior</code> — список с информацией об априорных распределениях предикторов, созданный с помощью функции <code>SpikeSlabPrior()</code>. Этот аргумент нужен только если предикторы входят в формулу модели. Если предикторов в модели нет, то аргумент <code>prior</code> будет просто соответствовать априорному распределению стандартного отклонения остатков, которое можно задать самостоятельно с помощью функции <code>SdPrior()</code>. Обычно в этом аргументе нет необходимости, поскольку хорошие результаты получаются и с его принятыми по умолчанию настройками.</li>
+<li><code>contrasts</code> — <a href="https://r-analytics.blogspot.com/2013/03/blog-post_30.html">матрица контрастов</a> модели. Этот аргумент идентичен такому же аргументу базовой функции <code>lm()</code>.</li>
+<li><code>na.action</code> — задает правило обработки пропущенных наблюдений в зависимой переменной. По умолчанию препущенные наблюдения допускаются. Для их удаления на этот аргумент необходимо подать либо функцию <code>na.omit()</code>, либо функцию <code>na.exclude()</code> (без скобок, т.е. <code>na.action = na.omit</code>).</li>
+<li><code>niter</code> — положительное целое число, задающее количество итераций алгоритма MCMC.</li>
+<li><code>ping</code> — число, задающее частоту вывода на экран служебной информации о ходе выполнения алгоритма MCMС. Если это положительное число, то информация будет выводиться каждые <code>ping</code> итераций.</li>
+<li><code>model.options</code> — настройки вычислительных алгоритмов, лежащих в основе функции <code>bsts</code>, которые можно задать с помощью функции <code>BstsOptions()</code>. Необходимость в изменении этих настроек возникает очень редко.</li>
+<li><code>timestamps</code> — временные отметки регистрации значений моделируемой переменной. Этот аргумент бывает полезным, когда в данных имеются пропущенные значения, или когда на одну временную метку приходится несколько наблюдений зависимой переменной. Если в моделируемом временном ряду пропущенные значения отсутствуют и на каждую временную отметку приходится только одно наблюдение, то этот аргумент становится необязательным (по умолчанию он равен <code>NULL</code>).</li>
+<li><code>seed</code> — зерно генератора случайных чисел (для воспроизводимости результатов вычислений).</li>
+<li><code>...</code> — дополнительные аргументы, которые передаются на функцию <code>SpikeSlabPrior()</code> (см. аргумент <code>prior</code> выше).</li>
+</ul>
+<p>Функция <code>bsts()</code> возвращает объект класса <code>bsts</code>, который представляет собой список с несколькими элементами. Содержимое этого списка определяется спецификацией конкретной модели, но как минимум он включает следующие элементы:</p>
+<ul>
+<li><code>state.specification</code> — информация о компонентах модели, заданных с помощью одноименного аргумента функции <code>bsts()</code>;</li>
+<li><code>state.contributions</code> — массив со значениями компонент модели, оцененными в ходе каждой из <code>niter</code> MCMC–итераций;</li>
+<li><code>one.step.prediction.errors</code> — матрица с <code>niter</code> строками, содержащая т.н. “ошибки следующего шага” (см. объяснение в разд. <a href="ch-intro-to-bsts.html#sec-bsts-model-examples">7.4</a>);</li>
+<li><code>sigma.obs</code> — вектор длиной <code>niter</code> со стандартными отклонениями остатков модели;</li>
+<li><code>log.likelihood</code> — вектор длиной <code>niter</code> со значеними логарифма функции <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%82%D0%BE%D0%B4_%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BC%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BF%D1%80%D0%B0%D0%B2%D0%B4%D0%BE%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D0%B8%D1%8F">максимального правдоподобия</a> модели.</li>
+</ul>
+<p>У объектов класса <code>bsts</code> есть несколько методов, включая стандартные <code>summary()</code>, <code>plot()</code> и <code>predict()</code>. Примеры использования этих методов приведены ниже.</p>
+</div>
+<div id="sec-bsts-add-functions" class="section level2">
+<h2><span class="header-section-number">7.3</span> Спецификация компонент модели</h2>
+<p>Пакет <code>bsts</code> содержит целую библиотеку функций, формирующих различные компоненты структурных моделей временных рядов. Как было отмечено выше, имена всех этих функций начинаются с приставки <code>Add</code>, поскольку они “добавляют” спецификацию тех или иных компонент в соответствующий список. Этот список (обычно ему дают имя <code>ss</code>, что значит “state specification”, т.е. “спецификация состояний”) далее подается на функцию <code>bsts()</code>, которая непосредственно выполняет подгонку структурной модели. Основными аргументами <code>Add</code>–функций являются <code>state.specification</code> — список, в который необходимо добавить спецификацию соответствующей компоненты, и <code>y</code> — вектор со значениями моделируемой переменной. Приведенный ниже код поможет понять, как это работает:</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" title="1"><span class="kw">require</span>(bsts)</a>
+<a class="sourceLine" id="cb124-2" title="2"></a>
+<a class="sourceLine" id="cb124-3" title="3">y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb124-4" title="4"></a>
+<a class="sourceLine" id="cb124-5" title="5"><span class="co"># список со спецификациями компонент модели:</span></a>
+<a class="sourceLine" id="cb124-6" title="6">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb124-7" title="7">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLevel</span>(<span class="dt">state.specification =</span> ss, <span class="dt">y =</span> y)</a>
+<a class="sourceLine" id="cb124-8" title="8"><span class="co"># ...или просто ss &lt;- AddLocalLevel(ss, y)</span></a>
+<a class="sourceLine" id="cb124-9" title="9">ss &lt;-<span class="st"> </span><span class="kw">AddAr</span>(ss, y, <span class="dt">lags =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb124-10" title="10"></a>
+<a class="sourceLine" id="cb124-11" title="11"><span class="co"># подгонка модели:</span></a>
+<a class="sourceLine" id="cb124-12" title="12">model &lt;-<span class="st"> </span><span class="kw">bsts</span>(y, <span class="dt">state.specification =</span> ss, <span class="dt">niter =</span> <span class="dv">1500</span>) </a></code></pre></div>
+<p>Ниже перечислены наиболее важные <code>Add</code>–функции и соответствующие им компоненты структурных моделей (сравните с описанной выше базовой структурной моделью временных рядов).</p>
+<ul>
+<li><code>AddLocalLevel()</code> — <em>локальный уровень</em> (local level), соответствующий процессу “<a href="https://ru.wikipedia.org/wiki/%D0%A1%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D0%BE%D0%B5_%D0%B1%D0%BB%D1%83%D0%B6%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5">случайного блуждания</a> с шумом” (random walk with noise): <span class="math display">\[ \begin{aligned} &amp; y_t = \mu_t + \epsilon_t,\\ &amp; \mu_{t} = \mu_{t-1} + u_t,\\ &amp; \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2),  u_t \sim \mathcal{N}(0, \sigma_{u}^2) \end{aligned} \]</span></li>
+<li><code>AddAr()</code> — <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B5%D0%B3%D1%80%D0%B5%D1%81%D1%81%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C">авторегрессионный процесс</a> (autoregressive process), согласно которому текущий средний уровень временного ряда линейно связан с его предыдущими значениями (вплоть до временного сдвига <span class="math inline">\(p\)</span>, который называют также <em>порядком</em> процесса): <span class="math display">\[ \begin{aligned} &amp; y_t = \mu_t + \epsilon_t,\\ &amp; \mu_{t} = \sum_{i=1}^{p}\phi_i \mu_{t-i} + u_t,\\ &amp; \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2),  u_t \sim \mathcal{N}(0, \sigma_{u}^2), \end{aligned} \]</span> где <span class="math inline">\(\phi_1, \dots, \phi_{p}\)</span> — подлежащие оцениванию параметры модели. Для работы с большими значениями <span class="math inline">\(p\)</span> в пакете <code>bsts</code> есть специальная функция <code>AddAutoAr()</code>, которая применяет метод “spike–and–slab” для регуляризации <span class="math inline">\(\phi_1, \dots, \phi_{p}\)</span> (т.е. многие из этих параметров в итоге окажутся в точности равными нулю).</li>
+<li><code>AddLocalLinearTrend()</code> — <em>локальный линейный тренд</em> (local linear trend). Предполагает, что процессом “случайного блуждания” можно описать динамику как среднего уровня временного ряда <span class="math inline">\(\mu_t\)</span>, так и коэффициента его прироста <span class="math inline">\(\delta_t\)</span> (“угол наклона” тренда) : <span class="math display">\[ \begin{aligned} &amp; y_t = \mu_t + \epsilon_t,\\ &amp; \mu_{t} = \mu_{t-1} + \delta_{t-1} + u_t,\\ &amp; \delta_{t} = \delta_{t-1} + v_t,\\ &amp; \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2), u_t \sim \mathcal{N}(0, \sigma_{u}^2), v_t \sim \mathcal{N}(0, \sigma_{v}^2) \end{aligned}  \]</span></li>
+<li><code>AddStudentLocalLinearTrend()</code> — <em>устойчивый локальный линейный тренд</em> (robust local linear trend). Отличается от предыдущей компоненты тем, что ее случайные колебания подчиняются <a href="https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5_%D0%A1%D1%82%D1%8C%D1%8E%D0%B4%D0%B5%D0%BD%D1%82%D0%B0">распределению Стьюдента</a>, а не Гаусса. Эта компонента хорошо подходит для краткосрочных прогнозов на основе временных рядов, в которых иногда наблюдаются резкие скачки среднего уровня. Распределенные по Стьюденту остатки можно ввести также в уравнение наблюдений структурной модели (см. выше), подав аргумент <code>family = "student"</code> на функцию <code>bsts()</code>. Как было отмечено выше, это позволит получать более надежные прогнозы в присутствии аномальных наблюдений.</li>
+<li><code>AddSemiLocalLinearTrend()</code> — <em>полулокальный линейный тренд</em>. Похож на модель локального уровня, но предполагает, что коэффициент прироста среднего уровня ряда развивается в соответствии с авторегрессионным процессом первого порядка:
+<span class="math display">\[ \begin{aligned} &amp; y_t = \mu_t + \epsilon_t,\\ &amp; \mu_{t} = \mu_{t-1} + \delta_{t-1} + u_t,\\ &amp; \delta_{t} = D + \phi \times (\delta_{t-1} - D) + v_t,\\ &amp; \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2), u_t \sim \mathcal{N}(0, \sigma_{u}^2), v_t \sim \mathcal{N}(0, \sigma_{v}^2) \end{aligned}  \]</span>
+Стационарный авторегрессионный процесс первого порядка более стабилен, чем процесс случайного блуждания, что делает модель полулокального линейного тренда более подходящей для расчета долгосрочных прогнозов (благодаря меньшей неопределенности в отношении предсказанных значений).</li>
+<li><code>AddSeasonal()</code> — <em>сезонная компонента</em> (seasonal component), число сезонов <span class="math inline">\(S\)</span> в которой задается с помощью аргумента <code>nseasons</code>. В основе этой компоненты лежит линейная модель с <span class="math inline">\(S-1\)</span> индикаторными переменными <span class="math display">\[ \begin{aligned} &amp; y_t = \gamma_t + \epsilon_t,\\ &amp; \gamma_{t} = -\sum_{s=1}^{S-1} \gamma_{t-s} + w_t,\\ &amp; \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2), w_t \sim \mathcal{N}(0, \sigma_{w}^2)  \end{aligned} \]</span> Для моделирования физических и других процесов с четко выраженными амплитудой и частотой можно воспользоваться также функцией <code>AddTrig()</code>, которая задает соответствующую компоненту в виде суммы элементарных тригонометрических составляющих (cos и sin) с варьирующими во времени коэффициентами.</li>
+<li><code>AddRegressionHoliday()</code> — добавляет в модель эффекты “праздников” и других важных для моделируемого временного ряда событий. Список таких событий формируется с помощью нескольких вспомогательных функций (например, <code>NamedHoliday()</code>, <code>FixedDateHoliday()</code>, <code>DateRangeHoliday</code> и др.) и подается на аргумент <code>holiday.list</code> функции <code>AddRegressionHoliday()</code>. В основе этой функции лежит простая модель следующего вида: <span class="math display">\[ \begin{aligned} &amp; y_t = \beta_{d(t)} + \epsilon_t,\\ &amp;  \epsilon_t \sim \mathcal{N}(0, \sigma_{\epsilon}^2), \end{aligned} \]</span> где вектор <span class="math inline">\(\beta\)</span> содержит коэффициенты регрессии <span class="math inline">\(\beta_d \sim \mathcal{N}(0, \sigma^2)\)</span>.</li>
+</ul>
+</div>
+<div id="sec-bsts-model-examples" class="section level2">
+<h2><span class="header-section-number">7.4</span> Примеры моделей без предикторов</h2>
+<p>Для иллюстрации основ работы с пакетом <code>bsts</code> мы воспользуемся данными по стоимости номера в гостинице <code>73738</code> из таблицы <code>hotels</code> (см. подразд. <a href="intro.html#subsec-hotel-price">1.5.4</a>). Эти данные обладают несколькими свойствами, которые делают задачу прогнозирования достаточно трудной (рис. <a href="ch-intro-to-bsts.html#fig:hotel-73738">7.2</a>):</p>
+<ul>
+<li>крайне нерегулярная регистрация наблюдений с точностью до 1 секунды, что приводит к большому количеству пропущенных значений и “маскировке” возможных сезонных колебаний;</li>
+<li>относительно непродолжительный период учета данных (8 месяцев), что в совокупности с многочисленными пропущенными значениями затрудняет адекватное моделирование тренда и сезонных колебаний.</li>
+</ul>
+
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" title="1"><span class="kw">require</span>(dplyr)</a>
+<a class="sourceLine" id="cb125-2" title="2"><span class="kw">require</span>(ggplot2)</a>
+<a class="sourceLine" id="cb125-3" title="3"></a>
+<a class="sourceLine" id="cb125-4" title="4">hotels <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb125-5" title="5"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb125-6" title="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(date_time, price_usd)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb125-7" title="7"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb125-8" title="8"><span class="st">  </span><span class="kw">scale_y_log10</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb125-9" title="9"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="ot">NA</span>))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hotel-73738"></span>
+<img src="time_series_ru_files/figure-html/hotel-73738-1.png" alt="Исходные данные по динамике стоимости номера в гостинице 73738 из таблицы hotels" width="100%" />
+<p class="caption">
+РИСУНОК 7.2: Исходные данные по динамике стоимости номера в гостинице <code>73738</code> из таблицы <code>hotels</code>
+</p>
+</div>
+<p>Перечисленные трудности можно отчасти преодолеть путем агрегирования данных с секундного до некоторого более крупного интервала времени (например, путем расчета средней стоимости номера, зарегистрированной за минуту, час, день и т.п.). Выбор подходящего интервала для агрегирования — это отдельная задача, которая, к сожалению, не имеет простого решения. С одной стороны, чем шире интервал (например, дневной), тем меньше в агрегированных данных будет пропущенных наблюдений, но некоторые свойства исходных данных при этом будут утрачены (в частности, внутридневные колебания стоимости). С другой стороны, агрегирование по более узкому интервалу поможет сохранить свойства исходных данных, но не решит проблему большого количества пропущенных наблюдений.</p>
+<p>В приведенных ниже примерах агрегирование выполнено путем усреднения логафмированных значений стоимости гостиничного номера за день. Даже при таком подходе в данных все еще остается несколько пропущенных наблюдений. Хотя лежащая в основе пакета <code>bsts</code> методология достаточно устойчива к наличию небольшого количества пропущенных наблюдений в зависимой переменной, для упрощения примеров мы выполним простую линейную этих пропусков в обучающей выборке, как это было сделано в гл. <a href="ch-visualisation.html#ch-visualisation">4</a>. Проверочная выборка будет содержать 14 наблюдений, что соответствует прогнозному горизонту длиной 14 дней (рис. <a href="ch-intro-to-bsts.html#fig:h73738-prep">7.3</a>).</p>
+
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" title="1"><span class="co"># Агрегирование данных:</span></a>
+<a class="sourceLine" id="cb126-2" title="2">h73738 &lt;-<span class="st"> </span>hotels <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb126-3" title="3"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-4" title="4"><span class="st">  </span><span class="kw">index_by</span>(<span class="dt">dt =</span> <span class="kw">as.Date</span>(date_time)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-5" title="5"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">y =</span> <span class="kw">mean</span>(<span class="kw">log</span>(price_usd))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-6" title="6"><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">fill_gaps</span>()</a>
+<a class="sourceLine" id="cb126-7" title="7"></a>
+<a class="sourceLine" id="cb126-8" title="8"><span class="co"># Разбиение на обучающую и проверочную выборки </span></a>
+<a class="sourceLine" id="cb126-9" title="9"><span class="co"># (прогнозный горизонт составляет 14 дней):</span></a>
+<a class="sourceLine" id="cb126-10" title="10">cut_point &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="kw">max</span>(h73738<span class="op">$</span>dt)) <span class="op">-</span><span class="st"> </span><span class="dv">14</span></a>
+<a class="sourceLine" id="cb126-11" title="11">h73738_train &lt;-<span class="st"> </span>h73738 <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-12" title="12"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">as.Date</span>(dt) <span class="op">&lt;=</span><span class="st"> </span>cut_point) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-13" title="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> forecast<span class="op">::</span><span class="kw">na.interp</span>(y))</a>
+<a class="sourceLine" id="cb126-14" title="14">h73738_test &lt;-<span class="st"> </span>h73738 <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-15" title="15"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">as.Date</span>(dt) <span class="op">&gt;</span><span class="st"> </span>cut_point)</a>
+<a class="sourceLine" id="cb126-16" title="16"></a>
+<a class="sourceLine" id="cb126-17" title="17"><span class="co"># Визуализация агрегированных данных:</span></a>
+<a class="sourceLine" id="cb126-18" title="18"><span class="kw">rbind</span>(<span class="kw">mutate</span>(h73738_train, <span class="dt">dataset =</span> <span class="st">&quot;train&quot;</span>),</a>
+<a class="sourceLine" id="cb126-19" title="19">      <span class="kw">mutate</span>(h73738_test, <span class="dt">dataset =</span> <span class="st">&quot;test&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb126-20" title="20"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(dt, y, <span class="dt">col =</span> dataset)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb126-21" title="21"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb126-22" title="22"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb126-23" title="23"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;black&quot;</span>))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:h73738-prep"></span>
+<img src="time_series_ru_files/figure-html/h73738-prep-1.png" alt="Обучающие (черный цвет) и проверочные (синий цвет) данные по динамике среднедневной стоимости номера в гостинице 73738. Пропуски в обучающих данных восстановлены путем интепорляции. К проверочным данным такое восстановление не применялось, в связи с чем соединяющая точки линия имеет два разрыва" width="100%" />
+<p class="caption">
+РИСУНОК 7.3: Обучающие (черный цвет) и проверочные (синий цвет) данные по динамике среднедневной стоимости номера в гостинице <code>73738</code>. Пропуски в обучающих данных восстановлены путем интепорляции. К проверочным данным такое восстановление не применялось, в связи с чем соединяющая точки линия имеет два разрыва
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-bsts.html#fig:h73738-prep">7.3</a> виден слабый возрастающий тренд в данных, который мы попытаемся отразить в модели с помощью компоненты линейного локального тренда (функция <code>AddLocalLinearTrend()</code>). Кроме того, мы добавим в модель компоненту недельной сезонности (функция <code>AddSeasonal(nseasons = 7)</code>), поскольку дневные данные часто демонстрируют такого рода колебания:</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" title="1"><span class="kw">require</span>(bsts)</a>
+<a class="sourceLine" id="cb127-2" title="2"><span class="co"># Моделируемая переменная:</span></a>
+<a class="sourceLine" id="cb127-3" title="3">y_<span class="dv">73738</span> &lt;-<span class="st"> </span>h73738_train<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb127-4" title="4"><span class="co"># временные отметки для аргумента `timestamps` функции `bsts()` </span></a>
+<a class="sourceLine" id="cb127-5" title="5"><span class="co"># (не обязательны, но полезны для построения графиков):</span></a>
+<a class="sourceLine" id="cb127-6" title="6">dt_<span class="dv">73738</span> &lt;-<span class="st"> </span>h73738_train<span class="op">$</span>dt</a>
+<a class="sourceLine" id="cb127-7" title="7"></a>
+<a class="sourceLine" id="cb127-8" title="8"><span class="co"># Спецификация компонент модели:</span></a>
+<a class="sourceLine" id="cb127-9" title="9">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb127-10" title="10">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(ss, y_<span class="dv">73738</span>)</a>
+<a class="sourceLine" id="cb127-11" title="11">ss &lt;-<span class="st"> </span><span class="kw">AddSeasonal</span>(ss, y_<span class="dv">73738</span>, <span class="dt">nseasons =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb127-12" title="12"></a>
+<a class="sourceLine" id="cb127-13" title="13"><span class="co"># Подгонка модели (может занять некоторое время).</span></a>
+<a class="sourceLine" id="cb127-14" title="14"><span class="co"># Результат сохранен в объект с именем `M19`</span></a>
+<a class="sourceLine" id="cb127-15" title="15"><span class="co"># (в продолжение нумерации модельных объектов, </span></a>
+<a class="sourceLine" id="cb127-16" title="16"><span class="co"># начатой в главе о пакете `prophet`):</span></a>
+<a class="sourceLine" id="cb127-17" title="17">M19 &lt;-<span class="st"> </span><span class="kw">bsts</span>(y_<span class="dv">73738</span>, ss,</a>
+<a class="sourceLine" id="cb127-18" title="18">            <span class="dt">timestamps =</span> dt_<span class="dv">73738</span>, </a>
+<a class="sourceLine" id="cb127-19" title="19">            <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<p>Полученный объект <code>M19</code> обладает рядом удобных методов, позволяющих исследовать свойства полученной модели. Так, стандартный метод <code>summary()</code> возвращает список с несколькими количественными метриками качества модели, рассчитанными по обучающим данным:</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" title="1"><span class="kw">summary</span>(M19)</a></code></pre></div>
+<pre><code>## $residual.sd
+## [1] 0.174605
+## 
+## $prediction.sd
+## [1] 0.1956826
+## 
+## $rsquare
+## [1] 0.3094038
+## 
+## $relative.gof
+## [1] 0.3437019</code></pre>
+<p>В приведенном списке <code>residual.sd</code> — это среднее значение апостериорного распределения стандартного отклонения остатков модели, а <code>rsquare</code> — обычный коэффициент детерминации (т.е. доля, которую дисперсия остатков составляет от обшей дисперсии в данных). Остальные две метрики рассчитываются с использованием т.н. <em>“ошибок следующего шага”</em> (one-step-ahead errors), которые вычисляются в ходе подгонки модели как <span class="math inline">\(y_t - E(y_t|Y_{t-1}, \theta)\)</span>, где <span class="math inline">\(Y_{t-1} = y_1, y_2, \dots y_{t-1}\)</span>, а <span class="math inline">\(\theta\)</span> — вектор с текущими оценками параметров модели. При необходимости эти ошибки можно извлечь с помощью функции <code>bsts.prediction.errors()</code>, подав на нее соответствующий модельный объект. Возвращаемая методом <code>summary()</code> метрика <code>prediction.sd</code> представляет собой стандартное отклонение ошибок следующего шага, рассчитанных по обучающим данным, а <code>relative.gof</code> — это т.н. <em>статистика Харви</em> (Harvey’s goodness of fit statistic). Статистика Харви похожа на коэффициент детерминации и вычисляется как <span class="math inline">\(R_D^2 = 1 - \sum \nu^2 /(n-2) \times \text{var}(\text{diff}(y))\)</span>, где <span class="math inline">\(\nu\)</span> — ошибки следующего шага, <span class="math inline">\(n\)</span> — число наблюдений <span class="math inline">\(y\)</span> в анализируемом временном ряду, а <span class="math inline">\(\text{var}\)</span> и <span class="math inline">\(\text{diff}\)</span> — функции для расчета дисперсии и перехода к разностям (дифференцированию) временного ряда соответственно.</p>
+<p>Качество <code>bsts</code>–моделей можно проанализировать также графически с помощью диаграмм нескольких типов. Так, стандартный метод <code>plot()</code> изображает обучающие данные и оцененное на их основе апостериорное <em>совместное</em> распределение компонент модели в каждый момент времени (<span class="math inline">\(Z_t^\intercal \alpha_t\)</span>; см. рис. <a href="ch-intro-to-bsts.html#fig:m19-plot">7.4</a> и разд. <a href="ch-intro-to-bsts.html#sec-how-bsts-works">7.1</a>):</p>
+
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" title="1"><span class="kw">plot</span>(M19)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m19-plot"></span>
+<img src="time_series_ru_files/figure-html/m19-plot-1.png" alt="Результат подгонки модели M19. Кружками показаны обучающие данные. Полупрозрачными черными точками показано апостериорное совместное распределение компонент модели. Области плотного расположения этих точек выглядят темнее и соответствуют областям с большей апостериорной вероятностью. На каждую временную отметку приходится niter = 1500 таких точек" width="100%" />
+<p class="caption">
+РИСУНОК 7.4: Результат подгонки модели <code>M19</code>. Кружками показаны обучающие данные. Полупрозрачными черными точками показано апостериорное совместное распределение компонент модели. Области плотного расположения этих точек выглядят темнее и соответствуют областям с большей апостериорной вероятностью. На каждую временную отметку приходится <code>niter = 1500</code> таких точек
+</p>
+</div>
+<p>Метод <code>plot()</code> в сочетании с аргументом <code>y = "components"</code> позволяет также изобразить вклад отдельных компонент модели (рис. <a href="ch-intro-to-bsts.html#fig:m19-plot-comp">7.5</a>; этот метод принимает и ряд других аргументов — см. справочный файл, доступный по команде <code>?plot.bsts</code>):</p>
+
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" title="1"><span class="kw">plot</span>(M19, <span class="dt">y =</span> <span class="st">&quot;components&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m19-plot-comp"></span>
+<img src="time_series_ru_files/figure-html/m19-plot-comp-1.png" alt="Апостериорные распределения компонент модели M19. Слева: локальный линейный тренд. Справа: эффекты дней недели" width="100%" />
+<p class="caption">
+РИСУНОК 7.5: Апостериорные распределения компонент модели <code>M19</code>. Слева: локальный линейный тренд. Справа: эффекты дней недели
+</p>
+</div>
+<p>Поскольку все графики на рис. <a href="ch-intro-to-bsts.html#fig:m19-plot-comp">7.5</a> имеют одинаковые оси ординат, то эффекты дней недели рассмотреть очень сложно. Мы можем изобразить их отдельно с помощью следующей команды (рис. <a href="ch-intro-to-bsts.html#fig:m19-plot-seasonal">7.6</a>):</p>
+
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" title="1"><span class="kw">plot</span>(M19, <span class="dt">y =</span> <span class="st">&quot;seasonal&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m19-plot-seasonal"></span>
+<img src="time_series_ru_files/figure-html/m19-plot-seasonal-1.png" alt="Апостериорные распределения эффектов дней недели, оцененные с помощью модели M19. Зеленые линии соответствуют медианам этих распределений" width="100%" />
+<p class="caption">
+РИСУНОК 7.6: Апостериорные распределения эффектов дней недели, оцененные с помощью модели <code>M19</code>. Зеленые линии соответствуют медианам этих распределений
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-bsts.html#fig:m19-plot-seasonal">7.6</a> лучше видно, что цена на номер в гостинице <code>73738</code> в среднем была несколько выше в субботу (Saturday), воскресенье (Sunday) и понедельник (Monday), чем в другие дни, и что эффекты каждого из дней недели были практически постоянны на протяжении всего исторического периода. Тем не менее вклад сезонной компоненты в целом оказался весьма незначительным, по сравнению с вкладом линейного тренда, что согласуется также с результатом разведочного анализа этих данных, выполненного в гл. <a href="ch-visualisation.html#ch-visualisation">4</a>.</p>
+<p>Важным свойством хорошей модели временного ряда является отсутствие автокорреляции в ее остатках. Для визуальной проверки этого служит команда <code>AcfDist()</code>, которая принимает матрицу с остатками модели и строит диаграммы размахов (“ящики с усами”) для апостериорных распределений автокорреляционной функции. В идеале центры этих апостериорных распределений (начиная со сдвига 1 и далее) должны приходится на 0, однако в случае с моделью <code>M19</code> это явно не так (рис. <a href="ch-intro-to-bsts.html#fig:m19-acf">7.7</a>): хорошо видна цикличность с периодом, составляющим примерно 7 временных шагов. Похожее свойство этих данных мы ранее обнаружили также в ходе их разведочного анализа (гл. <a href="ch-visualisation.html#ch-visualisation">4</a>).</p>
+
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" title="1">m19_resid &lt;-<span class="st"> </span><span class="kw">residuals</span>(M19)</a>
+<a class="sourceLine" id="cb133-2" title="2"><span class="kw">AcfDist</span>(<span class="dt">draws =</span> m19_resid)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m19-acf"></span>
+<img src="time_series_ru_files/figure-html/m19-acf-1.png" alt="Апостериорные распределения автокорреляционной функции остатков модели M19" width="100%" />
+<p class="caption">
+РИСУНОК 7.7: Апостериорные распределения автокорреляционной функции остатков модели <code>M19</code>
+</p>
+</div>
+<p>Попробуем улучшить модель <code>M19</code>, добавив в нее авторегрессионный процесс и одновременно исключив сезонную компоненту. Обратите внимание на то, что для добавления авторегрессионной компоненты в приведенном ниже коде использована функция <code>AddAutoAr()</code>, которая, в отличие от <code>AddAr()</code>, применяет метод “spike–and–slab” для регуляризации авторегрессионных коэффициентов: пользователь задает максимально возможное количество таких коэффициентов (с помощью аргумента <code>lag</code>), но некоторые из них в отдельных MCMC–итерациях окажутся в точности приравнены к нулю.</p>
+
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" title="1">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb134-2" title="2">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(ss, y_<span class="dv">73738</span>)</a>
+<a class="sourceLine" id="cb134-3" title="3">ss &lt;-<span class="st"> </span><span class="kw">AddAutoAr</span>(ss, y_<span class="dv">73738</span>, <span class="dt">lag =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb134-4" title="4">M20 &lt;-<span class="st"> </span><span class="kw">bsts</span>(y_<span class="dv">73738</span>, ss,</a>
+<a class="sourceLine" id="cb134-5" title="5">            <span class="dt">timestamps =</span> dt_<span class="dv">73738</span>, </a>
+<a class="sourceLine" id="cb134-6" title="6">            <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb134-7" title="7"><span class="kw">summary</span>(M20)</a></code></pre></div>
+<pre><code>## $residual.sd
+## [1] 0.09866681
+## 
+## $prediction.sd
+## [1] 0.1874644
+## 
+## $rsquare
+## [1] 0.7794775
+## 
+## $relative.gof
+## [1] 0.3970419</code></pre>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" title="1"><span class="kw">AcfDist</span>(<span class="kw">residuals</span>(M20))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m20-acf"></span>
+<img src="time_series_ru_files/figure-html/m20-acf-1.png" alt="Апостериорные распределения автокорреляционной функции остатков модели M20" width="100%" />
+<p class="caption">
+РИСУНОК 7.8: Апостериорные распределения автокорреляционной функции остатков модели <code>M20</code>
+</p>
+</div>
+<p>Как следует из приведенных выше диагностических метрик и из рис. <a href="ch-intro-to-bsts.html#fig:m20-acf">7.8</a>, модель <code>M20</code> гораздо лучше описывает обучающие данные, чем модель <code>M19</code>. Это видно также на рис. <a href="ch-intro-to-bsts.html#fig:m20-plot">7.9</a>, где изображены обучающие данные и апостериорное совместное распределение компонент <code>M20</code>, и на рис. <a href="ch-intro-to-bsts.html#fig:m20-comp">7.10</a>, изображающем апостериорные распределения отдельных компонент этой модели:</p>
+
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" title="1"><span class="kw">plot</span>(M20)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m20-plot"></span>
+<img src="time_series_ru_files/figure-html/m20-plot-1.png" alt="Результат подгонки модели M20" width="100%" />
+<p class="caption">
+РИСУНОК 7.9: Результат подгонки модели <code>M20</code>
+</p>
+</div>
+
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" title="1"><span class="kw">plot</span>(M20, <span class="dt">y =</span> <span class="st">&quot;components&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m20-comp"></span>
+<img src="time_series_ru_files/figure-html/m20-comp-1.png" alt="Апостериорные распределения компонент модели M20. Слева: локальный линейный тренд. Справа: авторегрессионная компонента" width="100%" />
+<p class="caption">
+РИСУНОК 7.10: Апостериорные распределения компонент модели <code>M20</code>. Слева: локальный линейный тренд. Справа: авторегрессионная компонента
+</p>
+</div>
+<p>Качество нескольких <code>bsts</code>-моделей можно одновременно проанализирвать с помощью функции <code>CompareBstsModels()</code>, которая изображает накопленные средние абсолютные ошибки следующего шага для каждой из сравниваемых моделей. Под графиком таких кривых накопленных ошибок изображаются также исходные обучающие данные, что позволяет лучше понять, где именно та или иная модель плохо справляется с описанием данных. На рис. <a href="ch-intro-to-bsts.html#fig:compare-models">7.11</a> кривая накопленных ошибок модели <code>M20</code> проходит ниже кривой <code>M19</code>, что еще раз подтверждает более высокое качество модели <code>M20</code>.</p>
+
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" title="1">models_to_compare &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;M19&quot;</span> =<span class="st"> </span>M19, <span class="st">&quot;M20&quot;</span> =<span class="st"> </span>M20)</a>
+<a class="sourceLine" id="cb139-2" title="2"><span class="kw">CompareBstsModels</span>(models_to_compare)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:compare-models"></span>
+<img src="time_series_ru_files/figure-html/compare-models-1.png" alt="Пример сравнения качества двух моделей (M19 и M20) с помощью ошибок следующего шага. Вверху: накопленные средние абсолютные ошибки следующего шага. Внизу: обучающие данные" width="100%" />
+<p class="caption">
+РИСУНОК 7.11: Пример сравнения качества двух моделей (<code>M19</code> и <code>M20</code>) с помощью ошибок следующего шага. Вверху: накопленные средние абсолютные ошибки следующего шага. Внизу: обучающие данные
+</p>
+</div>
+</div>
+<div id="sec-bsts-models-with-regressors" class="section level2">
+<h2><span class="header-section-number">7.5</span> Модели с предикторами</h2>
+<p>Как было отмечено в разд. <a href="ch-intro-to-bsts.html#sec-how-bsts-works">7.1</a>, помимо стандартных компонент тренда и сезонности в структурные модели временных рядов можно включить также эффекты предикторов. Для этого необходимо воспользоваться аргументом <code>formula</code> функции <code>bsts()</code> и указать обычным для R образом имена соответствующих переменных справа от значка тильды (например <code>y ~ x1 + x2 + x3</code>, где <code>x1</code>, <code>x2</code> и <code>x3</code> — это имена предикторов). Все предикторы должны содержаться в одной таблице данных, которая подается на функцию <code>bsts()</code> с помощью аргумента <code>data</code>.</p>
+<p>Воспользуемся в качестве предикторов стоимостью номеров в двух других гостиницах (с идентификаторами <code>13252</code> и <code>83045</code>) из набора данных <code>hotels</code>. Хотя зависимой переменной в <code>bsts</code>–моделях разрешается иметь пропущенные значения, наличие пропусков в предикторах недопустимо. Мы уже сталкивались с аналогичным требованием при построении <code>prophet</code>–моделей (разд. <a href="ch-intro-to-prophet.html#sec-prophet-predictors">6.7</a>), где пропущенные наблюдения в предикторах были восстановлены с помощью метода LOCF (подразд. <a href="intro.html#subsec-share-price">1.5.3</a>). Здесь мы воспользуемся другим подходом и восстановим пропущенные значения на основе отдельных <code>bsts</code>–моделей, подогнанных к данным по стоимости номеров в соответствующих гостиницах. Такой подход часто дает реалистичные оценки пропущенных наблюдений, что является одним из больших преимуществ байесовских методов анализа временных рядов.</p>
+<p>В приведенном ниже коде происходит подготовка каждого временного ряда предиктора к моделированию и подгонка соответствующих моделей, структура которых идентична таковой у модели <code>M20</code>:</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" title="1"><span class="co"># Подготовка данных:</span></a>
+<a class="sourceLine" id="cb140-2" title="2">h &lt;-<span class="st"> </span>hotels <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb140-3" title="3"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">!=</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-4" title="4"><span class="st">  </span><span class="kw">group_by_key</span>(prop_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-5" title="5"><span class="st">  </span><span class="kw">index_by</span>(<span class="dt">dt =</span> <span class="kw">as.Date</span>(date_time)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-6" title="6"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">y =</span> <span class="kw">mean</span>(<span class="kw">log</span>(price_usd))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-7" title="7"><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">fill_gaps</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-8" title="8"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">as.Date</span>(dt) <span class="op">&lt;=</span><span class="st"> </span>cut_point)</a>
+<a class="sourceLine" id="cb140-9" title="9"></a>
+<a class="sourceLine" id="cb140-10" title="10"><span class="co"># Модель для гостиницы `13252`</span></a>
+<a class="sourceLine" id="cb140-11" title="11">y_<span class="dv">13252</span> &lt;-<span class="st"> </span>h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">13252</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(y)</a>
+<a class="sourceLine" id="cb140-12" title="12">dt_<span class="dv">13252</span> &lt;-<span class="st"> </span>h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">13252</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dt)</a>
+<a class="sourceLine" id="cb140-13" title="13">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb140-14" title="14">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(ss, y_<span class="dv">13252</span>)</a>
+<a class="sourceLine" id="cb140-15" title="15">ss &lt;-<span class="st"> </span><span class="kw">AddAutoAr</span>(ss, y_<span class="dv">13252</span>, <span class="dt">lag =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb140-16" title="16"></a>
+<a class="sourceLine" id="cb140-17" title="17">M13252 &lt;-<span class="st"> </span><span class="kw">bsts</span>(y_<span class="dv">13252</span>, ss,</a>
+<a class="sourceLine" id="cb140-18" title="18">               <span class="dt">timestamps =</span> dt_<span class="dv">13252</span>, </a>
+<a class="sourceLine" id="cb140-19" title="19">               <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb140-20" title="20"></a>
+<a class="sourceLine" id="cb140-21" title="21"><span class="co"># Модель для гостиницы `83045`</span></a>
+<a class="sourceLine" id="cb140-22" title="22">y_<span class="dv">83045</span> &lt;-<span class="st"> </span>h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">83045</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(y)</a>
+<a class="sourceLine" id="cb140-23" title="23">dt_<span class="dv">83045</span> &lt;-<span class="st"> </span>h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">83045</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dt)</a>
+<a class="sourceLine" id="cb140-24" title="24">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb140-25" title="25">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(ss, y_<span class="dv">83045</span>)</a>
+<a class="sourceLine" id="cb140-26" title="26">ss &lt;-<span class="st"> </span><span class="kw">AddAutoAr</span>(ss, y_<span class="dv">83045</span>, <span class="dt">lag =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb140-27" title="27"></a>
+<a class="sourceLine" id="cb140-28" title="28">M83045 &lt;-<span class="st"> </span><span class="kw">bsts</span>(y_<span class="dv">83045</span>, ss,</a>
+<a class="sourceLine" id="cb140-29" title="29">               <span class="dt">timestamps =</span> dt_<span class="dv">83045</span>, </a>
+<a class="sourceLine" id="cb140-30" title="30">               <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a></code></pre></div>
+<p>Результаты подгонки обеих моделей приведены на рис. <a href="ch-intro-to-bsts.html#fig:predictor-hotels-plots">7.12</a>.</p>
+
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" title="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb141-2" title="2"><span class="kw">plot</span>(M13252, <span class="dt">main =</span> <span class="st">&quot;M13252&quot;</span>)</a>
+<a class="sourceLine" id="cb141-3" title="3"><span class="kw">plot</span>(M83045, <span class="dt">main =</span> <span class="st">&quot;M83045&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:predictor-hotels-plots"></span>
+<img src="time_series_ru_files/figure-html/predictor-hotels-plots-1.png" alt="Результаты подгонки моделей по данным стоимости номеров в гостиницах 13252 и 83045" width="100%" />
+<p class="caption">
+РИСУНОК 7.12: Результаты подгонки моделей по данным стоимости номеров в гостиницах <code>13252</code> и <code>83045</code>
+</p>
+</div>
+<p>В пакете <code>bsts</code> нет готовой функции, позволяющей извлекать предсказанные значения для обучающих данных (подобно базовой функции <code>fitted()</code>). Но не беда — мы можем легко рассчитать эти значения самостоятельно по результатам MCMC-симуляций вклада каждой компоненты модели. Эти результаты хранятся в слоте <code>state.contributions</code> модельного объекта в виде массива размерностью <span class="math inline">\(i \times s \times l\)</span>, где <span class="math inline">\(i\)</span> — количество итераций MCMC, <span class="math inline">\(s\)</span> — число входящих в модель компонент, а <span class="math inline">\(l\)</span> — длина временного ряда (включая пропущенные значения). В рассматриваемом нами примере <span class="math inline">\(i = 1500\)</span>, <span class="math inline">\(s = 2\)</span>, а <span class="math inline">\(l = 228\)</span>:</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" title="1">M13252<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dim</span>()</a></code></pre></div>
+<pre><code>## [1] 1500    2  228</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" title="1">M83045<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dim</span>()</a></code></pre></div>
+<pre><code>## [1] 1500    2  228</code></pre>
+<p>Для расчета модельного значения стоимости гостиничного номера на определенной временной отметке необходимо суммировать вклады всех компонент модели, соответствующих этой отметке. Для каждой временной отметки мы в итоге получим 1500 оценок стоимости гостиничного номера. Наиболее вероятную оценку можно было бы далее рассчитать путем простого усреднения этих 1500 значений. Однако, как это обычно бывает при выполнении MCMC-симуляций, первые несколько итераций алгоритма во время его “разогрева” (“burn–in”) дают неустойчивые оценки моделируемой величины. В связи с этим принято такие начальные итерации исключать из анализа. Функция <code>SuggestBurn()</code> из пакета <code>bsts</code> вычисляет количество итераций MCMC, которые следует отбросить:</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" title="1"><span class="co"># Аргумент `proportion` задает число последних MCMC-итераций</span></a>
+<a class="sourceLine" id="cb146-2" title="2"><span class="co"># (в виде доли от общего количества итераций), которые</span></a>
+<a class="sourceLine" id="cb146-3" title="3"><span class="co"># используются для нахождения периода &quot;разогрева&quot; алгоритма</span></a>
+<a class="sourceLine" id="cb146-4" title="4">(burn_<span class="dv">13252</span> &lt;-<span class="st"> </span><span class="kw">SuggestBurn</span>(<span class="dt">proportion =</span> <span class="fl">0.1</span>, M13252))</a></code></pre></div>
+<pre><code>## [1] 78</code></pre>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" title="1">(burn_<span class="dv">83045</span> &lt;-<span class="st"> </span><span class="kw">SuggestBurn</span>(<span class="dt">proportion =</span> <span class="fl">0.1</span>, M83045))</a></code></pre></div>
+<pre><code>## [1] 112</code></pre>
+<p>Рассчитаем предсказанные моделями <code>M13252</code> и <code>M83045</code> наиболее вероятные значения стоимости гостиничных номеров, отбросив первые 78 и 112 МСМС–оценок соответственно, и изообразим результаты на графиках (рис. <a href="ch-intro-to-bsts.html#fig:hotel-predictor-means">7.13</a>):</p>
+
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" title="1">fitted_M13252 &lt;-<span class="st"> </span>M13252<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-2" title="2"><span class="st">  </span><span class="kw">apply</span>(., <span class="dt">MARGIN =</span> <span class="dv">3</span>, <span class="dt">FUN =</span> rowSums) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-3" title="3"><span class="st">  </span>.[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span>burn_<span class="dv">13252</span>), ] <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-4" title="4"><span class="st">  </span><span class="kw">colMeans</span>()</a>
+<a class="sourceLine" id="cb150-5" title="5"></a>
+<a class="sourceLine" id="cb150-6" title="6">fitted_M83045 &lt;-<span class="st"> </span>M83045<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-7" title="7"><span class="st">  </span><span class="kw">apply</span>(., <span class="dt">MARGIN =</span> <span class="dv">3</span>, <span class="dt">FUN =</span> rowSums) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-8" title="8"><span class="st">  </span>.[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span>burn_<span class="dv">83045</span>), ] <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb150-9" title="9"><span class="st">  </span><span class="kw">colMeans</span>()</a>
+<a class="sourceLine" id="cb150-10" title="10"></a>
+<a class="sourceLine" id="cb150-11" title="11"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb150-12" title="12"><span class="kw">plot</span>(fitted_M13252, <span class="dt">main =</span> <span class="st">&quot;M13252&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">4.6</span>, <span class="fl">6.4</span>))</a>
+<a class="sourceLine" id="cb150-13" title="13"><span class="kw">points</span>(h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">13252</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(y), <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</a>
+<a class="sourceLine" id="cb150-14" title="14"><span class="kw">plot</span>(fitted_M83045, <span class="dt">main =</span> <span class="st">&quot;M83045&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">4.6</span>, <span class="fl">6.4</span>))</a>
+<a class="sourceLine" id="cb150-15" title="15"><span class="kw">points</span>(h <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">83045</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(y), <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hotel-predictor-means"></span>
+<img src="time_series_ru_files/figure-html/hotel-predictor-means-1.png" alt="Модельные значения (сплошные линии) и обучающие данные по стоимости номеров в гостиницах 13252 и 83045 (кружки)" width="100%" />
+<p class="caption">
+РИСУНОК 7.13: Модельные значения (сплошные линии) и обучающие данные по стоимости номеров в гостиницах <code>13252</code> и <code>83045</code> (кружки)
+</p>
+</div>
+<p>Заменим теперь пропущенные данные по стоимости номеров в гостиницах <code>13252</code> и <code>83045</code> их модельными значениями (см. столбец <code>y_imputed</code>):</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" title="1"><span class="kw">require</span>(tidyr)</a>
+<a class="sourceLine" id="cb151-2" title="2"></a>
+<a class="sourceLine" id="cb151-3" title="3">predictors &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">prop_id =</span> <span class="dv">13252</span>, </a>
+<a class="sourceLine" id="cb151-4" title="4">                               <span class="dt">dt =</span> dt_<span class="dv">13252</span>, </a>
+<a class="sourceLine" id="cb151-5" title="5">                               <span class="dt">y_fitted =</span> fitted_M13252),</a>
+<a class="sourceLine" id="cb151-6" title="6">                        <span class="kw">tibble</span>(<span class="dt">prop_id =</span> <span class="dv">83045</span>, </a>
+<a class="sourceLine" id="cb151-7" title="7">                               <span class="dt">dt =</span> dt_<span class="dv">83045</span>, </a>
+<a class="sourceLine" id="cb151-8" title="8">                               <span class="dt">y_fitted =</span> fitted_M83045)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb151-9" title="9"><span class="st">  </span><span class="kw">inner_join</span>(., h, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;prop_id&quot;</span>, <span class="st">&quot;dt&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb151-10" title="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_imputed =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(y), y_fitted, y),</a>
+<a class="sourceLine" id="cb151-11" title="11">         <span class="dt">prop_id =</span> <span class="kw">paste0</span>(<span class="st">&quot;y_&quot;</span>, prop_id)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb151-12" title="12"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>y, <span class="op">-</span>y_fitted) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb151-13" title="13"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> prop_id, <span class="dt">values_from =</span> y_imputed)</a>
+<a class="sourceLine" id="cb151-14" title="14"></a>
+<a class="sourceLine" id="cb151-15" title="15">predictors</a></code></pre></div>
+<pre><code>## # A tibble: 228 x 3
+##    dt         y_13252 y_83045
+##    &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+##  1 2012-11-01    5.21    5.37
+##  2 2012-11-02    5.28    5.65
+##  3 2012-11-03    5.16    5.40
+##  4 2012-11-04    5.26    5.39
+##  5 2012-11-05    5.39    5.39
+##  6 2012-11-06    5.28    5.44
+##  7 2012-11-07    5.47    5.41
+##  8 2012-11-08    5.32    5.34
+##  9 2012-11-09    5.47    5.29
+## 10 2012-11-10    5.58    5.26
+## # ... with 218 more rows</code></pre>
+<p>В моделируемом нами временном ряду стоимости номеров в гостинице <code>73738</code> есть одно аномально низкое значение, приходящееся на временную отметку <code>2013-01-17</code> (рис. <a href="ch-intro-to-bsts.html#fig:h73738-prep">7.3</a>). Причина появления этого аномального наблюдения, к сожалению, не известна. Хотя модель <code>M20</code> ранее вполне успешно “справилась” с этим наблюдением без каких–либо специальных действий с нашей стороны (рис. <a href="ch-intro-to-bsts.html#fig:m20-plot">7.9</a>), мы могли бы также представить его в явном виде с помощью индикаторной переменной, которая принимает значение 1 на отметке <code>2013-01-17</code> и 0 на всех остальных отметках. Добавим такую индикаторную переменную в таблицу <code>predictors</code>:</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" title="1">anomaly_dt &lt;-<span class="st"> </span>h73738_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb153-2" title="2"><span class="st">  </span><span class="kw">filter</span>(y <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(y, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb153-3" title="3"><span class="st">  </span><span class="kw">pull</span>(dt)</a>
+<a class="sourceLine" id="cb153-4" title="4"></a>
+<a class="sourceLine" id="cb153-5" title="5">predictors &lt;-<span class="st"> </span>predictors <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb153-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">anomaly_event =</span> <span class="kw">ifelse</span>(dt <span class="op">==</span><span class="st"> </span>anomaly_dt, <span class="dv">1</span>, <span class="dv">0</span>))</a></code></pre></div>
+<p>Построим теперь новую модель стоимости номеров в гостинице <code>73738</code>, в которую помимо использованных нами ранее компонент войдут также независимые переменные из таблицы <code>predictors</code>:</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" title="1"><span class="co"># Добавление предикторов в таблицу с исходными данными:</span></a>
+<a class="sourceLine" id="cb154-2" title="2">h73738_train &lt;-<span class="st"> </span>h73738_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb154-3" title="3"><span class="st">  </span><span class="kw">left_join</span>(predictors, ., <span class="dt">by =</span> <span class="st">&quot;dt&quot;</span>)</a>
+<a class="sourceLine" id="cb154-4" title="4"></a>
+<a class="sourceLine" id="cb154-5" title="5">ss &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb154-6" title="6">ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(ss, y_<span class="dv">73738</span>)</a>
+<a class="sourceLine" id="cb154-7" title="7">ss &lt;-<span class="st"> </span><span class="kw">AddAutoAr</span>(ss, y_<span class="dv">73738</span>, <span class="dt">lag =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb154-8" title="8">M21 &lt;-<span class="st"> </span><span class="kw">bsts</span>(y <span class="op">~</span><span class="st"> </span>y_<span class="dv">13252</span> <span class="op">+</span><span class="st"> </span>y_<span class="dv">83045</span> <span class="op">+</span><span class="st"> </span>anomaly_event, ss,</a>
+<a class="sourceLine" id="cb154-9" title="9">            <span class="dt">data =</span> h73738_train,</a>
+<a class="sourceLine" id="cb154-10" title="10">            <span class="dt">timestamps =</span> dt_<span class="dv">73738</span>, </a>
+<a class="sourceLine" id="cb154-11" title="11">            <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">seed =</span> <span class="dv">42</span>, <span class="dt">ping =</span> <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb154-12" title="12"></a>
+<a class="sourceLine" id="cb154-13" title="13"><span class="kw">print</span>(<span class="kw">summary</span>(M21), <span class="dt">digits =</span> <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>## $residual.sd
+## [1] 0.0529
+## 
+## $prediction.sd
+## [1] 0.16
+## 
+## $rsquare
+## [1] 0.937
+## 
+## $relative.gof
+## [1] 0.562
+## 
+## $size
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    1.00    1.00    1.04    1.00    3.00 
+## 
+## $coefficients
+##                    mean      sd mean.inc sd.inc inc.prob
+## anomaly_event -1.44e+00 0.14375 -1.43979 0.1438   1.0000
+## y_13252        2.82e-04 0.00394  0.01500 0.0250   0.0188
+## y_83045        8.82e-05 0.00379  0.00504 0.0288   0.0175
+## (Intercept)    0.00e+00 0.00000  0.00000 0.0000   0.0000</code></pre>
+<p>Приведенная сводка по модели <code>M21</code> несколько отличается от виденных нами ранее. В одном из новых элементов сводки — <code>size</code> — приведена таблица с описательными статистиками по количеству предикторов, включенных в модель на разных итерациях алгоритма МСМС. Как было отмечено выше (разд. <a href="ch-intro-to-bsts.html#sec-how-bsts-works">7.1</a>), в ходе подгонки модели выполняется регуляризация ее размера с помощью метода “spike–and–slab”, в результате чего не все предикторы входят во все МСМС–реализации. В нашем примере видно, что в большинстве случаев в модель был включен лишь один предиктор (см. медианное значение).</p>
+<p>Другой новый элемент в сводке — <code>coefficients</code> — содержит описательные статистики по оцененным коэффициентам каждого из предикторов. Особенно важным показателем здесь является т.н. <em>апостериорная вероятность включения</em> предиктора в модель (posterior inclusion probability, см. столбец <code>inc.prob</code>). Как следует из названия, это вероятность использования того или иного предиктора в отдельных MCMC–реализациях модели, в т.ч. при расчете прогнозных значений (см. ниже). Хорошо видно, что наиболее важным предиктором оказалась индикаторная переменная <code>anomaly_event</code>, тогда как переменные <code>y_13252</code> и <code>y_83045</code> имеют достаточно низкую вероятность быть включенными в модель. Апостериорные вероятности включения предикторов можно также изобразить графически при помощи следующей простой команды (рис. <a href="ch-intro-to-bsts.html#fig:m21-incl-probs">7.14</a>):</p>
+
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" title="1"><span class="kw">plot</span>(M21, <span class="dt">y =</span> <span class="st">&quot;coefficients&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m21-incl-probs"></span>
+<img src="time_series_ru_files/figure-html/m21-incl-probs-1.png" alt="Апостериорные вероятности включения трех предикторов в модель M21. Чем темнее заштриховка столбца, тем более вероятно, что соответствующая переменная отрицательно коррелирует с зависимой переменной. (Intercept) обозначает свободный член регрессионного уравнения" width="100%" />
+<p class="caption">
+РИСУНОК 7.14: Апостериорные вероятности включения трех предикторов в модель <code>M21</code>. Чем темнее заштриховка столбца, тем более вероятно, что соответствующая переменная отрицательно коррелирует с зависимой переменной. <code>(Intercept)</code> обозначает свободный член регрессионного уравнения
+</p>
+</div>
+</div>
+<div id="sec-bsts-optimal-model" class="section level2">
+<h2><span class="header-section-number">7.6</span> Выбор оптимальной модели</h2>
+<p>До сих пор мы оценивали адекватность <code>bsts</code>–моделей по тому, насколько хорошо они описывали обучающие данные. Безусловно, такой подход сопровождается высоким риском выбрать в качестве оптимальной переобученную модель. Диагностика с использованием ошибок следующего шага (разд. <a href="ch-intro-to-bsts.html#sec-bsts-model-examples">7.4</a>; см. также справочный файл по функции <code>bsts.prediction.errors()</code>) лишь отчасти помогает застраховаться от этого, и единственным объективным тестом качества модели всегда будет точность ее предсказаний на независимом наборе данных.</p>
+<p>Объекты класса <code>bsts</code> обладают стандартным методом <code>predict()</code>, основными аргументами которого являются следующие (подробнее см. справочный файл, доступный по команде <code>?predict.bsts</code>):</p>
+<ul>
+<li><code>object</code> — модельный объект;</li>
+<li><code>horizon</code> — целое число, задающее длину прогнозного горизонта;</li>
+<li><code>newdata</code> — вектор, матрица или таблица со значениями предикторов (если таковые имеются);</li>
+<li><code>timestamps</code> — вектор с временными отметками, соответствующими строкам в <code>newdata</code>, для которых необходимо рассчитать прогнозные значения;</li>
+<li><code>plot.original</code> — количество последних наблюдений из обучающих данных, которые необходимо изобразить на графике;</li>
+<li><code>na.action</code> — функция, которую следует применить к пропущенным значениям в <code>newdata</code>;</li>
+<li><code>quantiles</code> — вектор с двумя значениями, задающими нижний и верхний лимиты доверительного интервала прогнозных значений (по умолчанию <code>с(0.025, 0.975)</code>, что соответствует 95%–ному интервалу);</li>
+<li><code>seed</code> — зерно генератора случайных чисел, которое можно указать для воспроизводимости результатов.</li>
+</ul>
+<p>Полученные с помощью метода <code>predict()</code> прогнозные значения можно также визуализировать с помощью метода <code>plot()</code> (рис. <a href="ch-intro-to-bsts.html#fig:m20-pred">7.15</a> и <a href="ch-intro-to-bsts.html#fig:m20-pred-zoom">7.16</a>):</p>
+
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" title="1">M20_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(M20, <span class="dt">horizon =</span> <span class="dv">14</span>)</a>
+<a class="sourceLine" id="cb157-2" title="2"><span class="kw">plot</span>(M20_pred)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m20-pred"></span>
+<img src="time_series_ru_files/figure-html/m20-pred-1.png" alt="Обучающие данные (черная линия) и прогнозные значения, полученные с помощью модели M20. Синей линией показаны наиболее вероятные будущие значения временного ряда. Вокруг этой линии полупрозрачными черными точками показаны также другие возможные реализации будущих значений. Зеленые прерывистые линии ограничивают 95%–ный доверительный интервал предсказанных значений" width="100%" />
+<p class="caption">
+РИСУНОК 7.15: Обучающие данные (черная линия) и прогнозные значения, полученные с помощью модели <code>M20</code>. Синей линией показаны наиболее вероятные будущие значения временного ряда. Вокруг этой линии полупрозрачными черными точками показаны также другие возможные реализации будущих значений. Зеленые прерывистые линии ограничивают 95%–ный доверительный интервал предсказанных значений
+</p>
+</div>
+
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" title="1"><span class="kw">plot</span>(M20_pred, <span class="dt">plot.original =</span> <span class="dv">50</span>)</a>
+<a class="sourceLine" id="cb158-2" title="2"><span class="kw">with</span>(h73738_test, <span class="kw">points</span>(dt, y, <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">col =</span> <span class="st">&quot;yellow&quot;</span>))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m20-pred-zoom"></span>
+<img src="time_series_ru_files/figure-html/m20-pred-zoom-1.png" alt="То же, что на рис. 7.15, но с изображением только последних 50 наблюдений из обучающих данных. Желтыми точками показаны также наблюденные данные из проверочной выборки, что позволяет визуально оценить качество прогноза" width="100%" />
+<p class="caption">
+РИСУНОК 7.16: То же, что на рис. <a href="ch-intro-to-bsts.html#fig:m20-pred">7.15</a>, но с изображением только последних 50 наблюдений из обучающих данных. Желтыми точками показаны также наблюденные данные из проверочной выборки, что позволяет визуально оценить качество прогноза
+</p>
+</div>
+<p>Рассчитаем теперь прогнозные значения для всех трех простроенных нами моделей и сравним эти предсказания с данными из проверочной выборки, которые хранятся в таблице <code>h73738_test</code> (разд. <a href="ch-intro-to-bsts.html#sec-bsts-model-examples">7.4</a>). В качестве метрики для выбора оптимальной модели применим cреднюю абсолютную удельную ошибку предсказаний (MAPE; подразд. <a href="ch-intro-to-prophet.html#subsec-perf-metric">6.8.3</a>). Поскольку <code>bsts</code>–модели предсказывают большое количество возможных реализаций будущих значений зависимой переменной, то для расчета MAPE мы воспользуемся медианными значениями этих возможных реализаций. Метод <code>predict()</code> автоматически вычисляет такие значения и сохраняет их в элементе <code>median</code> возвращаемого списка:</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" title="1"><span class="co"># Функция для расчета средней абсолютной удельной ошибки:</span></a>
+<a class="sourceLine" id="cb159-2" title="2">mape &lt;-<span class="st"> </span><span class="cf">function</span>(observed, predicted){</a>
+<a class="sourceLine" id="cb159-3" title="3">  na_ind &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">is.na</span>(observed))</a>
+<a class="sourceLine" id="cb159-4" title="4">  observed &lt;-<span class="st"> </span><span class="kw">na.omit</span>(observed)</a>
+<a class="sourceLine" id="cb159-5" title="5">  predicted &lt;-<span class="st"> </span>predicted[<span class="op">-</span>na_ind]</a>
+<a class="sourceLine" id="cb159-6" title="6">  <span class="kw">mean</span>(<span class="kw">abs</span>(observed <span class="op">-</span><span class="st"> </span>predicted)<span class="op">/</span>observed)</a>
+<a class="sourceLine" id="cb159-7" title="7">}</a>
+<a class="sourceLine" id="cb159-8" title="8"></a>
+<a class="sourceLine" id="cb159-9" title="9"><span class="co"># Предсказания модели M19:</span></a>
+<a class="sourceLine" id="cb159-10" title="10">M19_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(M19, <span class="dt">horizon =</span> <span class="dv">14</span>) <span class="op">%&gt;%</span><span class="st"> </span>.<span class="op">$</span>median</a>
+<a class="sourceLine" id="cb159-11" title="11"></a>
+<a class="sourceLine" id="cb159-12" title="12"><span class="co"># Предсказания модели M20:</span></a>
+<a class="sourceLine" id="cb159-13" title="13">M20_pred &lt;-<span class="st"> </span>M20_pred<span class="op">$</span>median</a>
+<a class="sourceLine" id="cb159-14" title="14"></a>
+<a class="sourceLine" id="cb159-15" title="15"><span class="co"># Для получения предсказаний с помощью модели M21</span></a>
+<a class="sourceLine" id="cb159-16" title="16"><span class="co"># нам сначала необходимо создать таблицу с будущими</span></a>
+<a class="sourceLine" id="cb159-17" title="17"><span class="co"># значениями всех входящих в нее предикторов:</span></a>
+<a class="sourceLine" id="cb159-18" title="18">predictors_future &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb159-19" title="19">  <span class="dt">dt =</span> h73738_test<span class="op">$</span>dt,</a>
+<a class="sourceLine" id="cb159-20" title="20">  <span class="dt">y_13252 =</span> <span class="kw">predict</span>(M13252, <span class="dt">horizon =</span> <span class="dv">14</span>) <span class="op">%&gt;%</span><span class="st"> </span>.<span class="op">$</span>median,</a>
+<a class="sourceLine" id="cb159-21" title="21">  <span class="dt">y_83045 =</span> <span class="kw">predict</span>(M83045, <span class="dt">horizon =</span> <span class="dv">14</span>) <span class="op">%&gt;%</span><span class="st"> </span>.<span class="op">$</span>median,</a>
+<a class="sourceLine" id="cb159-22" title="22">  <span class="dt">anomaly_event =</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb159-23" title="23">)</a>
+<a class="sourceLine" id="cb159-24" title="24"></a>
+<a class="sourceLine" id="cb159-25" title="25">M21_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(M21, <span class="dt">horizon =</span> <span class="dv">14</span>,</a>
+<a class="sourceLine" id="cb159-26" title="26">                    <span class="dt">newdata =</span> predictors_future) <span class="op">%&gt;%</span><span class="st"> </span>.<span class="op">$</span>median</a>
+<a class="sourceLine" id="cb159-27" title="27"></a>
+<a class="sourceLine" id="cb159-28" title="28"><span class="co"># MAPE для всех трех моделей:</span></a>
+<a class="sourceLine" id="cb159-29" title="29"><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="st">&quot;M19&quot;</span> =<span class="st"> </span>M19_pred, </a>
+<a class="sourceLine" id="cb159-30" title="30">            <span class="st">&quot;M20&quot;</span> =<span class="st"> </span>M20_pred, </a>
+<a class="sourceLine" id="cb159-31" title="31">            <span class="st">&quot;M21&quot;</span> =<span class="st"> </span>M21_pred), </a>
+<a class="sourceLine" id="cb159-32" title="32">       mape, <span class="dt">observed =</span> h73738_test<span class="op">$</span>y) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-33" title="33"><span class="st">  </span><span class="kw">round</span>(., <span class="dv">4</span>)</a></code></pre></div>
+<pre><code>##    M19    M20    M21 
+## 0.0194 0.0157 0.0163</code></pre>
+<p>Как следует из приведенных результатов, оптимальной следует считать модель <code>M20</code>. Интересно, что модель <code>M21</code>, несмотря на наличие в ней дополнительных предикторов, оказалась на втором месте по качеству прогноза. Подобная ситуация, когда включение предикторов не сопровождается улучшением качества модели временного ряда, довольно обычна и может быть обусловлена многими факторами (слабая связь между предикторами и моделируемой переменной, ошибки, возникающие при расчете прогнозных значений самих предикторов, эффект переобучения и т.п.).</p>
+<p>Возможности пакета <code>bsts</code> для прогнозирования временных рядов намного шире описанных в этой вводной главе. Дополнительную информацию о пакете и примеры его использования можно найти в статье <a href="http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html">Scott (2017)</a>, а также на <a href="https://sites.google.com/view/stevethebayesian/home?authuser=0">сайте Стивена Скотта</a>.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-intro-to-prophet.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-structural-changes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

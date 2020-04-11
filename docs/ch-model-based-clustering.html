@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 13 Кластеризация по результатам подгонки моделей | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 13 Кластеризация по результатам подгонки моделей | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 13 Кластеризация по результатам подгонки моделей | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-features-based-clustering.html"/>
+<link rel="next" href="ch-literature.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-model-based-clustering" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 13</span> Кластеризация по результатам подгонки моделей</h1>
+<p>Как было отмечено в гл. <a href="ch-ts-clustering-task.html#ch-ts-clustering-task">10</a>, один из способов кластеризации временных рядов основан на подгонке модели с определенной фиксированной структурой к каждому из анализируемых рядов и последующему использованию оцененных параметров модели в качестве описательных признаков. Для демонстрации этого принципа предположим, что временные ряды из набора данных <code>cryptos</code> были порождены процессом, который можно хорошо аппроксимировать байесовской стуктурной моделью с линейным локальным трендом и авторегрессионной компонентой первого порядка (гл. <a href="ch-intro-to-bsts.html#ch-intro-to-bsts">7</a>). На рис. <a href="ch-model-based-clustering.html#fig:cryptos-bsts-fits">13.1</a> показан результат подгонки такой модели к четырем случайно выбранным временным рядам из набора данных <code>cryptos</code>.</p>
+
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb209-1" title="1"><span class="kw">require</span>(dplyr)</a>
+<a class="sourceLine" id="cb209-2" title="2"><span class="kw">require</span>(ggplot2)</a>
+<a class="sourceLine" id="cb209-3" title="3"><span class="kw">require</span>(tidyr)</a>
+<a class="sourceLine" id="cb209-4" title="4"><span class="kw">require</span>(bsts)</a>
+<a class="sourceLine" id="cb209-5" title="5"></a>
+<a class="sourceLine" id="cb209-6" title="6"><span class="co"># Вспомогательная функция для подгонки моделей:</span></a>
+<a class="sourceLine" id="cb209-7" title="7">fit_bsts &lt;-<span class="st"> </span><span class="cf">function</span>(y) {</a>
+<a class="sourceLine" id="cb209-8" title="8">  ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(<span class="kw">list</span>(), y)</a>
+<a class="sourceLine" id="cb209-9" title="9">  ss &lt;-<span class="st"> </span><span class="kw">AddAr</span>(ss, y, <span class="dt">lag =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb209-10" title="10">  m &lt;-<span class="st"> </span><span class="kw">bsts</span>(y, ss, <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb209-11" title="11">  <span class="kw">return</span>(m)</a>
+<a class="sourceLine" id="cb209-12" title="12">}</a>
+<a class="sourceLine" id="cb209-13" title="13"></a>
+<a class="sourceLine" id="cb209-14" title="14"><span class="co"># Вспомогательная функция для извлечения наиболее</span></a>
+<a class="sourceLine" id="cb209-15" title="15"><span class="co"># вероятных модельных значений стоимости криптовалюты:</span></a>
+<a class="sourceLine" id="cb209-16" title="16">get_bsts_fit &lt;-<span class="st"> </span><span class="cf">function</span>(m) {</a>
+<a class="sourceLine" id="cb209-17" title="17">  burn &lt;-<span class="st"> </span><span class="kw">SuggestBurn</span>(<span class="fl">0.1</span>, m)</a>
+<a class="sourceLine" id="cb209-18" title="18">  m<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-19" title="19"><span class="st">    </span><span class="kw">apply</span>(., <span class="dt">MARGIN =</span> <span class="dv">3</span>, <span class="dt">FUN =</span> rowSums) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-20" title="20"><span class="st">    </span>.[<span class="op">-</span>(<span class="dv">1</span><span class="op">:</span>burn), ] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">colMeans</span>()</a>
+<a class="sourceLine" id="cb209-21" title="21">}</a>
+<a class="sourceLine" id="cb209-22" title="22"></a>
+<a class="sourceLine" id="cb209-23" title="23"><span class="co"># Подгонка моделей (займет какое-то время) и </span></a>
+<a class="sourceLine" id="cb209-24" title="24"><span class="co"># сопутствующие вычисления:</span></a>
+<a class="sourceLine" id="cb209-25" title="25"><span class="kw">set.seed</span>(<span class="dv">101</span>)</a>
+<a class="sourceLine" id="cb209-26" title="26">cryptos_bsts_fit &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-27" title="27"><span class="st">  </span><span class="kw">filter</span>(coin <span class="op">%in%</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">unique</span>(coin), <span class="dt">size =</span> <span class="dv">4</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb209-28" title="28"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">log</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-29" title="29"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> coin, <span class="dt">values_from =</span> y) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-30" title="30"><span class="st">  </span><span class="kw">arrange</span>(ds) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-31" title="31"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>ds) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-32" title="32"><span class="st">  </span><span class="kw">lapply</span>(., fit_bsts) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb209-33" title="33"><span class="st">  </span><span class="kw">lapply</span>(., <span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb209-34" title="34">    fit &lt;-<span class="st"> </span><span class="kw">get_bsts_fit</span>(x) </a>
+<a class="sourceLine" id="cb209-35" title="35">    x[[<span class="st">&#39;fit&#39;</span>]] &lt;-<span class="st"> </span>fit</a>
+<a class="sourceLine" id="cb209-36" title="36">    <span class="kw">return</span>(x)</a>
+<a class="sourceLine" id="cb209-37" title="37">  }) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-38" title="38"><span class="st">  </span><span class="kw">lapply</span>(., <span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb209-39" title="39">    <span class="kw">tibble</span>(<span class="dt">idx =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(x<span class="op">$</span>fit),</a>
+<a class="sourceLine" id="cb209-40" title="40">           <span class="dt">y =</span> <span class="kw">as.numeric</span>(x<span class="op">$</span>original.series), <span class="dt">fitted_y =</span> x<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb209-41" title="41">  }) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-42" title="42"><span class="st">  </span><span class="kw">bind_rows</span>(., <span class="dt">.id =</span> <span class="st">&quot;coin&quot;</span>)</a>
+<a class="sourceLine" id="cb209-43" title="43"></a>
+<a class="sourceLine" id="cb209-44" title="44"><span class="co"># Визуализация результатов подгонки моделей</span></a>
+<a class="sourceLine" id="cb209-45" title="45">cryptos_bsts_fit <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb209-46" title="46"><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb209-47" title="47"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(idx, y), <span class="dt">col =</span> <span class="st">&quot;skyblue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb209-48" title="48"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(idx, fitted_y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb209-49" title="49"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>coin, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:cryptos-bsts-fits"></span>
+<img src="time_series_ru_files/figure-html/cryptos-bsts-fits-1.png" alt="Пример подгонки байесовской структурной модели с одинаковым набором компонент к четырем случайно выбранным временным рядам из таблицы cryptos. Синими полупрозрачными точками показаны обучающие данные. Черные линии соответствуют аппроксимированным модельным значениям" width="100%"  />
+<p class="caption">
+РИСУНОК 13.1: Пример подгонки байесовской структурной модели с одинаковым набором компонент к четырем случайно выбранным временным рядам из таблицы <code>cryptos</code>. Синими полупрозрачными точками показаны обучающие данные. Черные линии соответствуют аппроксимированным модельным значениям
+</p>
+</div>
+<p>Для кластеризации временных рядов <code>cryptos</code> мы воспользуемся несколькими количественными показателями, которые можно извелечь и <code>bsts</code>–объектов в готовом виде или рассчитать самостоятельно. Ниже приведен код функции, которая поможет нам выполнить подгонку модели к каждому временному ряду и получить необходимые показатели в табличном виде:</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb210-1" title="1">get_bsts_features &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</a>
+<a class="sourceLine" id="cb210-2" title="2">  </a>
+<a class="sourceLine" id="cb210-3" title="3">  <span class="co"># спецификация и подгонка модели</span></a>
+<a class="sourceLine" id="cb210-4" title="4">  y &lt;-<span class="st"> </span>df<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb210-5" title="5">  ss &lt;-<span class="st"> </span><span class="kw">AddLocalLinearTrend</span>(<span class="kw">list</span>(), y)</a>
+<a class="sourceLine" id="cb210-6" title="6">  ss &lt;-<span class="st"> </span><span class="kw">AddAr</span>(ss, y, <span class="dt">lag =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb210-7" title="7">  m &lt;-<span class="st"> </span><span class="kw">bsts</span>(y, ss, <span class="dt">niter =</span> <span class="dv">1500</span>, <span class="dt">ping =</span> <span class="dv">0</span>, <span class="dt">seed =</span> <span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb210-8" title="8">  </a>
+<a class="sourceLine" id="cb210-9" title="9">  <span class="co"># извлечение готовых показателей и добавление их в таблицу:</span></a>
+<a class="sourceLine" id="cb210-10" title="10">  s &lt;-<span class="st"> </span><span class="kw">summary</span>(m)</a>
+<a class="sourceLine" id="cb210-11" title="11">  result &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb210-12" title="12">    <span class="dt">residual_sd =</span> s<span class="op">$</span>residual.sd,</a>
+<a class="sourceLine" id="cb210-13" title="13">    <span class="dt">prediction_sd =</span> s<span class="op">$</span>prediction.sd,</a>
+<a class="sourceLine" id="cb210-14" title="14">    <span class="dt">r_square =</span> s<span class="op">$</span>rsquare,</a>
+<a class="sourceLine" id="cb210-15" title="15">    <span class="dt">harvey_stat =</span> s<span class="op">$</span>relative.gof,</a>
+<a class="sourceLine" id="cb210-16" title="16">    <span class="dt">trend_level_sigma_mean =</span> <span class="kw">mean</span>(m<span class="op">$</span>sigma.trend.level),</a>
+<a class="sourceLine" id="cb210-17" title="17">    <span class="dt">trend_level_sigma_sd =</span> <span class="kw">sd</span>(m<span class="op">$</span>sigma.trend.level),</a>
+<a class="sourceLine" id="cb210-18" title="18">    <span class="dt">trend_slope_sigma_mean =</span> <span class="kw">mean</span>(m<span class="op">$</span>sigma.trend.slope),</a>
+<a class="sourceLine" id="cb210-19" title="19">    <span class="dt">trend_slope_sigma_sd =</span> <span class="kw">sd</span>(m<span class="op">$</span>sigma.trend.slope),</a>
+<a class="sourceLine" id="cb210-20" title="20">    <span class="dt">ar1_coef_mean =</span> <span class="kw">mean</span>(m<span class="op">$</span>AR1.coefficients),</a>
+<a class="sourceLine" id="cb210-21" title="21">    <span class="dt">ar1_coef_sd =</span> <span class="kw">sd</span>(m<span class="op">$</span>AR1.coefficients),</a>
+<a class="sourceLine" id="cb210-22" title="22">    <span class="dt">ar1_sigma_mean =</span> <span class="kw">mean</span>(m<span class="op">$</span>AR1.sigma),</a>
+<a class="sourceLine" id="cb210-23" title="23">    <span class="dt">ar1_sigma_sd =</span> <span class="kw">sd</span>(m<span class="op">$</span>AR1.sigma),</a>
+<a class="sourceLine" id="cb210-24" title="24">    <span class="dt">final_state_mean =</span> m<span class="op">$</span>final.state <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowSums</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mean</span>(),</a>
+<a class="sourceLine" id="cb210-25" title="25">    <span class="dt">final_state_sd =</span> m<span class="op">$</span>final.state <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowSums</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sd</span>(),</a>
+<a class="sourceLine" id="cb210-26" title="26">    <span class="dt">loglik_mean =</span> <span class="kw">mean</span>(m<span class="op">$</span>log.likelihood),</a>
+<a class="sourceLine" id="cb210-27" title="27">    <span class="dt">loglik_sd =</span> <span class="kw">sd</span>(m<span class="op">$</span>log.likelihood)</a>
+<a class="sourceLine" id="cb210-28" title="28">  )</a>
+<a class="sourceLine" id="cb210-29" title="29">  </a>
+<a class="sourceLine" id="cb210-30" title="30">  <span class="kw">return</span>(result)</a>
+<a class="sourceLine" id="cb210-31" title="31">  </a>
+<a class="sourceLine" id="cb210-32" title="32">}</a></code></pre></div>
+<p>Применим функцию <code>get_bsts_features</code> к таблице <code>cryptos</code> (выполнение этого кода займет около 5 минут):</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" title="1">cryptos_bsts_features &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb211-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb211-3" title="3"><span class="st">  </span><span class="kw">do</span>(<span class="kw">get_bsts_features</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb211-4" title="4"><span class="st">  </span><span class="kw">ungroup</span>()</a></code></pre></div>
+<p>Для кластеризации анализируемых временных рядов на основе полученных описательных признаков воспользуемся методом <span class="math inline">\(k\)</span> средних c <span class="math inline">\(k=4\)</span> (предварительно выполнив стандартизацию данных и применив метод PCA для удаления корреляции между отдельными признаками):</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" title="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)</a>
+<a class="sourceLine" id="cb212-2" title="2">pca_bsts_features &lt;-<span class="st"> </span>cryptos_bsts_features <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb212-3" title="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>coin) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb212-4" title="4"><span class="st">  </span><span class="kw">prcomp</span>(<span class="dt">scale =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb212-5" title="5"></a>
+<a class="sourceLine" id="cb212-6" title="6"><span class="co"># Первые пять главных компонент объясняют примерно 97%</span></a>
+<a class="sourceLine" id="cb212-7" title="7"><span class="co"># исходной дисперсии данных (результат не приводится</span></a>
+<a class="sourceLine" id="cb212-8" title="8"><span class="co"># для экономии места):</span></a>
+<a class="sourceLine" id="cb212-9" title="9"><span class="co"># summary(pca_bsts_features)</span></a>
+<a class="sourceLine" id="cb212-10" title="10"></a>
+<a class="sourceLine" id="cb212-11" title="11"><span class="co"># Кластеризация:</span></a>
+<a class="sourceLine" id="cb212-12" title="12"><span class="kw">set.seed</span>(<span class="dv">1984</span>)</a>
+<a class="sourceLine" id="cb212-13" title="13">cl_bsts &lt;-<span class="st"> </span>cryptos_bsts_features <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb212-14" title="14"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb212-15" title="15"><span class="st">  </span><span class="kw">bind_cols</span>(., <span class="kw">as_tibble</span>(pca_bsts_features<span class="op">$</span>x)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb212-16" title="16"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(PC1<span class="op">:</span>PC5) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb212-17" title="17"><span class="st">  </span><span class="kw">kmeans</span>(., <span class="dt">centers =</span> <span class="dv">4</span>, <span class="dt">nstart =</span> <span class="dv">50</span>)</a></code></pre></div>
+<p>Изобразим теперь исходные временные ряды, сгруппировав их в соответствии с результатами выполненного кластерного анализа:</p>
+
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" title="1"><span class="kw">require</span>(ggrepel)</a>
+<a class="sourceLine" id="cb213-2" title="2"></a>
+<a class="sourceLine" id="cb213-3" title="3">cryptos_bsts_features <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cluster =</span> <span class="kw">paste0</span>(<span class="st">&quot;C&quot;</span>, cl_bsts<span class="op">$</span>cluster)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-5" title="5"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(coin, cluster) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-6" title="6"><span class="st">  </span><span class="kw">inner_join</span>(., cryptos, <span class="dt">by =</span> <span class="st">&quot;coin&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-7" title="7"><span class="st">  </span><span class="kw">group_by</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">ifelse</span>(ds <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(ds), coin, <span class="ot">NA</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-9" title="9"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(ds, y, <span class="dt">group =</span> coin)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb213-10" title="10"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb213-11" title="11"><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="kw">aes</span>(<span class="dt">label =</span> label),</a>
+<a class="sourceLine" id="cb213-12" title="12">                  <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">nudge_x =</span> <span class="dv">50</span>, <span class="dt">segment.size =</span> <span class="fl">0.4</span>,</a>
+<a class="sourceLine" id="cb213-13" title="13">                  <span class="dt">segment.color =</span> <span class="st">&quot;gray60&quot;</span>, <span class="dt">point.padding =</span> <span class="fl">0.2</span>,</a>
+<a class="sourceLine" id="cb213-14" title="14">                  <span class="dt">force =</span> <span class="dv">4</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb213-15" title="15"><span class="st">  </span><span class="kw">scale_y_log10</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb213-16" title="16"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cluster, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb213-17" title="17"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb213-18" title="18"><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="kw">as.Date</span>(<span class="st">&quot;2018-01-01&quot;</span>), <span class="kw">as.Date</span>(<span class="st">&quot;2020-08-01&quot;</span>)))</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:cryptos-bsts-clust"></span>
+<img src="time_series_ru_files/figure-html/cryptos-bsts-clust-1.png" alt="Результат кластеризации временных рядов из таблицы cryptos по методу \(k\) средних на основе количественных показателей bsts–моделей" width="100%"  />
+<p class="caption">
+РИСУНОК 13.2: Результат кластеризации временных рядов из таблицы <code>cryptos</code> по методу <span class="math inline">\(k\)</span> средних на основе количественных показателей <code>bsts</code>–моделей
+</p>
+</div>
+<p>Представленный на рис. <a href="ch-model-based-clustering.html#fig:cryptos-bsts-clust">13.2</a> результат заметно отличается от выполненных нами ранее кластеризаций на основе исходных данных (гл. <a href="ch-ts-clustering-by-raw-data.html#ch-ts-clustering-by-raw-data">11</a>) и по описательным признакам (гл. <a href="ch-features-based-clustering.html#ch-features-based-clustering">12</a>). Это наблюдение еще раз подчеркивает необходимость применения нескольких вариантов кластеризации для нахождения решения, которое имеет смысл с т.з. его дальнейшего практического использования.</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-features-based-clustering.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

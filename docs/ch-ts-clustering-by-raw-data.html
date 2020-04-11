@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 11 Кластеризация по исходным данным | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 11 Кластеризация по исходным данным | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 11 Кластеризация по исходным данным | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-ts-clustering-task.html"/>
+<link rel="next" href="ch-features-based-clustering.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-ts-clustering-by-raw-data" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 11</span> Кластеризация по исходным данным</h1>
+<p>Кластеризация по исходным данным подойдет для ситуаций, когда количество анализируемых временных рядов и их длина относительно невелики (иначе могут потребоваться значительные вычислительные ресурсы). Расстояние между двумя временными рядами можно выразить при помощи многих мер, однако, как показано ниже, не все меры одинаково хорошо подходят для этого.</p>
+<div id="dtw-расстояние" class="section level2">
+<h2><span class="header-section-number">11.1</span> DTW-расстояние</h2>
+<p>В кластерном анализе и многих других приложениях для описания различий между объектами широко используется <em>евклидово расстояние</em>. В случае с двумя временными рядами <span class="math inline">\(x_i\)</span> и <span class="math inline">\(y_i\)</span>, имеющими одинаковый интервал регистрации <span class="math inline">\(n\)</span> наблюдений, оно вычисляется следущим образом (см. также рис. <a href="ch-ts-clustering-by-raw-data.html#fig:ts-euclid-example">11.1</a>): <span class="math display">\[ d_E = \sqrt{\sum_{i=1}^n (x_{i} - y_{i})^2}.\]</span></p>
+
+<div class="figure" style="text-align: center"><span id="fig:ts-euclid-example"></span>
+<img src="time_series_ru_files/figure-html/ts-euclid-example-1.png" alt="Евклидово расстояние между двумя временными рядами вычисляется как квадратный корень из суммы квадратов расстояний от каждого \(i\)–го наблюдения одного ряда до \(i\)–го наблюдения другого ряда (показаны светло-серыми вертикальными линиями). В качестве примера использованы данные по стоимости криптовалют ethereum (верхний ряд) и litecoin (нижний ряд) за первые 6 месяцев 2019 г." width="100%" />
+<p class="caption">
+РИСУНОК 11.1: Евклидово расстояние между двумя временными рядами вычисляется как квадратный корень из суммы квадратов расстояний от каждого <span class="math inline">\(i\)</span>–го наблюдения одного ряда до <span class="math inline">\(i\)</span>–го наблюдения другого ряда (показаны светло-серыми вертикальными линиями). В качестве примера использованы данные по стоимости криптовалют <code>ethereum</code> (верхний ряд) и <code>litecoin</code> (нижний ряд) за первые 6 месяцев 2019 г.
+</p>
+</div>
+<p>К сожалению, евклидово расстояние не всегда является адекватной мерой различий между двумя временными рядами, поскольку оно плохо отражает <em>форму</em> сравниваемых рядов. Для пояснения этого утверждение предположим, что мы создали копию некоторого временного ряда и сдвинули ее по оси времени вправо на несколько шагов. Рассчитав евклидово расстояние между оригиналом и копией, мы бы выяснили, что оно существенно отличается от нуля. Хотя это и ожидаемый результат, в определенной степени он противоречит интуиции — ведь форма обоих рядов идентична! Единственная разница между ориналом и копией в том, что регистрация наблюдений оригинала началась на несколько временных шагов раньше.</p>
+<p>Для решения этой проблемы были разработаны специальные меры расстояния, среди которых особое место занимает т.н. DTW–расстояние, основанное на алгоритме <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%B4%D0%B8%D0%BD%D0%B0%D0%BC%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B9_%D1%82%D1%80%D0%B0%D0%BD%D1%81%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D0%B8_%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D0%BE%D0%B9_%D1%88%D0%BA%D0%B0%D0%BB%D1%8B">динамической трансформации временной шкалы</a> (Dynamic Time Warping). Впервые эта мера была применена в 1970–х гг. в задаче по распознаванию речи для устранения проблемы, связанной с разной скоростью произнесения одинаковых фраз разными людьми.</p>
+<!-- (ref:ts-shifted-caption) Пример двух временных рядов с идентичной формой, но сдвинутых относительно друг друга по временной шкале -->
+<!-- ```{r ts-shifted, fig.cap='(ref:ts-shifted-caption)', out.width='100%', fig.asp=.6, echo=FALSE} -->
+<!-- shift <- 3 -->
+<!-- tibble(time = rep(c(t, 30:(30+shift-1)), 2), -->
+<!--        ts = rep(c("оригинал", "копия"), each = n + shift), -->
+<!--        value = c(ts_x, rep(NA, shift), rep(NA, shift), ts_x )) %>%  -->
+<!--   ggplot(., aes(time, value, col = ts)) + -->
+<!--   geom_line() + -->
+<!--   geom_point(size = 2) + theme_minimal() -->
+<!-- ``` -->
+<p>Как следует из его названия, алгоритм DTW трансформирует временную шкалу (растягивает или сжимает) с целью достичь <em>оптимального сопоставления</em> (optimal matching), или <em>оптимального выравнивания</em> (optimal alignment), двух последовательностей. Проще говоря, ставится задача расположить два временных ряда относительно друг друга таким образом, чтобы расстояние между ними оказалось минимальным.</p>
+<!-- (ref:eucl-vs-dtw-caption) Евклидово расстояние между двумя временными рядами вычисляется как квадратный корень из суммы квадратов расстояний от каждого $t$-го наблюдения одного ряда до $t$-го наблюдения другого ряда. DTW-расстояние вычисляется более сложным образом, который позволяет учесть форму обоих рядов (см. объяснения в тексте). _По_: @ratanamahatana_keogh_2004 -->
+<!-- ```{r eucl-vs-dtw, fig.cap='(ref:eucl-vs-dtw-caption)', out.width='50%', fig.align='center', echo=FALSE} -->
+<!-- knitr::include_graphics("figures/dtw_vs_euclidean_ru.png") -->
+<!-- ``` -->
+<p>Предположим, что мы сравниваем два временных ряда <span class="math inline">\(Q = (q_1, q_2, \dots, q_n)\)</span> и <span class="math inline">\(R = (r_1, r_2, \dots, r_m)\)</span> (эти обозначения происходят от часто используемых в англоязычной литературе терминов “query” — “запрос”, и “reference” — “эталон”). Символами <span class="math inline">\(i = 1 \dots n\)</span> и <span class="math inline">\(j = 1 \dots m\)</span> обозначим соответствующие индексные номера наблюдений из этих двух рядов.</p>
+<p>Алгоритм DTW включает две основные стадии. На первой стадии составляют т.н. <em>матрицу локальных потерь</em> <span class="math inline">\(lcm\)</span> (от “Local Cost Matrix”) порядка <span class="math inline">\(n \times m\)</span>, каждый элемент <span class="math inline">\(lcm(i, j)\)</span> которой содержит расстояние между парой наблюдений <span class="math inline">\(q_i\)</span> и <span class="math inline">\(r_j\)</span>. Обычно используют евклидово или манхэттенское расстояния, хотя можно воспользоваться и другими подходящими случаю мерами.</p>
+<p>На второй стадии находят такой <em>путь трансформации</em> (warping path) <span class="math inline">\(\phi = \{(1, 1), \dots, (n, m)\}\)</span> через эту матрицу, который минимизирует суммарное расстояние между рядами <span class="math inline">\(Q\)</span> и <span class="math inline">\(R\)</span>. Это расстояние вычисляется следующим образом: <span class="math display">\[DTW(Q, R) = \underset{\phi}{min} \left(\sum \frac{m_{\phi} lcm(k)}{M_{\phi}}\right), \forall k \in \phi,\]</span> где <span class="math inline">\(m_{\phi} &gt; 0\)</span> — весовой коэффициент, ассоциированный с каждым элементом <span class="math inline">\(\phi\)</span>, а <span class="math inline">\(M_{\phi}\)</span> — константа, нормализующая длину пути <span class="citation">(Giorgino <a href="ch-literature.html#ref-giorgino_2009" role="doc-biblioref">2009</a>)</span>.</p>
+<p>Поскольку число возможных путей трансформации экпоненциально возрастает с длиной сравниваемых последовательностей, то для нахождения оптимального пути за конечное время вычислений вводят ряд ограничений (constraints). Одно из важных <em>локальных ограничений</em> требует, чтобы путь трансформации был <em>монотонным</em>, т.е. на каждом шаге пути индексам <span class="math inline">\(i\)</span> и <span class="math inline">\(j\)</span> разрешается только возрастать. Это ограничение задается с помощью т.н. <em>шаговых паттернов</em> (step patterns), которые определяют направление разрешенных переходов между ячейками таблицы <span class="math inline">\(lcm\)</span> на каждом шаге. В литературе можно встретить несколько таких шаговых паттернов <span class="citation">(Sarda-Espinosa <a href="ch-literature.html#ref-sarda_2019" role="doc-biblioref">2019</a>)</span>, однако чаще всего используются <code>symmetric1</code> и <code>symmetric2</code> (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dtw-step-patterns">11.2</a>).</p>
+
+<div class="figure" style="text-align: center"><span id="fig:dtw-step-patterns"></span>
+<img src="figures/dtw_step_patterns.png" alt="Наиболее распространенные шаговые паттерны, используемые для нахождения оптимального пути трансформации в алгоритме DTW. Линии, соединяющие точки, соответствуют разрешенными направлениям перехода между ячейками таблицы \(lcm\) на каждом шаге пути, а числа рядом с этими линиями — весовым коэффициентам переходов \(m_{\phi}\)" width="95%" />
+<p class="caption">
+РИСУНОК 11.2: Наиболее распространенные шаговые паттерны, используемые для нахождения оптимального пути трансформации в алгоритме DTW. Линии, соединяющие точки, соответствуют разрешенными направлениям перехода между ячейками таблицы <span class="math inline">\(lcm\)</span> на каждом шаге пути, а числа рядом с этими линиями — весовым коэффициентам переходов <span class="math inline">\(m_{\phi}\)</span>
+</p>
+</div>
+<p>Помимо локальных вводятся также и <em>глобальные ограничения</em>. Важнейшим из них является ограничение на ширину <em>окна трансформации</em> (warping window), в пределах которого разрешается прокладывать путь трансформации. Разработано множество разновидностей таких окон, но чаще всего используется т.н. <em>окно Сакэ–Чиба</em> (Sakoe–Chiba window), которое охватывает определенную симметричную область вдоль диагонали матрицы <span class="math inline">\(lcm\)</span> (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:sakoe-chiba">11.3</a>).</p>
+
+<div class="figure" style="text-align: center"><span id="fig:sakoe-chiba"></span>
+<img src="time_series_ru_files/figure-html/sakoe-chiba-1.png" alt="Пример окна Сакэ–Чиба" width="70%" />
+<p class="caption">
+РИСУНОК 11.3: Пример окна Сакэ–Чиба
+</p>
+</div>
+<p>На рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dtw-graph">11.4</a> показан стандартный способ визулизации матрицы локальных потерь <span class="math inline">\(lcm\)</span> (прямоугольник в центре диаграммы), найденного пути трансформации (линия, проходящая примерно по диагонали матрицы) и сравниваемых временных рядов. Индексацию матрицы принято начинать в левом нижнем углу прямоугольника (<span class="math inline">\(lcm(1, 1)\)</span>), а заканчивать в правом верхнем (<span class="math inline">\(lcm(m, n)\)</span>). Слева от прямоугольника принято изображать “эталон” (reference), т.е. временной ряд, с которым сравнивается изображенный внизу матрицы “запросный” временной ряд (query). Для построения диаграммы был использован пакет <code>dtw</code> <span class="citation">(Giorgino <a href="ch-literature.html#ref-giorgino_2009" role="doc-biblioref">2009</a>)</span>.</p>
+
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" title="1"><span class="kw">require</span>(dtw)</a>
+<a class="sourceLine" id="cb182-2" title="2"></a>
+<a class="sourceLine" id="cb182-3" title="3">alignment &lt;-<span class="st"> </span><span class="kw">dtw</span>(</a>
+<a class="sourceLine" id="cb182-4" title="4">  <span class="dt">x =</span> ether_lite_wide<span class="op">$</span>litecoin, <span class="co"># &quot;запрос&quot; </span></a>
+<a class="sourceLine" id="cb182-5" title="5">  <span class="dt">y =</span> ether_lite_wide<span class="op">$</span>ethereum, <span class="co"># &quot;эталон&quot;</span></a>
+<a class="sourceLine" id="cb182-6" title="6">  <span class="dt">step.pattern =</span> symmetric1,    <span class="co"># шаговый паттерн</span></a>
+<a class="sourceLine" id="cb182-7" title="7">  <span class="dt">window.type =</span> <span class="st">&quot;sakoechiba&quot;</span>,   <span class="co"># тип окна трансформации</span></a>
+<a class="sourceLine" id="cb182-8" title="8">  <span class="dt">window.size =</span> <span class="dv">7</span>,              <span class="co"># размер окна</span></a>
+<a class="sourceLine" id="cb182-9" title="9">  <span class="dt">keep.internals =</span> <span class="ot">TRUE</span>)        <span class="co"># сохранение промежуточных вычислений</span></a>
+<a class="sourceLine" id="cb182-10" title="10"></a>
+<a class="sourceLine" id="cb182-11" title="11"><span class="kw">plot</span>(alignment, <span class="dt">type =</span> <span class="st">&quot;threeway&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb182-12" title="12">     <span class="dt">xlab =</span> <span class="st">&quot;Индексный номер эталона&quot;</span>, </a>
+<a class="sourceLine" id="cb182-13" title="13">     <span class="dt">ylab =</span> <span class="st">&quot;Индексный номер запроса&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dtw-graph"></span>
+<img src="time_series_ru_files/figure-html/dtw-graph-1.png" alt="Визулизация оптимального пути DTW–трансформации, найденного при сопоставлении временных рядов стоимости криптовалют ethereum и litecoin" width="100%" />
+<p class="caption">
+РИСУНОК 11.4: Визулизация оптимального пути DTW–трансформации, найденного при сопоставлении временных рядов стоимости криптовалют <code>ethereum</code> и <code>litecoin</code>
+</p>
+</div>
+<p>На рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dtw-example-matching">11.5</a> приведен результат оптимального сопоставления временных рядов стоимости криптовалют <code>ethereum</code> и <code>litecoin</code> с помощью алгоритма DTW.</p>
+
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" title="1"><span class="kw">plot</span>(alignment, <span class="dt">type =</span> <span class="st">&quot;twoway&quot;</span>,</a>
+<a class="sourceLine" id="cb183-2" title="2">     <span class="dt">xlab =</span> <span class="st">&quot;Индексный номер эталона&quot;</span>, </a>
+<a class="sourceLine" id="cb183-3" title="3">     <span class="dt">ylab =</span> <span class="st">&quot;Запросный ряд&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dtw-example-matching"></span>
+<img src="time_series_ru_files/figure-html/dtw-example-matching-1.png" alt="Результат оптимального сопоставления временных рядов стоимости криптовалют ethereum (красная прерывистая линия) и litecoin (черная сплошная линия), полученный с помощью алгоритма DTW (сравните с рис. 11.1). В алгоритме были использованы параметры, приведенные в коде для рис. 11.4" width="100%" />
+<p class="caption">
+РИСУНОК 11.5: Результат оптимального сопоставления временных рядов стоимости криптовалют <code>ethereum</code> (красная прерывистая линия) и <code>litecoin</code> (черная сплошная линия), полученный с помощью алгоритма DTW (сравните с рис. <a href="ch-ts-clustering-by-raw-data.html#fig:ts-euclid-example">11.1</a>). В алгоритме были использованы параметры, приведенные в коде для рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dtw-graph">11.4</a>
+</p>
+</div>
+<!-- Чем больше наблюдений в каждом из сравниваемых временных рядов, тем больше существует возможных путей трансформации. Поэтому для достижения конечного времени вычислений при поиске оптимального пути накладываются следующие ограничения: -->
+<!-- https://www.psb.ugent.be/cbd/papers/gentxwarper/DTWalgorithm.htm -->
+<!-- * _монотонность_: путь никогда не "поворачивает назад", т.е. индексы $i$ и $j$ могут только возрастать; -->
+<!-- * _непрерывность_: на каждой итерации путь прирастает только на один шаг, скачки не разрешаются; -->
+<!-- * _граничные условия_: путь начинается в левой нижней ячейке матрицы и заканчивается в правой верхней ячейке; -->
+<!-- * ограниченная ширина _окна трансформации_ (warping window): путь не может значительно отклоняться от диагонали матрицы; -->
+<!-- * ограниченный _угол наклона пути_: этот угол не может быть слишком большим или слишком малым во избежание сопоставления коротких последовательностей одного временного ряда длинным последовательностям другого ряда. Это условие обычно выражают как отношение $p/q$, где $p$ - дозволенное число шагов в одном направлении (горизонтальном или вертикальном), а $q$ - минимальное число шагов строго по диагонали матрицы, которое путь должен проделать после $p$ шагов в одном направлении. -->
+</div>
+<div id="пакет-dtwclust" class="section level2">
+<h2><span class="header-section-number">11.2</span> Пакет <code>dtwclust</code></h2>
+<p>В R есть несколько пакетов для выполнения кластерного анализа и почти любой из них можно было бы использовать для кластеризации временных рядов. Однако, как это обычно бывает, удобнее иметь один пакет, в котором эффективным образом реализовано большинство подходов, необходимых для решения конкретного круга задач. В случае с временными рядами одним из таких пакетов является <code>dtwclust</code>, который мы и будем использовать в рассматриваемых ниже примерах.</p>
+<p>В пакете <code>dtwclust</code> (<span class="citation">Sarda-Espinosa (<a href="ch-literature.html#ref-sarda_2019" role="doc-biblioref">2019</a>)</span>) реализовано большое количество алгоритмов кластеризации временных рядов, включая несколько недавно разработанных методов. За исключением классической иерархической кластеризации, код для всех этих алгоритмов написан специально с целью добиться максимальной скорости вычислений. Вычислительная оптимизация алгоритмов была выполнена исходя из предположения, что в большинстве случаев пользователи будут применять DWT–расстояние в качестве меры различий между временными рядами (отсюда название пакета). Однако имеется возможность использовать и другие меры расстояния, включая пользовательские. Кроме того, с помощью <code>dtwclust</code> можно одновременно сравнить несколько алгоритмов и выбрать оптимальное решение на основе одной или нескольких метрик качества кластеризации.</p>
+<p>Главной функцией пакета <code>dtwclust</code> является <code>tsclust()</code>, у которой есть следующие аргументы:</p>
+<ul>
+<li><code>series</code> — список из нескольких временных рядов (<em>не обязятельно</em> одинаковой длины), матрица с числовыми значениями или таблица данных. Поскольку все функции <code>dtwclust</code> так или иначе работают со списками временных рядов, то лучше всего на этот аргумент подавать сразу именно такой список. Для формирования списка временных рядов из матриц и таблиц данных можно применить вспомогательную функцию <code>tslist()</code> (при этом предполагается что каждая <em>строка</em> в матрице или таблице данных представляет собой один временной ряд).</li>
+<li><code>type</code> — тип кластеризации: <code>"partitional"</code> (с разбиением), <code>"hierarchical"</code> (иерархическая), <code>"tadpole"</code> <span class="citation">(по алгоритму <a href="https://www.researchgate.net/profile/Nurjahan_Begum/publication/311411265_A_General_Framework_for_Density_Based_Time_Series_Clustering_Exploiting_a_Novel_Admissible_Pruning_Strategy/links/589b6d0c458515e5f45480a7/A-General-Framework-for-Density-Based-Time-Series-Clustering-Exploiting-a-Novel-Admissible-Pruning-Strategy.pdf" role="doc-biblioref">TADPole</a>; Begum et al. <a href="ch-literature.html#ref-begum_et_al_2015" role="doc-biblioref">2016</a>)</span> или <code>"fuzzy"</code> (нечеткая кластеризация).</li>
+<li><code>k</code> — запрашиваемое число кластеров. Это может быть также вектор из нескольких целых чисел, если стоит задача проверить качество кластеризации для нескольких решений.</li>
+<li><code>preproc</code> — имя функции, выполняющей предварительную обработку данных. По умолчанию принимает значение <code>NULL</code>. Если аргументу <code>centroid</code> (см. ниже) присвоено значение <code>"shape"</code> (“форма”), то <code>preproc</code> автоматически примет значение <code>zscore</code>, что соответствует функции из пакета <code>dtwclust</code>, которая выполняет стандартизацию данных.</li>
+<li><code>distance</code> — название меры расстояния, зарегистрированное в регистре функции <code>dist()</code> из пакета <code>proxy</code> (см. объяснение ниже). Если <code>type = "tadpole"</code>, то этот аргумент будет проигнорирован.</li>
+<li><code>centroid</code> — либо строковое значение с названием метода нахождения центроидов (<code>"mean"</code>, <code>"median"</code>, <code>"shape"</code> и др.), либо функция, выполняющая нахождение центроидов.</li>
+<li><code>control</code> — список с перечнем управляющих параметров алгоритма, заданного через аргумент <code>type</code>. Для формирования подобных списков служат специальные функции: <code>partitional_control()</code>, <code>hierarchical_control()</code>, <code>fuzzy_control()</code> и <code>tadpole_control()</code> (см. справочный файл, доступный по команде <code>?"tadpole_control"</code> и примеры ниже).</li>
+<li><code>args</code> — вложенный список параметров, определяющих процесс подготовки данных к анализу (элемент списка с именем <code>preproc</code>), расчета меры расстояния (элемент <code>dist</code>) и центроидов (прототипов) кластеров (элемент <code>cent</code>). Для формирования этого списка служит специальная функция <code>tsclust_args()</code>.</li>
+<li><code>seed</code> — значение зерна генератора случайных чисел (позволяет воспроизвести результаты вычислений).</li>
+<li><code>trace</code> — логический аргумент (по умолчанию равен <code>FALSE</code>). При значении <code>TRUE</code> на экран будет выводиться больше служебной информации о ходе вычислений.</li>
+<li><code>error.check</code> — логический аргумент (по умолчанию равен <code>TRUE</code>). Включает или выключает проверку правильности значений перечисленных выше аргументов перед началом вычислений.</li>
+</ul>
+<p>Функция <code>tsclust()</code> возвращает объект класса <code>TSClusters</code>, который реализован с использованием <code>S4</code> — одной из разновидностей классов, применяемых в R для объектно-ориентированного программирования. Отдельные атрибуты объектов класса S4 (“слоты”) можно извлекать с помощью оператора <code>@</code> (в отличие от обычного <code>$</code>, принятого в <code>S3</code>–объектах). Подробную документацию по классу <code>TSClusters</code> и его методами можно найти в справочных файлах, доступных по командам <code>?"TSClusters-class"</code> и <code>?"tsclusters-methods"</code> соответственно.</p>
+<p>Пакет <code>dtwclust</code> во многом полагается на другой широко используемый пакет — <code>proxy</code> (автоматически устанавливается и загружается одновременно с <code>dtwclust</code>), в котором реализованы многие меры расстояния. Различная информация о функциях, вычисляющих соответствующие меры расстояния, хранится в специальном объекте–регистре под названием <code>pr_DB</code>. Содержимое регистра можно просмотреть с помощью команды <code>proxy::pr_DB$get_entries()</code> (в целях экономии места пример не приводится). Все зарегистрированные в <code>pr_DB</code> функции автоматически становятся доступными для функции <code>proxy::dist()</code>, которая используется в пакете <code>dtwcust</code>. Это является большим преимуществом дизайна <code>dtwclust</code>, поскольку пользователь получает возможность работать с любой мерой расстояния из <code>pr_DB</code>.</p>
+</div>
+<div id="пример-кластеризации-с-использованием-dtwрасстояния" class="section level2">
+<h2><span class="header-section-number">11.3</span> Пример кластеризации с использованием DTW–расстояния</h2>
+<p>Рассмотрим особенности работы с пакетом <code>dtwclust</code> на примере иерархической кластеризации временных рядов стоимости 22 криптовалют из таблицы <code>cryptos</code>:</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" title="1"><span class="kw">require</span>(dtwclust)</a>
+<a class="sourceLine" id="cb184-2" title="2"></a>
+<a class="sourceLine" id="cb184-3" title="3"><span class="co"># Преобразование исходных данных в список с 22 элементами,</span></a>
+<a class="sourceLine" id="cb184-4" title="4"><span class="co"># содержащими отдельные временные ряды:</span></a>
+<a class="sourceLine" id="cb184-5" title="5">cryptos_list &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">log</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-7" title="7"><span class="st">  </span><span class="kw">pivot_wider</span>(., <span class="dt">names_from =</span> coin, <span class="dt">values_from =</span> y) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-8" title="8"><span class="st">  </span><span class="kw">arrange</span>(ds) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-9" title="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>ds) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-10" title="10"><span class="st">  </span><span class="kw">as.list</span>()</a>
+<a class="sourceLine" id="cb184-11" title="11"></a>
+<a class="sourceLine" id="cb184-12" title="12"><span class="co"># Кластеризация:</span></a>
+<a class="sourceLine" id="cb184-13" title="13">hc_<span class="dv">4</span>_ward &lt;-<span class="st"> </span><span class="kw">tsclust</span>(</a>
+<a class="sourceLine" id="cb184-14" title="14">  cryptos_list,</a>
+<a class="sourceLine" id="cb184-15" title="15">  <span class="dt">k =</span> <span class="dv">4</span>,                 <span class="co"># запрашиваемое число кластеров</span></a>
+<a class="sourceLine" id="cb184-16" title="16">  <span class="dt">type =</span> <span class="st">&quot;hierarchical&quot;</span>, <span class="co"># тип кластеризации</span></a>
+<a class="sourceLine" id="cb184-17" title="17">  <span class="dt">distance =</span> <span class="st">&quot;dtw&quot;</span>,      <span class="co"># мера расстояния</span></a>
+<a class="sourceLine" id="cb184-18" title="18">  <span class="dt">seed =</span> <span class="dv">42</span>,</a>
+<a class="sourceLine" id="cb184-19" title="19">  <span class="dt">control =</span> </a>
+<a class="sourceLine" id="cb184-20" title="20">    <span class="kw">hierarchical_control</span>(<span class="dt">method =</span> <span class="st">&quot;ward.D2&quot;</span>), <span class="co"># метод агломерации</span></a>
+<a class="sourceLine" id="cb184-21" title="21">  <span class="dt">args =</span> </a>
+<a class="sourceLine" id="cb184-22" title="22">    <span class="kw">tsclust_args</span>(<span class="dt">dist =</span> <span class="kw">list</span>(<span class="dt">window.size =</span> <span class="dv">7</span>)) <span class="co"># размер окна Сакэ-Чиба</span></a>
+<a class="sourceLine" id="cb184-23" title="23">  ) </a>
+<a class="sourceLine" id="cb184-24" title="24"></a>
+<a class="sourceLine" id="cb184-25" title="25">hc_<span class="dv">4</span>_ward</a></code></pre></div>
+<pre><code>## hierarchical clustering with 4 clusters
+## Using dtw distance
+## Using PAM (Hierarchical) centroids
+## Using method ward.D2 
+## 
+## Time required for analysis:
+##    user  system elapsed 
+##   14.86    1.86   16.73 
+## 
+## Cluster sizes with average intra-cluster distance:
+## 
+##   size   av_dist
+## 1    5  875.9981
+## 2    7 1340.3730
+## 3    4 1644.0947
+## 4    6  875.1360</code></pre>
+<p>Полученный объект <code>hc_4_ward</code> принадлежит к упомянутому выше классу <code>TSClusters</code> и имеет несколько полезных атрибутов. Например, следующим образом можно просмотреть, к какому кластеру принадлежит каждый временной ряд:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" title="1">hc_<span class="dv">4</span>_ward<span class="op">@</span>cluster</a></code></pre></div>
+<pre><code>##     augur   bitcoin   cardano chainlink      dash    decred  dogecoin       eos 
+##         1         2         3         4         2         1         3         1 
+##  ethereum      iota  litecoin     maker    monero      nano       neo      qtum 
+##         2         4         2         2         2         4         1         1 
+##   stellar    tether     tezos      tron       xrp     zcash 
+##         3         4         4         3         4         2</code></pre>
+<p>Объект <code>hc_4_ward</code> обладает также удобным методом <code>plot()</code>, позволяющим визулизировать полученное кластерное решение. Поскольку мы имеем дело с иерархической кластеризацией, то по умолчанию будет изображена дендрограмма (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dwtclust-hc">11.6</a>):</p>
+
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" title="1"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb188-2" title="2"><span class="kw">plot</span>(hc_<span class="dv">4</span>_ward, <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">sub =</span> <span class="st">&quot;&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dwtclust-hc"></span>
+<img src="time_series_ru_files/figure-html/dwtclust-hc-1.png" alt="Результат иерархической кластеризации 22 временных рядов, выполненной с использованием DTW–расстояния" width="100%" />
+<p class="caption">
+РИСУНОК 11.6: Результат иерархической кластеризации 22 временных рядов, выполненной с использованием DTW–расстояния
+</p>
+</div>
+<p>Применив функцию <code>plot()</code> с аргументом <code>type = "sc"</code>, мы получим изображение анализируемых временных рядов, сгруппированных в соответствии с результатом кластеризации (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dwtclust-hc-sc">11.7</a>). Кроме того, для каждого кластера в виде прерывистой линии будет показан его центроид, или “прототип”. По умолчанию центроиды представляют собой такие временные ряды из исходных данных, которые в среднем ближе всего ко всем остальным рядам из соответствующих кластеров. При необходимости алгоритм расчета центроидов можно изменить с помощью аргумента <code>centroid</code> функции <code>tsclust()</code>.</p>
+
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" title="1"><span class="kw">plot</span>(hc_<span class="dv">4</span>_ward, <span class="dt">type =</span> <span class="st">&quot;sc&quot;</span>) <span class="co"># &quot;sc&quot; значит &quot;series and centroids&quot; </span></a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dwtclust-hc-sc"></span>
+<img src="time_series_ru_files/figure-html/dwtclust-hc-sc-1.png" alt="Временные ряды стоимости 22 криптовалют, сгруппированные в соответствии с кластером, к которому они принадлежат" width="100%" />
+<p class="caption">
+РИСУНОК 11.7: Временные ряды стоимости 22 криптовалют, сгруппированные в соответствии с кластером, к которому они принадлежат
+</p>
+</div>
+<p>Интересно, что для 4–го кластера в качестве центроида алгоритмом был выбран временной ряд <code>tether</code>, который по сравнению с другими рядами выглядит почти как прямая горизонтальная линия. Однако если “присмотреться поближе”, то можно увидеть, что форма этого ряда далека от горизонтальной линии и отчасти напоминает форму других рядов из кластера 4. Для изображения этого центроида достаточно воспользоваться следующей командой (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dwtclust-hc-cent">11.8</a>):</p>
+
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" title="1"><span class="kw">plot</span>(hc_<span class="dv">4</span>_ward, </a>
+<a class="sourceLine" id="cb190-2" title="2">     <span class="dt">type =</span> <span class="st">&quot;centroids&quot;</span>, <span class="co"># включает изображение центроидов</span></a>
+<a class="sourceLine" id="cb190-3" title="3">     <span class="dt">clus =</span> <span class="dv">4</span>)           <span class="co"># изображает только избранные центроиды </span></a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dwtclust-hc-cent"></span>
+<img src="time_series_ru_files/figure-html/dwtclust-hc-cent-1.png" alt="Центроид кластера 4 из объекта hc_4_ward" width="100%" />
+<p class="caption">
+РИСУНОК 11.8: Центроид кластера 4 из объекта <code>hc_4_ward</code>
+</p>
+</div>
+<p>К сожалению, как видно на рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dwtclust-hc-sc">11.7</a>, исходные настройки метода <code>plot()</code> в пакете <code>dtwclust</code> не отличаются особой эстетической привлекательностью: ширина изображающей центроид линии слишком велика, что в сочетании с прерывистостью этой линии затрудняет восприятие графика и понимание свойств временного ряда. К cчастью, метод <code>plot()</code> является лишь оберткой для функций <code>ggplot2</code>, а значит мы можем легко изменить свойства линии (рис. <a href="ch-ts-clustering-by-raw-data.html#fig:dwtclust-hc-cent-modif">11.9</a>):</p>
+
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" title="1"><span class="co"># Аргументы linetype, size и alpha автоматически</span></a>
+<a class="sourceLine" id="cb191-2" title="2"><span class="co"># передаются на функцию geom_line() из пакета ggplot2:</span></a>
+<a class="sourceLine" id="cb191-3" title="3"><span class="kw">plot</span>(hc_<span class="dv">4</span>_ward, <span class="dt">type =</span> <span class="st">&quot;centroids&quot;</span>, <span class="dt">clus =</span> <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb191-4" title="4">     <span class="dt">linetype =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">alpha =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:dwtclust-hc-cent-modif"></span>
+<img src="time_series_ru_files/figure-html/dwtclust-hc-cent-modif-1.png" alt="Результат изменения внешнего вида линии, изображающей центроид одного из кластеров" width="100%" />
+<p class="caption">
+РИСУНОК 11.9: Результат изменения внешнего вида линии, изображающей центроид одного из кластеров
+</p>
+</div>
+<p>Выполненная нами выше кластеризация была основана на фиксированных параметрах (число выделяемых кластеров, метод кластеризации и др.), выбор которых не был определен какими–то особыми соображениями. К сожалению, как это обычно бывает с кластерным анализом, очень трудно сделать уверенное заключение о “правильности” полученного решения. Тем не менее, как было отмечено в разд. <a href="ch-ts-clustering-task.html#ch-ts-clustering-task">10</a>, существует ряд метрик, которые пытаются объективно оценить качество кластеризации. В функции <code>cvi()</code> (от “cluster validity indices”, т.е. “индексы валидности кластеров”) реализовано несколько таких метрик, широко используемых при кластеризации временных рядов (подробнее см. справочный файл, доступный по команде <code>?cvi</code>).</p>
+<p>В качестве примера использования <code>cvi()</code> создадим несколько вариантов кластеризации анализируемых нами временных рядов. Тип кластеризации оставим прежним (<code>"hierarchical"</code>), но будем варьировать запрашиваемое число кластеров и методы агломерации:</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" title="1">k &lt;-<span class="st"> </span><span class="dv">3</span><span class="op">:</span><span class="dv">5</span></a>
+<a class="sourceLine" id="cb192-2" title="2">method &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ward.D2&quot;</span>, <span class="st">&quot;average&quot;</span>, <span class="st">&quot;single&quot;</span>, </a>
+<a class="sourceLine" id="cb192-3" title="3">            <span class="st">&quot;complete&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;mcquitty&quot;</span>)</a></code></pre></div>
+<p>Приведенные значения <code>k</code> и <code>method</code> дают 18 комбинаций параметров. Поскольку расчет DTW–расстояния требует значительных вычислительных ресурсов, построение 18 кластерных решений может занять довольно много времени. Один из способов ускорить эти вычисления заключается в использовании существенно оптимизированной (но ограниченной по возможностям) функции <code>dtw_basic()</code> вместо <code>dtw()</code> для расчета DTW–расстояния. Однако мы воспользуемся другим подходом — параллелизацией вычислений. В пакете <code>dtwclust</code> <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%BD%D0%BE%D0%B3%D0%BE%D0%BF%D0%BE%D1%82%D0%BE%D1%87%D0%BD%D0%BE%D1%81%D1%82%D1%8C#%D0%9A%D1%80%D0%B8%D1%82%D0%B8%D0%BA%D0%B0_%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D0%B8">многопоточные</a> параллельные вычисления выполняются с помощью широко используемого для этих целей пакета <code>foreach</code>. Такие вычисления запустятся автоматически при условии существования необходимого “бэкенда”, который можно создать с помощью еще одного популярного пакета — <code>doParallel</code>:</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" title="1"><span class="kw">require</span>(<span class="st">&quot;doParallel&quot;</span>)</a>
+<a class="sourceLine" id="cb193-2" title="2"></a>
+<a class="sourceLine" id="cb193-3" title="3"><span class="co"># Инициализация локального вычислительного кластера, </span></a>
+<a class="sourceLine" id="cb193-4" title="4"><span class="co"># состоящего из 7 ЦПУ (если нужно, измените это число </span></a>
+<a class="sourceLine" id="cb193-5" title="5"><span class="co"># в соответствии с конфигурацией вашего компьютера)</span></a>
+<a class="sourceLine" id="cb193-6" title="6">cl &lt;-<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb193-7" title="7"><span class="kw">registerDoParallel</span>(cl)</a>
+<a class="sourceLine" id="cb193-8" title="8"></a>
+<a class="sourceLine" id="cb193-9" title="9">hc_par &lt;-<span class="st"> </span><span class="kw">tsclust</span>(</a>
+<a class="sourceLine" id="cb193-10" title="10">  cryptos_list,</a>
+<a class="sourceLine" id="cb193-11" title="11">  <span class="dt">k =</span> k,</a>
+<a class="sourceLine" id="cb193-12" title="12">  <span class="dt">type =</span> <span class="st">&quot;hierarchical&quot;</span>,</a>
+<a class="sourceLine" id="cb193-13" title="13">  <span class="dt">distance =</span> <span class="st">&quot;dtw&quot;</span>,</a>
+<a class="sourceLine" id="cb193-14" title="14">  <span class="dt">seed =</span> <span class="dv">42</span>,</a>
+<a class="sourceLine" id="cb193-15" title="15">  <span class="dt">control =</span> <span class="kw">hierarchical_control</span>(<span class="dt">method =</span> method),</a>
+<a class="sourceLine" id="cb193-16" title="16">  <span class="dt">args =</span> <span class="kw">tsclust_args</span>(<span class="dt">dist =</span> <span class="kw">list</span>(<span class="dt">window.size =</span> <span class="dv">7</span>)),</a>
+<a class="sourceLine" id="cb193-17" title="17">  <span class="dt">trace =</span> <span class="ot">TRUE</span>) <span class="co"># для мониторинга процесса вычислений</span></a></code></pre></div>
+<pre><code>## 
+## Calculating distance matrix...
+## Performing hierarchical clustering...
+## Extracting centroids...
+## 
+##  Elapsed time is 27.94 seconds.</code></pre>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" title="1"><span class="kw">stopCluster</span>(cl) <span class="co"># терминация кластера</span></a>
+<a class="sourceLine" id="cb195-2" title="2"><span class="kw">registerDoSEQ</span>() <span class="co"># возврат к последовательным вычислениям</span></a></code></pre></div>
+<p>Заметьте, что построение всех 18 вариантов кластеризации было выполнено с помощью единственного вызова функции <code>tsclust()</code>. Для этого потребовалось лишь подать векторы с интересующими нас значениями параметров на соответствующие аргументы (<code>k</code> и <code>method</code>). Итогом этих вычислений стал список с 18 элементами, которые содержат отдельные объекты класса <code>TSClusters</code>:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" title="1"><span class="kw">length</span>(hc_par)</a></code></pre></div>
+<pre><code>## [1] 18</code></pre>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" title="1"><span class="kw">class</span>(hc_par[[<span class="dv">1</span>]])</a></code></pre></div>
+<pre><code>## [1] &quot;HierarchicalTSClusters&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;dtwclust&quot;</code></pre>
+<p>Для нахождения “оптимального” решения можно воспользоваться <a href="https://ranalytics.github.io/data-mining/103-Clustering-Quality.html">несколькими индексами</a> “внутренней” валидности кластеров, реализованными в функции <code>cvi()</code>. Поскольку разные индексы могут приводить к разным заключениям о качестве сравниваемых кластеризаций, часто рассчитывают сразу несколько индексов, а затем принимают окончательное заключение на основании простого “большинства голосов”. В приведенном ниже примере мы рассчитаем индекс силуэтов (Silhouette index, <code>"Sil"</code>), индекс Данна (Dunn index, <code>"D"</code>) и индекс Калинского–Харабаша (Calinski–Harabasz index, <code>"CH"</code>). Чем больше каждый из этих индексов, тем лучше соответствующее кластерное решение:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" title="1"><span class="kw">lapply</span>(hc_par, cvi, <span class="dt">type =</span> <span class="kw">c</span>(<span class="st">&quot;Sil&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;CH&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb200-2" title="2"><span class="st">  </span><span class="kw">do.call</span>(rbind, .) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb200-3" title="3"><span class="st">  </span><span class="kw">apply</span>(., <span class="dt">MARGIN =</span> <span class="dv">2</span>, <span class="dt">FUN =</span> which.max)</a></code></pre></div>
+<pre><code>## Sil   D  CH 
+##   2  15   2</code></pre>
+<p>Как видим, два из трех индексов вадидности указывают то, что оптимальным является второе решение (см. также рис. <a href="ch-ts-clustering-by-raw-data.html#fig:hc-optimal-solution">11.10</a>):</p>
+
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" title="1">hc_par[[<span class="dv">2</span>]]</a></code></pre></div>
+<pre><code>## hierarchical clustering with 3 clusters
+## Using dtw distance
+## Using PAM (Hierarchical) centroids
+## Using method average 
+## 
+## Time required for analysis:
+##    user  system elapsed 
+##    1.18    0.22   27.94 
+## 
+## Cluster sizes with average intra-cluster distance:
+## 
+##   size  av_dist
+## 1   11 1654.238
+## 2    1    0.000
+## 3   10 1976.140</code></pre>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" title="1"><span class="co"># график временных рядов, без центроидов:</span></a>
+<a class="sourceLine" id="cb204-2" title="2"><span class="kw">plot</span>(hc_par[[<span class="dv">2</span>]], <span class="dt">type =</span> <span class="st">&quot;series&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hc-optimal-solution"></span>
+<img src="time_series_ru_files/figure-html/hc-optimal-solution-1.png" alt="Результат оптимальной иерархической кластеризации временных рядов cryptos, найденной при помощи трех индексов валидности" width="100%" />
+<p class="caption">
+РИСУНОК 11.10: Результат оптимальной иерархической кластеризации временных рядов <code>cryptos</code>, найденной при помощи трех индексов валидности
+</p>
+</div>
+<p>Рассмотренные выше примеры — это лишь введение в возможности пакета <code>dtwclust</code>. Дополнительную информацию о реализованных в нем методах кластеризации временных рядов можно найти в статье <span class="citation">Sarda-Espinosa (<a href="ch-literature.html#ref-sarda_2019" role="doc-biblioref">2019</a>)</span>.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-ts-clustering-task.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-features-based-clustering.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

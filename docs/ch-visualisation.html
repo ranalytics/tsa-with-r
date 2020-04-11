@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 4 Визуализация временных рядов и их свойств | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 4 Визуализация временных рядов и их свойств | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 4 Визуализация временных рядов и их свойств | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-aggregation.html"/>
+<link rel="next" href="ch-feature-extraction.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-visualisation" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 4</span> Визуализация временных рядов и их свойств</h1>
+<p>Анализ временных рядов, равно как и данных других типов, практически невозможно представить себе без их визуализации в том или ином виде и многочисленные примеры графического представления временных рядов (преимущественно средствами пакета <code>ggplot2</code>) можно встретить на протяжении всей книги. В этой небольшой главе показаны некоторые дополнительные приемы, которые могут оказаться полезными в ходе разведочного анализа и подготовки данных к моделированию. Поскольку эти приемы являются стандартными, то их готовые реализации можно найти в нескольких пакетах для R. Мы воспользуемся одним из таких пакетов — <code>feasts</code> (от “<b>f</b>eature <b>e</b>xtraction <b>a</b>nd <b>s</b>tatistics for <b>t</b>ime <b>s</b>eries”), который представляет собой коллекцию функций для визуализации временных рядов и расчета многочисленных показателей, обобщающих их свойства (гл. <a href="ch-feature-extraction.html#ch-feature-extraction">5</a>). Пакет <code>feasts</code> разработан в соответствии с принципами организации и анализа “опрятных данных”, что помимо простого и удобного синтаксиса команд делает его масштабируемым для одновременной обработки большого количества временных рядов, хранящихся в таблицах формата <code>tsibble</code> (разд. <a href="intro.html#sec-data-format">1.4</a>),</p>
+<p>В примерах будем использовать данные по стоимости гостиничных номеров из таблицы <code>hotels</code>, которые мы сначала агрегируем (гл. <a href="ch-aggregation.html#ch-aggregation">3</a>) до среднедневных значений (на логарифмической шкале), а затем восстановим пропущенные наблюдения (гл. <a href="ch-missing-values.html#ch-missing-values">2</a>) путем простой линейной интерполяции (c помощью функции <code>na.interp()</code> из пакета <code>forecast</code>):</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">require</span>(tsibble)</a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="kw">require</span>(dplyr)</a>
+<a class="sourceLine" id="cb32-3" title="3"></a>
+<a class="sourceLine" id="cb32-4" title="4">hotels_daily &lt;-<span class="st"> </span>hotels <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-5" title="5"><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-6" title="6"><span class="st">  </span><span class="kw">index_by</span>(<span class="dt">dt =</span> <span class="kw">as.Date</span>(date_time)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-7" title="7"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">y =</span> <span class="kw">mean</span>(<span class="kw">log</span>(price_usd))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-8" title="8"><span class="st">  </span><span class="kw">fill_gaps</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> forecast<span class="op">::</span><span class="kw">na.interp</span>(y))</a></code></pre></div>
+<p>Полученные временные ряды можно легко представить на графике с помощью функции <code>autoplot()</code> из пакета <code>feasts</code>, которая автоматически распознает наличие группирующей переменной в данных (<code>prop_id</code>) и изобразит три отдельные линии для каждой гостиницы:</p>
+
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw">require</span>(feasts)</a>
+<a class="sourceLine" id="cb33-2" title="2"></a>
+<a class="sourceLine" id="cb33-3" title="3">hotels_daily <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(y)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:auto-hotels-daily"></span>
+<img src="time_series_ru_files/figure-html/auto-hotels-daily-1.png" alt="Результат применения функции feasts::autoplot() к таблице hotels_daily, которая является объектом класса tsibble с одной группирующей переменной (prop_id)" width="100%" />
+<p class="caption">
+РИСУНОК 4.1: Результат применения функции <code>feasts::autoplot()</code> к таблице <code>hotels_daily</code>, которая является объектом класса <code>tsibble</code> с одной группирующей переменной (<code>prop_id</code>)
+</p>
+</div>
+<p>Функция <code>autoplot()</code> очень удобна для быстрого разведочного анализа данных: для построения графика на рис. <a href="ch-visualisation.html#fig:auto-hotels-daily">4.1</a> потребовалась всего одна строка кода. По внешнему виду полученного графика можно легко догадаться что он представляет собой результат работы пакета <code>ggplot2</code>. Функция <code>autoplot()</code>, а также другие функции из пакета <code>feasts</code>, выполняющие визуализацию данных — это всего лишь “обертки” (wrappers), которые автоматически вызывают необходимые функции <code>ggplot2</code> в соответствии с классом и структурой подаваемых на них объектов. Из этого, в частности, следует, что графические функции из пакета <code>feasts</code> можно использовать в сочетании со многими функциями <code>ggplot2</code> для тонкой настройки внешнего вида графиков. Ниже мы воспользуемся этим обстоятельством и будем применять графические функции <code>feasts</code> в сочетании с <code>theme_minimal()</code> для изменения шаблона графиков со стандартного “серого” на предпочитаемый в этой книге “минимальный”.</p>
+<p>Как было отмечено в разд. <a href="intro.html#sec-main-concepts">1.3</a>, многие (но далеко не все!) временные ряды в общем виде можно представить как сумму трех компонент: тренда, сезонных изменений и шума (колебаний, связанных со случайными факторами). Хорошее понимание сруктуры временного ряда является важным условием для построения надежных прогнозных моделей. К счастью, наше зрение устроено так, что часто мы без труда можем выделить тренд и сезонные изменения, просто глядя на график временного ряда. Однако при наличии слабого тренда и большого “шума” в данных, сделать это бывает труднее. В таких случаях может помочь <em>декомпозиция временного ряда</em> (time series decomposition) — прием, позволяющий автоматически разложить временной ряд на отдельные компоненты, которые далее можно изобразить графически.</p>
+<p>Существует несколько методов декомпозиции временных рядов. Одним из наиболее широко используемых является <em>разложение на тренд и сезонную составляющую с помощью локальной полиномиальной регрессии</em> (Seasonal and Trend decomposition using Loess, STL; <span class="citation">Cleveland et al. (<a href="ch-literature.html#ref-cleveland_1990" role="doc-biblioref">1990</a>)</span>). Проще всего с этим методом можно разобраться, применив его к конкретным данным. Для примера воспользуемся данными по гостинице <code>73738</code> из созданной нами ранее таблицы <code>hotels_daily</code> (рис. <a href="ch-visualisation.html#fig:stl-73738">4.2</a>):</p>
+
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1">hotels_daily <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="st">  </span><span class="kw">model</span>(<span class="kw">STL</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">trend</span>(<span class="dt">window =</span> <span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="kw">season</span>(<span class="dt">period =</span> <span class="st">&quot;week&quot;</span>))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="st">  </span><span class="kw">components</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-5" title="5"><span class="st">  </span><span class="kw">autoplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:stl-73738"></span>
+<img src="time_series_ru_files/figure-html/stl-73738-1.png" alt="Результат применения метода STL для декомпозиции одного из временных рядов из таблицы hotels_daily" width="100%" />
+<p class="caption">
+РИСУНОК 4.2: Результат применения метода STL для декомпозиции одного из временных рядов из таблицы <code>hotels_daily</code>
+</p>
+</div>
+<p>В приведенном коде использованы не встречавшиеся нам ранее функции из нескольких пакетов: <code>model()</code> и <code>components()</code> из пакета <a href="https://github.com/tidyverts/fabletools"><code>fabletools</code></a>, который устанавливается и автоматически загружается одновременно с <code>feasts</code>, и <code>STL()</code> из пакета <code>feasts</code>. Для спецификации формулы STL–модели использованы также особые функции <code>trend()</code> и <code>season()</code> (подробнее см. справочный файл, доступный по команде <code>?STL</code>). Аргумент <code>window</code> функции <code>trend()</code> задает количество наблюдений в скользящем окне, используемом для оценивания тренда (в данном случае 30; чем выше это число, тем более гладкой окажется в итоге кривая тренда). Аргумент <code>period</code> функции <code>season()</code> используется для указания периода сезонных колебаний (в данном случае одна неделя).</p>
+<p>На рис. <a href="ch-visualisation.html#fig:stl-73738">4.2</a> выделенные с помощью метода STL компоненты временного ряда показаны на трех нижних графиках (<code>trend</code> — тренд, <code>season_week</code> — компонента недельной сезонности, <code>remainder</code> — остатки). Если их просуммировать, то получим исходный ряд <code>y</code> (приведен на верхнем графике). Серые вертикальные столбцы, изображенные слева от графиков, отражают удельный вклад каждой компоненты в общую дисперсию в данных. Чтобы лучше понять, что это значит, примем длину столбца на графике с исходными данными за единицу дисперсии. Длина столбца на графике тренда примерно в четыре раза больше, что указывает на незначительный вклад тренда в общую дисперсию. Другими словами, если бы мы сжали шкалу тренда настолько, чтобы длина его столбца стала равной длине столбца исходных данных, то дисперсия значений тренда оказалась бы довольно низкой. Аналогичный вывод можно сделать и в отношении вклада сезонной компоненты (который, что интересно, заметно варьирует во времени). В то же время длина столбца на графике остатков сравнима с длиной столбца на графике с исходными данными, что указывает на значительный вклад случайных факторов в общую дисперсию.</p>
+<p>На рис. <a href="ch-visualisation.html#fig:stl-73738">4.2</a> приведен результат декомпозиции одного временного ряда, однако мы могли бы выполнить такую декомпозицию сразу для всех рядов, хранящихся в таблице <code>hotels_daily</code> (рис. <a href="ch-visualisation.html#fig:stl-all-hotels">4.3</a>):</p>
+
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1">hotels_daily <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="st">  </span><span class="kw">model</span>(<span class="kw">STL</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">trend</span>(<span class="dt">window =</span> <span class="dv">30</span>) <span class="op">+</span><span class="st"> </span><span class="kw">season</span>(<span class="dt">period =</span> <span class="st">&quot;week&quot;</span>))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-4" title="4"><span class="st">  </span><span class="kw">components</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-5" title="5"><span class="st">  </span><span class="kw">autoplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-6" title="6"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="dt">legend.direction =</span> <span class="st">&quot;vertical&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:stl-all-hotels"></span>
+<img src="time_series_ru_files/figure-html/stl-all-hotels-1.png" alt="Результат применения метода STL для декомпозиции всех трех временных рядов из таблицы hotels_daily" width="100%" />
+<p class="caption">
+РИСУНОК 4.3: Результат применения метода STL для декомпозиции всех трех временных рядов из таблицы <code>hotels_daily</code>
+</p>
+</div>
+<p>Более детальное изучение сезонных колебаний в анализируемых временных рядах можно выполнить также с помощью функции <code>gg_season()</code> из пакета <code>feasts()</code>. В приведенном ниже примере эта функция применена для изображения динамики среднедневных значений стоимости номеров в каждой гостинице в течение каждой недели исследованного периода времени. На рис. <a href="ch-visualisation.html#fig:hotels-gg-season">4.4</a> хорошо видно отсутствие каких–либо выраженных колебаний стоимости гостиничных номеров в течение недели, что согласуется с полученными ранее результами декомпозиции этих временных рядов:</p>
+
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">hotels_daily <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="st">  </span><span class="kw">index_by</span>(<span class="dt">w =</span> <span class="kw">yearweek</span>(dt)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="st">  </span><span class="kw">gg_season</span>(y, <span class="dt">period =</span> <span class="st">&quot;week&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hotels-gg-season"></span>
+<img src="time_series_ru_files/figure-html/hotels-gg-season-1.png" alt="Динамика среднедневной стоимости номеров в гостиницах из таблицы hotels_daily в течение каждой недели исследованного периода времени" width="100%" />
+<p class="caption">
+РИСУНОК 4.4: Динамика среднедневной стоимости номеров в гостиницах из таблицы <code>hotels_daily</code> в течение каждой недели исследованного периода времени
+</p>
+</div>
+<p>Важным свойством многих временных рядов является наличие автокорреляции в их значениях, т.е. связи между значениями одного ряда, взятыми с определенным сдвигом (“лагом”, или “задержкой”). Наличие автокорреляции в данных является важной информацией для построения надежных прогнозных моделей. Выявление автокорреляции в остатках таких моделей также важно для диагностики их качества (в надежных моделях такой корреляции в остатках быть не должно).</p>
+<p>Визуально корреляцию между значениями одного временного ряда на разных сдвигах (по умолчанию от 1 до 9) можно представить с помощью функции <code>gg_lag()</code> из пакета <code>feasts()</code>:</p>
+
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">hotels_daily <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-2" title="2"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb37-3" title="3"><span class="st">  </span><span class="kw">gg_lag</span>(<span class="dt">geom =</span> <span class="st">&quot;point&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hotels-lags"></span>
+<img src="time_series_ru_files/figure-html/hotels-lags-1.png" alt="Связь между значениями временного ряда 73738 из таблицы hotels_daily его копиями, сдвинутыми на несколько временных отметок (от 1 до 9)" width="100%" />
+<p class="caption">
+РИСУНОК 4.5: Связь между значениями временного ряда <code>73738</code> из таблицы <code>hotels_daily</code> его копиями, сдвинутыми на несколько временных отметок (от 1 до 9)
+</p>
+</div>
+<p>На рис. <a href="ch-visualisation.html#fig:hotels-lags">4.5</a> видна умеренная связь между значениями временного ряда гостиницы <code>73738</code> на всех девяти сдвигах. Существует несколько способов, позволяющих выразить степень связи между временным рядом и его сдвинутыми копиями (т.е. <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B2%D1%82%D0%BE%D0%BA%D0%BE%D1%80%D1%80%D0%B5%D0%BB%D1%8F%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8F"><em>автокорреляционную функцию</em></a>) количественно. В простейшем случае для этого рассчитывают обычный линейный коэффициент корреляции: <span class="math display">\[r_k = \frac{\sum_{t=k+1}^T (y_t - \bar{y})(y_{t-k} - \bar{y})}{\sum_{t=1}^T (y_t = \bar{y})^2},\]</span> где <span class="math inline">\(T\)</span> — это длина временного ряда. В пакете <code>feasts</code> для расчета автокорреляционной функции служит команда <code>ACF()</code>. По умолчанию <code>ACF()</code> выполняет вычисления для сдвигов от 1 до 23, однако максимальный сдвиг можно изменить с помощью аргумента <code>lag_max</code>:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">hotels_daily <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="st">  </span><span class="kw">ACF</span>(<span class="dt">lag_max =</span> <span class="dv">6</span>)</a></code></pre></div>
+<pre><code>## # A tsibble: 6 x 3 [1D]
+## # Key:       prop_id [1]
+##   prop_id   lag   acf
+##     &lt;dbl&gt; &lt;lag&gt; &lt;dbl&gt;
+## 1   73738    1D 0.350
+## 2   73738    2D 0.315
+## 3   73738    3D 0.234
+## 4   73738    4D 0.242
+## 5   73738    5D 0.265
+## 6   73738    6D 0.315</code></pre>
+<p>Полученные коэффициенты корреляции принято изображать в виде графика, который называют <a href="http://www.machinelearning.ru/wiki/index.php?title=%D0%9A%D0%BE%D1%80%D1%80%D0%B5%D0%BB%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0"><em>коррелограммой</em></a>; рис. <a href="ch-visualisation.html#fig:hotels-acf-plot">4.6</a>):</p>
+
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1">hotels_daily <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-2" title="2"><span class="st">  </span><span class="kw">filter</span>(prop_id <span class="op">==</span><span class="st"> </span><span class="dv">73738</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-3" title="3"><span class="st">  </span><span class="kw">ACF</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb40-4" title="4"><span class="st">  </span><span class="kw">autoplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:hotels-acf-plot"></span>
+<img src="time_series_ru_files/figure-html/hotels-acf-plot-1.png" alt="Коррелограмма временного ряда 73738 из таблицы hotels_daily для сдвигов от 1 до 23" width="100%" />
+<p class="caption">
+РИСУНОК 4.6: Коррелограмма временного ряда <code>73738</code> из таблицы <code>hotels_daily</code> для сдвигов от 1 до 23
+</p>
+</div>
+<p>На полученном графике видно, что все коэффициенты автокорреляции являются умеренно положительными, указывая на наличие во временном ряду тренда на возрастание. Кроме того, можно видеть небольшие “всплески” коэффициентов, видимо обусловленные (слабо выраженной) недельной сезонностью. Синие пунктирные линии соответствуют критическим значениям корреляции (на уровне значимости 0.05). Если полученные коэффициенты по модулю превышают эти критические значения (как в нашем случае), то соответствующие корреляции можно считать значимо отличающимися от нуля.</p>
+<p>На этом мы завершим рассмотрение способов графического представления временных рядов и их свойств. С некоторыми дополнительными приемами визуализации можно познакомиться в великолепной книге <span class="citation">Hyndman and Athanasopoulos (<a href="ch-literature.html#ref-hyndman_athanasopoulos_2019" role="doc-biblioref">2019</a>)</span>.</p>
+<!-- Как было отмечено в разд.\@ref(sec-main-concepts), многие временные ряды в общем виде можно представить как сумму трех основных составляющих: тренда, сезонной компоненты и шума (колебаний, связанных с неизвестными факторами). Наше зрение устроено так, что обычно мы без труда можем выделить тренд на графике временного ряда. Однако при наличии слабого тренда и большого "шума" в данных, сделать это бывает труднее. В таких случаях может помочь сглаживание данных с помощью того иного метода. Пример использования одного из таких методов - сглаживания с помощью скользящей средней - был приведен ранее в гл. \@ref(ch-aggregation) (см. рис. \@ref(fig:cryptos-ma)). Другой распространенный способ сглаживания заключается в подгонке _локальной полиномиальной регрессии_ ([loess regression](https://en.wikipedia.org/wiki/Local_regression)). Используя пакет `ggplot2`, loess-кривую можно легко добавить к графику временного ряда при помощи функции `geom_smooth()` (рис. \@ref(fig:spline-trend)): -->
+<!-- Выявить сезонные колебания на графике временного ряда тоже бывает непросто. В таких случаях полезно вместо исходных наблюдений изобразить их _отклонения от тренда_. В приведенном ниже примере тренд оценен с помощью локальной полиномиальной регрессии (для этого применена базовая функция `loess()`). Отклонения исходных данных от полученной регрессионной кривой далее сгруппированы по дням недели и представлены графически в виде диаграммы размахов (рис. \@ref(fig:seasons-boxplots)). Как видно на этой диаграмме, колебания стоимости номера в гостинице `73738` в течение недели выражены слабо: хотя наблюдается некоторое увеличение в субботу, воскресенье и понедельник, диасперсия данных достаточно велика, чтобы считать эти изменения несущественными. Аналогичный вывод можно сделать также по рис. \@ref(fig:seasons-weekly), где отклонения от тренда показаны для каждой из 36 недель. -->
+<!-- (ref:seasons-boxplots-caption) Визуализация отклонений исходных наблюдений от тренда, оцененного с помощью метода локальной полиномиальной регрессии. Отклонения сгруппированы по дням недели -->
+<!-- ```{r seasons-boxplots, fig.cap='(ref:seasons-boxplots-caption)', out.width='100%', fig.asp=.6} -->
+<!-- require(lubridate) -->
+<!-- h73738 <- h73738 %>%  -->
+<!--   mutate(x = 1:n(), -->
+<!--          trend = loess(y ~ x) %>% fitted(), -->
+<!--          deviations = y - trend, -->
+<!--          wday = lubridate::wday(dt, label = TRUE, week_start = 1)) -->
+<!-- h73738 %>%  -->
+<!--   ggplot(aes(wday, deviations)) + -->
+<!--   geom_boxplot() + -->
+<!--   theme_minimal() -->
+<!-- ``` -->
+<!-- (ref:seasons-weekly-caption) Дневные отклонения исходных наблюдений от тренда сгруппированы по неделям и изображены в виде отдельных линий -->
+<!-- ```{r seasons-weekly, fig.cap='(ref:seasons-weekly-caption)', out.width='100%', fig.asp=.6} -->
+<!-- h73738 %>%  -->
+<!--   mutate(w = yearweek(dt)) %>%  -->
+<!--   ggplot() + -->
+<!--   geom_line(aes(wday, deviations, group = w), alpha = 0.4) + -->
+<!--   theme_minimal() -->
+<!-- ``` -->
+<!-- На рис. \@ref(fig:seasons-boxplots) и \@ref(fig:seasons-weekly) приведены примеры анализа недельной сезонности, однако похожие способы визуализации данных можно применить и для выявления других видов сезонных колебаний (годовые, квартальные, месячные и т.п.). -->
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-aggregation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-feature-extraction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

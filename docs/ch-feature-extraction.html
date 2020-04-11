@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 5 Извлечение признаков с помощью пакета feasts | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 5 Извлечение признаков с помощью пакета feasts | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 5 Извлечение признаков с помощью пакета feasts | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-visualisation.html"/>
+<link rel="next" href="ch-intro-to-prophet.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-feature-extraction" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 5</span> Извлечение признаков с помощью пакета <code>feasts</code></h1>
+<p>Подобно свойствам другим совокупностей, мы можем компактно охарактеризовать свойства временных рядов с помощью стандартных показателей описательной статистики (среднее значение, медиана, дисперсия, стандартное отклонение, квантили и т.п.). Поскольку наблюдения во временных рядах упорядочены, то для них можно рассчитать также и многие специфичные показатели, такие как автокорреляция (гл. <a href="ch-visualisation.html#ch-visualisation">4</a>), выраженность тренда и сезонной компоненты, <a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C">стационарность ряда</a> и т.п.</p>
+<p>Помимо того, что описательные статистики временных рядов представляют интерес сами по себе, их используют также в качестве признаков, или предикторов, при создании предсказательных моделей и в других задачах, решаемых с помощью методов машинного обучения (кластеризация, выявление аномалий и т.п.). Извлечение таких признаков из временных рядов с помощью R не составляет труда — для этого вполне подойдут как базовые функции, так и функции из многочисленных дополнительных пакетов. Однако учитывая то, как часто возникает необходимость в подобных вычислениях, в идеале было бы удобно иметь один–два пакета, в которых реализован соответствующий функционал. К счастью, такие пакеты для R есть. С одним из них — <code>feasts</code> — мы уже познакомились в гл. <a href="ch-visualisation.html#ch-visualisation">4</a>. Ниже будут рассмотрены возможности <code>feasts</code> по извлечению признаков из временных рядов на примере данных по стоимости 22 криптовалют (подразд. <a href="intro.html#subsec-cryptos-price">1.5.1</a>).</p>
+<div id="sec-features-function" class="section level2">
+<h2><span class="header-section-number">5.1</span> Функция <code>features()</code></h2>
+<p>В пакете <code>feasts</code> извлечение признаков из временных рядов выполняется с помощью функции–менеджера <code>features()</code>, которая имеет следующие аргументы:</p>
+<ul>
+<li><code>.tbl</code> — таблица с данными (например, объект класса <code>data.frame</code>, <code>tibble</code>, или <code>tsibble</code>);</li>
+<li><code>.var</code> — имя переменной в таблице <code>.tbl</code>, по значениям которой необходимо вычислить те или иные признаки;</li>
+<li><code>features</code> — список функций, которые непосредственно выполняют вычисления соответствующих признаков;</li>
+<li><code>...</code> — дополнительные аргументы, которые необходимо подать на функции, перечисленные в списке <code>features</code>. Важно отметить, что такие аргументы будут переданы на ту или иную функцию только, если они входят в состав формальных аргументов этой функции, а не являются ее дополнительными аргументами (<code>...</code>). Например, в случае с базовой функцией <code>var()</code>, указание аргумента <code>na.rm = TRUE</code> сработает, поскольку это формальный аргумент <code>var()</code>. В то же время в случае с базовой функцией <code>mean()</code> это не сработает, поскольку <code>na.rm</code> является ее дополнительным аргументом. Чтобы убедиться в том, что необходимые аргументы будут поданы на нужную функцию, ее следует добавить в список <code>features</code> в виде анонимной функции, как показано в следующем примере:</li>
+</ul>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">require</span>(feasts)</a>
+<a class="sourceLine" id="cb41-2" title="2"></a>
+<a class="sourceLine" id="cb41-3" title="3"><span class="co"># Неправильный способ подать дополнительный аргумент на функцию,</span></a>
+<a class="sourceLine" id="cb41-4" title="4"><span class="co"># которая вычисляет некоторый признак (здесь - среднее значение)</span></a>
+<a class="sourceLine" id="cb41-5" title="5"><span class="co"># при наличии пропущенных наблюдений (NA): </span></a>
+<a class="sourceLine" id="cb41-6" title="6"><span class="co">## features(dat_ts, y, features = list(mean), na.rm = TRUE)</span></a>
+<a class="sourceLine" id="cb41-7" title="7"></a>
+<a class="sourceLine" id="cb41-8" title="8"><span class="co"># Правильный способ (с использованием анонимной функции):</span></a>
+<a class="sourceLine" id="cb41-9" title="9"><span class="kw">features</span>(cryptos, y, <span class="dt">features =</span> <span class="kw">list</span>(<span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(., <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)))</a></code></pre></div>
+<pre><code>## # A tibble: 22 x 2
+##    coin              V1
+##    &lt;chr&gt;          &lt;dbl&gt;
+##  1 augur       23.2    
+##  2 bitcoin   7492.     
+##  3 cardano      0.136  
+##  4 chainlink    0.938  
+##  5 dash       223.     
+##  6 decred      41.8    
+##  7 dogecoin     0.00350
+##  8 eos          6.08   
+##  9 ethereum   340.     
+## 10 iota         0.776  
+## # ... with 12 more rows</code></pre>
+<p>Заметьте, что в последней команде нам не нужно было сначала сгруппировать данные по переменной <code>coin</code> — расчет средних значений для отдельных уровней этой переменной был выполнен автоматически. Такой результат стал возможным благодаря тому, что таблица <code>dat_ts</code> является объектом класса <code>tsibble</code>, в котором переменная <code>coin</code> служит “ключом”. Функции пакета <code>feasts</code> “знают” как работать с подобными объектами.</p>
+<p>Другой момент, на который стоит обратить внимание: результатом выполнения последней команды стала таблица, в которой рассчитанная новая переменная имеет мало о чем говорящее название <code>V1</code>. Чтобы изменить такое поведение <code>feasts</code> рекомендуется сначала сохранить определение анонимной функции в виде полноценной пользовательской функции. Эта функция должна возвращать вектор с одним или несколькими поименованными элементами — их имена в итоге станут именами соответствующих переменных в итоговой таблице. В приведенном ниже примере пользовательская функция <code>my_func(x)</code> возвращает вектор со значениями арифметического среднего и дисперсии <code>x</code>:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1">my_func &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</a>
+<a class="sourceLine" id="cb43-2" title="2">  m &lt;-<span class="st"> </span><span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb43-3" title="3">  v &lt;-<span class="st"> </span><span class="kw">var</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb43-4" title="4">  <span class="kw">return</span>(<span class="kw">c</span>(<span class="dt">avg =</span> m, <span class="dt">var =</span> v))</a>
+<a class="sourceLine" id="cb43-5" title="5">}</a>
+<a class="sourceLine" id="cb43-6" title="6"></a>
+<a class="sourceLine" id="cb43-7" title="7"><span class="kw">features</span>(cryptos, y, <span class="dt">features =</span> <span class="kw">list</span>(<span class="op">~</span><span class="st"> </span><span class="kw">my_func</span>(.)))</a></code></pre></div>
+<pre><code>## # A tibble: 22 x 3
+##    coin             avg     var
+##    &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt;
+##  1 augur       23.2     3.28e+2
+##  2 bitcoin   7492.      6.72e+6
+##  3 cardano      0.136   2.61e-2
+##  4 chainlink    0.938   7.71e-1
+##  5 dash       223.      4.66e+4
+##  6 decred      41.8     7.46e+2
+##  7 dogecoin     0.00350 3.46e-6
+##  8 eos          6.08    1.23e+1
+##  9 ethereum   340.      7.00e+4
+## 10 iota         0.776   5.82e-1
+## # ... with 12 more rows</code></pre>
+</div>
+<div id="sec-feasts-embedded-features" class="section level2">
+<h2><span class="header-section-number">5.2</span> Встроенные функции для расчета признаков</h2>
+<p>Помимо подаваемых на <code>features()</code> пользовательских функций можно также воспользоваться целым рядом готовых функций, входящих в состав пакета <code>feasts</code>. Например, для расчета <a href="https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C_%D0%A5%D1%91%D1%80%D1%81%D1%82%D0%B0">коэффициента Xёрста</a> и спектральной энтропии ряда служат функции <code>coef_hurst()</code> и <code>feat_spectral()</code>:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw">require</span>(dplyr)</a>
+<a class="sourceLine" id="cb45-2" title="2"><span class="kw">require</span>(tidyr)</a>
+<a class="sourceLine" id="cb45-3" title="3"></a>
+<a class="sourceLine" id="cb45-4" title="4">cryptos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">features</span>(., y, <span class="kw">list</span>(coef_hurst, feat_spectral))</a></code></pre></div>
+<pre><code>## # A tibble: 22 x 3
+##    coin      coef_hurst spectral_entropy
+##    &lt;chr&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+##  1 augur           1.00            0.423
+##  2 bitcoin         1.00            0.444
+##  3 cardano         1.00            0.422
+##  4 chainlink       1.00            0.437
+##  5 dash            1.00            0.398
+##  6 decred          1.00            0.422
+##  7 dogecoin        1.00            0.535
+##  8 eos             1.00            0.494
+##  9 ethereum        1.00            0.407
+## 10 iota            1.00            0.417
+## # ... with 12 more rows</code></pre>
+<p>Некоторые встроенные в <code>feasts</code> функции возвращают сразу несколько признаков. Например, <code>feat_stl()</code> выполняет декомпозицию временного ряда на отдельные компоненты (гл. <a href="ch-visualisation.html#ch-visualisation">4</a>) и далее на их основе вычисляет различные величины, включая выраженность тренда (trend strength) и сезонной составляющей (seasonal strength), линейность (linearity) и кривизну (curvature) ряда и т.д. <span class="citation">(Hyndman and Athanasopoulos <a href="ch-literature.html#ref-hyndman_athanasopoulos_2019" role="doc-biblioref">2019</a>; Kang, Hyndman, and Smith-Miles <a href="ch-literature.html#ref-kang_et_al_2017" role="doc-biblioref">2017</a>)</span>:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb47-2" title="2"><span class="st">  </span><span class="kw">features</span>(., y, <span class="kw">list</span>(feat_stl)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>(<span class="dt">width =</span> <span class="dv">60</span>)</a></code></pre></div>
+<pre><code>## Observations: 22
+## Variables: 10
+## $ coin                   &lt;chr&gt; &quot;augur&quot;, &quot;bitcoin&quot;, &quot;car...
+## $ trend_strength         &lt;dbl&gt; 0.9907166, 0.9908439, 0....
+## $ seasonal_strength_week &lt;dbl&gt; 0.14638033, 0.21990784, ...
+## $ seasonal_peak_week     &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, ...
+## $ seasonal_trough_week   &lt;dbl&gt; 2, 2, 2, 2, 1, 4, 2, 2, ...
+## $ spikiness              &lt;dbl&gt; 4.733049e-04, 6.274527e+...
+## $ linearity              &lt;dbl&gt; -3.523179e+02, -4.067290...
+## $ curvature              &lt;dbl&gt; 2.204012e+02, 5.028015e+...
+## $ stl_e_acf1             &lt;dbl&gt; 0.40641299, 0.29884561, ...
+## $ stl_e_acf10            &lt;dbl&gt; 0.4719425, 0.2286323, 0....</code></pre>
+<p>На момент написания этой книги пакет <code>feasts</code> позволял рассчитать 48 признаков, характеризующих различные свойства временных рядов. Для одновременного расчета всех этих признаков можно применить вспомогательную функцию <code>feature_set()</code> из пакета <code>fabletools</code> (гл. <a href="ch-visualisation.html#ch-visualisation">4</a>) следующим образом:</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">(all_crypto_features &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb49-2" title="2"><span class="st">   </span><span class="kw">features</span>(., y, <span class="kw">feature_set</span>(<span class="dt">pkgs =</span> <span class="st">&quot;feasts&quot;</span>)))</a></code></pre></div>
+<pre><code>## # A tibble: 22 x 49
+##    coin  trend_strength seasonal_streng~ seasonal_peak_w~ seasonal_trough~
+##    &lt;chr&gt;          &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+##  1 augur          0.991            0.146                6                2
+##  2 bitc~          0.991            0.220                6                2
+##  3 card~          0.990            0.249                6                2
+##  4 chai~          0.996            0.226                6                2
+##  5 dash           0.996            0.312                6                1
+##  6 decr~          0.993            0.232                6                4
+##  7 doge~          0.983            0.303                6                2
+##  8 eos            0.988            0.274                6                2
+##  9 ethe~          0.995            0.159                6                4
+## 10 iota           0.995            0.228                6                2
+## # ... with 12 more rows, and 44 more variables: spikiness &lt;dbl&gt;,
+## #   linearity &lt;dbl&gt;, curvature &lt;dbl&gt;, stl_e_acf1 &lt;dbl&gt;, stl_e_acf10 &lt;dbl&gt;,
+## #   acf1 &lt;dbl&gt;, acf10 &lt;dbl&gt;, diff1_acf1 &lt;dbl&gt;, diff1_acf10 &lt;dbl&gt;,
+## #   diff2_acf1 &lt;dbl&gt;, diff2_acf10 &lt;dbl&gt;, season_acf1 &lt;dbl&gt;, pacf5 &lt;dbl&gt;,
+## #   diff1_pacf5 &lt;dbl&gt;, diff2_pacf5 &lt;dbl&gt;, season_pacf &lt;dbl&gt;,
+## #   zero_run_mean &lt;dbl&gt;, nonzero_squared_cv &lt;dbl&gt;, zero_start_prop &lt;dbl&gt;,
+## #   zero_end_prop &lt;dbl&gt;, lambda_guerrero &lt;dbl&gt;, kpss_stat &lt;dbl&gt;,
+## #   kpss_pvalue &lt;dbl&gt;, pp_stat &lt;dbl&gt;, pp_pvalue &lt;dbl&gt;, ndiffs &lt;int&gt;,
+## #   nsdiffs &lt;int&gt;, bp_stat &lt;dbl&gt;, bp_pvalue &lt;dbl&gt;, lb_stat &lt;dbl&gt;,
+## #   lb_pvalue &lt;dbl&gt;, var_tiled_var &lt;dbl&gt;, var_tiled_mean &lt;dbl&gt;,
+## #   shift_level_max &lt;dbl&gt;, shift_level_index &lt;dbl&gt;, shift_var_max &lt;dbl&gt;,
+## #   shift_var_index &lt;dbl&gt;, shift_kl_max &lt;dbl&gt;, shift_kl_index &lt;dbl&gt;,
+## #   spectral_entropy &lt;dbl&gt;, n_crossing_points &lt;int&gt;, n_flat_spots &lt;int&gt;,
+## #   coef_hurst &lt;dbl&gt;, stat_arch_lm &lt;dbl&gt;</code></pre>
+<p>Функция <code>feature_set()</code> имеет два аргумента: <code>pkgs</code> — вектор с названиями пакетов, функции из которых вычисляют те или иные признаки, и <code>tags</code> — вектор с “метками”, обозначающими группы тематически сходных признаков. В приведенной выше команде мы запросили вычисление всех признаков, реализованных в пакете <code>feasts</code> (<code>feature_set(pkgs = "feasts")</code>). Однако часто более удобным и гибким подходом для формирования списка признаков будет использование аргумента <code>tags</code>. Например, команда <code>feature_set(tags = c("stl", "spectral"))</code> приведет к вычислению всех признаков, возвращаемых функциями <code>feat_stl()</code> и <code>feat_spectral()</code> (см. выше). Список меток всех признаков, реализованных в пакете <code>feasts</code>, можно просмотреть с помощью команды <code>?features_by_tag</code>. Этот список и краткие пояснения к нему приведены ниже (названия меток выделены жирным шрифтом; после названия каждой метки идут краткое пояснение и список функций, непосредственно выполняющих соответствующие вычисления):</p>
+<div id="acf" class="section level3 unnumbered">
+<h3>acf</h3>
+<p>Набор признаков, рассчитываемых на основе коэффициентов автокорреляции.</p>
+<ul>
+<li><code>feat_acf()</code></li>
+</ul>
+</div>
+<div id="autocorrelation" class="section level3 unnumbered">
+<h3>autocorrelation</h3>
+<p>Набор признаков, рассчитываемых на основе коэффициентов автокорреляции и частных коэффициентов автокорреляции.</p>
+<ul>
+<li><code>feat_acf()</code></li>
+<li><code>feat_pacf()</code></li>
+</ul>
+</div>
+<div id="boxcox" class="section level3 unnumbered">
+<h3>boxcox</h3>
+<p>Оптимальное значение параметра <span class="math inline">\(\lambda\)</span> для <a href="https://r-analytics.blogspot.com/2015/07/blog-post_19.html">преобразования Бокса–Кокса</a>.</p>
+<ul>
+<li><code>guerrero()</code></li>
+</ul>
+</div>
+<div id="coefficients" class="section level3 unnumbered">
+<h3>coefficients</h3>
+<p>Коэффициент Хёрста.</p>
+<ul>
+<li><code>coef_hurst()</code></li>
+</ul>
+</div>
+<div id="count" class="section level3 unnumbered">
+<h3>count</h3>
+<p>Количество раз, когда временной ряд пересекает свою собственную медиану, и максимальная длина временного отрезка, в пределах которого наблюдения имеют одинаковые значения:</p>
+<ul>
+<li><code>n_crossing_points()</code></li>
+<li><code>n_flat_spots()</code></li>
+</ul>
+</div>
+<div id="decomposition" class="section level3 unnumbered">
+<h3>decomposition</h3>
+<p>Признаки, рассчитываемые на основе компонент временного ряда.</p>
+<ul>
+<li><code>feat_stl()</code></li>
+</ul>
+</div>
+<div id="intermittent" class="section level3 unnumbered">
+<h3>intermittent</h3>
+<p>Признаки, отражающие наличие и структуру временных отрезков, в пределах которых все значения ряда равны нулю.</p>
+<ul>
+<li><code>feat_intermittent()</code></li>
+</ul>
+</div>
+<div id="lumpiness" class="section level3 unnumbered">
+<h3>lumpiness</h3>
+<p>Дисперсия дисперсий, рассчитанных по наблюдениям из непересекающихся временных отрезков (окон).</p>
+<ul>
+<li><code>var_tiled_var()</code></li>
+</ul>
+</div>
+<div id="optimisation" class="section level3 unnumbered">
+<h3>optimisation</h3>
+<p>То же, что и метка <code>boxcox</code> выше, т.е. оптимальное значение параметра <span class="math inline">\(\lambda\)</span> для преобразования Бокса–Кокса.</p>
+<ul>
+<li><code>guerrero()</code></li>
+</ul>
+</div>
+<div id="pacf" class="section level3 unnumbered">
+<h3>pacf</h3>
+<p>Набор признаков, рассчитываемых на основе частных коэффициентов автокорреляции.</p>
+<ul>
+<li><code>feat_pacf()</code></li>
+</ul>
+</div>
+<div id="portmanteau" class="section level3 unnumbered">
+<h3>portmanteau</h3>
+<p>Статистики, рассчитываемые в результате применения тестов <a href="https://ru.wikipedia.org/wiki/Q-%D1%82%D0%B5%D1%81%D1%82_%D0%9B%D1%8C%D1%8E%D0%BD%D0%B3_%E2%80%94_%D0%91%D0%BE%D0%BA%D1%81%D0%B0">Льюнг–Бокса</a> и <a href="https://ru.wikipedia.org/wiki/Q-%D1%81%D1%82%D0%B0%D1%82%D0%B8%D1%81%D1%82%D0%B8%D0%BA%D0%B0_%D0%91%D0%BE%D0%BA%D1%81%D0%B0_%E2%80%94_%D0%9F%D0%B8%D1%80%D1%81%D0%B0">Бокса–Пирса</a> на наличие автокорреляции в данных.</p>
+<ul>
+<li><code>box_pierce()</code></li>
+<li><code>ljung_box()</code></li>
+</ul>
+</div>
+<div id="rle" class="section level3 unnumbered">
+<h3>rle</h3>
+<p>Максимальная длина временного отрезка, в пределах которого значения ряда принадлежат к одному из <a href="https://ru.wikipedia.org/wiki/%D0%9A%D0%B2%D0%B0%D0%BD%D1%82%D0%B8%D0%BB%D1%8C#%D0%94%D0%B5%D1%86%D0%B8%D0%BB%D1%8C">децилей</a>.</p>
+<ul>
+<li><code>n_flat_spots()</code></li>
+</ul>
+</div>
+<div id="roll" class="section level3 unnumbered">
+<h3>roll</h3>
+<p>Признаки, рассчитываемые по данным из пересекающихся временных отрезков (окон), в частности максимальный сдвиг среднего уровня, дисперсии и <a href="https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D0%B5_%D0%9A%D1%83%D0%BB%D1%8C%D0%B1%D0%B0%D0%BA%D0%B0_%E2%80%94_%D0%9B%D0%B5%D0%B9%D0%B1%D0%BB%D0%B5%D1%80%D0%B0">расстояния Кульбака–Лейблера</a> в следующих друг за другом отрезках.</p>
+<ul>
+<li><code>shift_level_max()</code></li>
+<li><code>shift_var_max()</code></li>
+<li><code>shift_kl_max()</code></li>
+</ul>
+</div>
+<div id="seasonal" class="section level3 unnumbered">
+<h3>seasonal</h3>
+<p>Признаки, рассчитываемые на основе компонент временного ряда, а также минимальное число <a href="https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average#Differencing">дифференцирований ряда</a>, необходимое для достижения его стационарности.</p>
+<ul>
+<li><code>feat_stl()</code></li>
+<li><code>unitroot_nsdiffs()</code></li>
+</ul>
+</div>
+<div id="slide" class="section level3 unnumbered">
+<h3>slide</h3>
+<p>То же, что и метка <code>roll</code> (см. выше).</p>
+</div>
+<div id="spectral" class="section level3 unnumbered">
+<h3>spectral</h3>
+<p>Спектральная энтропия ряда.</p>
+<ul>
+<li><code>feat_spectral()</code></li>
+</ul>
+</div>
+<div id="stability" class="section level3 unnumbered">
+<h3>stability</h3>
+<p>Максимальный сдвиг среднего уровня, рассчитанного по данным из двух пересекающихся временных отрезков (окон).</p>
+<ul>
+<li><code>var_tiled_mean()</code></li>
+</ul>
+</div>
+<div id="stl" class="section level3 unnumbered">
+<h3>stl</h3>
+<p>Признаки, рассчитываемые на основе компонент временного ряда.</p>
+<ul>
+<li><code>feat_stl()</code></li>
+</ul>
+</div>
+<div id="test" class="section level3 unnumbered">
+<h3>test</h3>
+<p>Статистики, рассчитываемые в ходе различных тестов (на наличие автокорреляции, <a href="https://ru.wikipedia.org/wiki/%D0%95%D0%B4%D0%B8%D0%BD%D0%B8%D1%87%D0%BD%D1%8B%D0%B9_%D0%BA%D0%BE%D1%80%D0%B5%D0%BD%D1%8C">единичного корня</a>, <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B5%D0%B3%D1%80%D0%B5%D1%81%D1%81%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D1%83%D1%81%D0%BB%D0%BE%D0%B2%D0%BD%D0%B0%D1%8F_%D0%B3%D0%B5%D1%82%D0%B5%D1%80%D0%BE%D1%81%D0%BA%D0%B5%D0%B4%D0%B0%D1%81%D1%82%D0%B8%D1%87%D0%BD%D0%BE%D1%81%D1%82%D1%8C">авторегрессионной условной гетероскедастичности</a> и др.).</p>
+<ul>
+<li><code>unitroot_kpss()</code></li>
+<li><code>unitroot_pp()</code></li>
+<li><code>unitroot_ndiffs()</code></li>
+<li><code>unitroot_nsdiffs()</code></li>
+<li><code>box_pierce()</code></li>
+<li><code>ljung_box()</code></li>
+<li><code>stat_arch_lm()</code></li>
+</ul>
+</div>
+<div id="tile" class="section level3 unnumbered">
+<h3>tile</h3>
+<p>Признаки, рассчитываемые по данным из непересекающихся временных отрезков (окон), в частности дисперсия дисперсий и дисперсия средних значений.</p>
+<ul>
+<li><code>var_tile_mean()</code></li>
+<li><code>var_tile_var()</code></li>
+</ul>
+</div>
+<div id="trend" class="section level3 unnumbered">
+<h3>trend</h3>
+<p>То же, что и метка <code>stl</code>.</p>
+</div>
+<div id="unitroot" class="section level3 unnumbered">
+<h3>unitroot</h3>
+<p>Статистики, рассчитываемые в ходе тестов на наличие в данных единичного корня, а также минимальное число дифференцирований ряда, необходимое для достижения его <a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%B0%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C">стационарности</a>.</p>
+<ul>
+<li><code>unitroot_kpss()</code></li>
+<li><code>unitroot_pp()</code></li>
+<li><code>unitroot_ndiffs()</code></li>
+<li><code>unitroot_nsdiffs()</code></li>
+</ul>
+<p>Пользовательские функции тоже можно сделать “видимыми” для <code>feature_set()</code>. Для этого их необходимо <em>зарегистрировать</em> с помощью вспомогательной функции <code>register_feature()</code>:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="kw">register_feature</span>(my_func, <span class="dt">tags =</span> <span class="kw">c</span>(<span class="st">&quot;avg_and_var&quot;</span>))</a>
+<a class="sourceLine" id="cb51-2" title="2"></a>
+<a class="sourceLine" id="cb51-3" title="3">cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-4" title="4"><span class="st">  </span><span class="kw">features</span>(., y, <span class="kw">feature_set</span>(<span class="dt">tags =</span> <span class="st">&quot;avg_and_var&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb51-5" title="5"><span class="st">  </span>tibble<span class="op">::</span><span class="kw">glimpse</span>(<span class="dt">width =</span> <span class="dv">60</span>)</a></code></pre></div>
+<pre><code>## Observations: 22
+## Variables: 3
+## $ coin &lt;chr&gt; &quot;augur&quot;, &quot;bitcoin&quot;, &quot;cardano&quot;, &quot;chainlink&quot;...
+## $ avg  &lt;dbl&gt; 2.315007e+01, 7.491721e+03, 1.359970e-01, ...
+## $ var  &lt;dbl&gt; 3.283892e+02, 6.722352e+06, 2.614519e-02, ...</code></pre>
+</div>
+</div>
+<div id="sec-features-use" class="section level2">
+<h2><span class="header-section-number">5.3</span> Примеры использования извлеченных признаков</h2>
+<p>Описанные в предыдущем разделе признаки позволяют проанализировать и понять свойства сразу нескольких временных рядов. Представим, например, что перед нами стоит задача выявить временные ряды с наименьшей и наибольшей выраженностью тренда. Это можно было бы сделать следующим образом (рис. <a href="ch-feature-extraction.html#fig:max-min-trend">5.1</a>):</p>
+
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">require</span>(ggplot2)</a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="kw">require</span>(gridExtra)</a>
+<a class="sourceLine" id="cb53-3" title="3"></a>
+<a class="sourceLine" id="cb53-4" title="4">cryptos_trend &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-5" title="5"><span class="st">  </span><span class="kw">features</span>(., y, <span class="kw">feature_set</span>(<span class="dt">tags =</span> <span class="st">&quot;stl&quot;</span>))</a>
+<a class="sourceLine" id="cb53-6" title="6"></a>
+<a class="sourceLine" id="cb53-7" title="7">min_trend &lt;-<span class="st"> </span>cryptos_trend <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-8" title="8"><span class="st">  </span><span class="kw">filter</span>(trend_strength <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(trend_strength)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-9" title="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-10" title="10"><span class="st">  </span><span class="kw">left_join</span>(., cryptos, <span class="dt">by =</span> <span class="st">&quot;coin&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-11" title="11"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(ds, y)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-12" title="12"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(<span class="op">~</span>coin) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-13" title="13"><span class="st">  </span><span class="kw">theme_minimal</span>()</a>
+<a class="sourceLine" id="cb53-14" title="14"></a>
+<a class="sourceLine" id="cb53-15" title="15">max_trend &lt;-<span class="st"> </span>cryptos_trend <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-16" title="16"><span class="st">  </span><span class="kw">filter</span>(trend_strength <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(trend_strength)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-17" title="17"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-18" title="18"><span class="st">  </span><span class="kw">left_join</span>(., cryptos, <span class="dt">by =</span> <span class="st">&quot;coin&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-19" title="19"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(ds, y)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb53-20" title="20"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(<span class="op">~</span>coin) <span class="op">+</span></a>
+<a class="sourceLine" id="cb53-21" title="21"><span class="st">  </span><span class="kw">theme_minimal</span>()</a>
+<a class="sourceLine" id="cb53-22" title="22"></a>
+<a class="sourceLine" id="cb53-23" title="23"><span class="kw">grid.arrange</span>(min_trend, max_trend, <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:max-min-trend"></span>
+<img src="time_series_ru_files/figure-html/max-min-trend-1.png" alt="Временные ряды из набора данных cryptos с минимальной (слева) и максимальной (справа) выраженностью тренда" width="100%" />
+<p class="caption">
+РИСУНОК 5.1: Временные ряды из набора данных <code>cryptos</code> с минимальной (слева) и максимальной (справа) выраженностью тренда
+</p>
+</div>
+<p>Другой вопрос, на который было бы интересно ответить: какие ряды необычны по сочетанию нескольких признаков одновременно? Посмотрим, например, как выглядит распределение анализируемых рядов по выраженности тренда и недельной сезонности (рис. <a href="ch-feature-extraction.html#fig:trends-n-peaks">5.2</a>):</p>
+
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1"><span class="kw">require</span>(ggrepel)</a>
+<a class="sourceLine" id="cb54-2" title="2"></a>
+<a class="sourceLine" id="cb54-3" title="3">cryptos_trend <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(trend_strength, </a>
+<a class="sourceLine" id="cb54-5" title="5">                seasonal_strength_week, <span class="dt">label =</span> coin)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb54-6" title="6"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-7" title="7"><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="dt">force =</span> <span class="dv">10</span>, <span class="dt">segment.color =</span> <span class="st">&quot;gray60&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb54-8" title="8"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:trends-n-peaks"></span>
+<img src="time_series_ru_files/figure-html/trends-n-peaks-1.png" alt="Распределение временных рядов из набора данных cryptos в соответствии с выраженностью тренда и недельной сезонности" width="100%" />
+<p class="caption">
+РИСУНОК 5.2: Распределение временных рядов из набора данных <code>cryptos</code> в соответствии с выраженностью тренда и недельной сезонности
+</p>
+</div>
+<p>На рис. <a href="ch-feature-extraction.html#fig:trends-n-peaks">5.2</a> четко выделяется временной ряд <code>tether</code>, для которого характерны низкие значения обоих показателей. Мы уже видели, как выглядит этот временной ряд (см. рис. <a href="ch-feature-extraction.html#fig:max-min-trend">5.1</a> слева). Изобразим теперь и данные по криптовалюте <code>qtum</code>, которая характеризуется необычно высокой выраженностью как тренда, так и недельной сезонности (рис. <a href="ch-feature-extraction.html#fig:qtum-series">5.3</a>):</p>
+
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1">cryptos <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb55-2" title="2"><span class="st">  </span><span class="kw">filter</span>(coin <span class="op">==</span><span class="st"> &quot;qtum&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb55-3" title="3"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(ds, y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb55-4" title="4"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:qtum-series"></span>
+<img src="time_series_ru_files/figure-html/qtum-series-1.png" alt="Динамика стоимости криптовалюты qtum" width="100%" />
+<p class="caption">
+РИСУНОК 5.3: Динамика стоимости криптовалюты <code>qtum</code>
+</p>
+</div>
+<p>Мы можем пойти еще дальше и проанализировать данные из таблицы <code>cryptos</code> с помощью <a href="https://ranalytics.github.io/data-mining/024-Projecting-Data-onto-a-Plane.html">метода главных компонент (PCA)</a> одновременно по всем признакам с ненулевой дисперсией (обратите внимание на логарифмирование исходных значений <code>y</code>, выполнененное для снижения дисперсии в отдельных рядах и различий между рядами):</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="co"># Функция для нахождения признаки c нулевой дисперсией:</span></a>
+<a class="sourceLine" id="cb56-2" title="2">zero_var_cols &lt;-<span class="st"> </span><span class="cf">function</span>(dat) {</a>
+<a class="sourceLine" id="cb56-3" title="3">    checks &lt;-<span class="st"> </span><span class="kw">lapply</span>(dat, <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x)))</a>
+<a class="sourceLine" id="cb56-4" title="4">    keep &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="op">!</span>checks <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb56-5" title="5">    <span class="kw">unlist</span>(keep) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">names</span>(.)</a>
+<a class="sourceLine" id="cb56-6" title="6">}</a>
+<a class="sourceLine" id="cb56-7" title="7">  </a>
+<a class="sourceLine" id="cb56-8" title="8"><span class="kw">set.seed</span>(<span class="dv">1984</span>)</a>
+<a class="sourceLine" id="cb56-9" title="9">pca &lt;-<span class="st"> </span>all_crypto_features <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb56-10" title="10"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(coin, <span class="kw">zero_var_cols</span>(.))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-11" title="11"><span class="st">  </span><span class="kw">prcomp</span>(<span class="dt">scale =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb56-12" title="12"></a>
+<a class="sourceLine" id="cb56-13" title="13"><span class="co"># summary(pca)</span></a></code></pre></div>
+<p>Согласно полученному результату (не приведен для экономии места), первые две главные компоненты объясняют примерно 56% всей дисперсии в данных. Изобразим все временные ряды в системе координат, образованной этими двумя главными компонентами (рис. <a href="ch-feature-extraction.html#fig:cryptos-pca-graph">5.4</a>):</p>
+
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">pc &lt;-<span class="st"> </span>all_crypto_features <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(coin) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="st">  </span><span class="kw">bind_cols</span>(., <span class="kw">as_tibble</span>(pca<span class="op">$</span>x))</a>
+<a class="sourceLine" id="cb57-4" title="4"></a>
+<a class="sourceLine" id="cb57-5" title="5">pc <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb57-6" title="6"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(PC1, PC2, <span class="dt">label =</span> coin)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-7" title="7"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-8" title="8"><span class="st">  </span><span class="kw">geom_text_repel</span>(<span class="dt">force =</span> <span class="dv">10</span>, <span class="dt">segment.color =</span> <span class="st">&quot;gray60&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-9" title="9"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:cryptos-pca-graph"></span>
+<img src="time_series_ru_files/figure-html/cryptos-pca-graph-1.png" alt="Распределение временных рядов из таблицы cryptos в соответствии со значениями первых двух главных компонент" width="100%" />
+<p class="caption">
+РИСУНОК 5.4: Распределение временных рядов из таблицы <code>cryptos</code> в соответствии со значениями первых двух главных компонент
+</p>
+</div>
+<p>PCA–анализ по совокупности нескольких десятков признаков еще раз подтвердил аномальность временного ряда <code>tether</code>, а также подчеркнул необычность ряда <code>bitcoin</code>. Следует отметить, что этот анализ был выполнен в демонстрационных целях: аномальность <code>tether</code> легко заметить и без применения PCA — достаточно изобразить все имеющиеся временные ряды на одном графике (см. рис. <a href="intro.html#fig:cryptos-22-raw">1.2</a>, где этот ряд выглядит практически как горизонтальная линия). Тем не менее, во многих реальных ситуациях приходится иметь дело с сотнями и даже тысячами временных рядов, простое визуальное исследование которых невозможно. Описанный выше подход в сочетании с определенным методом обнаружения аномалий помог бы выявить необычные временные ряды в автоматическом режиме.</p>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-visualisation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-intro-to-prophet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

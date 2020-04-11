@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>ГЛАВА 6 Пакет prophet | Анализ временных рядов с помощью R</title>
+  <meta name="description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="ГЛАВА 6 Пакет prophet | Анализ временных рядов с помощью R" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://ranalytics.github.io/tsa-with-r" />
+  <meta property="og:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+  <meta property="og:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="github-repo" content="ranalytics/tsa-r" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ГЛАВА 6 Пакет prophet | Анализ временных рядов с помощью R" />
+  
+  <meta name="twitter:description" content="Современные методы анализа временных рядов, реализованные в системе статистических вычислений R" />
+  <meta name="twitter:image" content="https://ranalytics.github.io/tsa-with-rfigures/tsa_with_r_cover.png" />
+
+<meta name="author" content="Мастицкий С. Э." />
+
+
+<meta name="date" content="2020-04-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="ch-feature-extraction.html"/>
+<link rel="next" href="ch-intro-to-bsts.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Анализ временных рядов с помощью R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Аннотация</a></li>
+<li class="chapter" data-level="" data-path="thanks.html"><a href="thanks.html"><i class="fa fa-check"></i>Благодарности</a></li>
+<li class="chapter" data-level="" data-path="other-formats.html"><a href="other-formats.html"><i class="fa fa-check"></i>Дополнительные форматы книги</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Введение</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#what-this-book-is-about"><i class="fa fa-check"></i><b>1.1</b> О чем эта книга и чего в ней нет</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.2</b> Что ожидается от читателя</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#sec-main-concepts"><i class="fa fa-check"></i><b>1.3</b> Основные понятия</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#sec-data-format"><i class="fa fa-check"></i><b>1.4</b> Формат данных <code>tsibble</code></a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#sec-example-datasets"><i class="fa fa-check"></i><b>1.5</b> Данные, используемые в примерах</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="intro.html"><a href="intro.html#subsec-cryptos-price"><i class="fa fa-check"></i><b>1.5.1</b> Стоимость 22 криптовалют</a></li>
+<li class="chapter" data-level="1.5.2" data-path="intro.html"><a href="intro.html#subsec-bitcoin-price"><i class="fa fa-check"></i><b>1.5.2</b> Стоимость биткоина</a></li>
+<li class="chapter" data-level="1.5.3" data-path="intro.html"><a href="intro.html#subsec-share-price"><i class="fa fa-check"></i><b>1.5.3</b> Цена акций трех компаний</a></li>
+<li class="chapter" data-level="1.5.4" data-path="intro.html"><a href="intro.html#subsec-hotel-price"><i class="fa fa-check"></i><b>1.5.4</b> Стоимость номеров в трех гостиницах</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>I Разведочный анализ данных</b></span></li>
+<li class="chapter" data-level="2" data-path="ch-missing-values.html"><a href="ch-missing-values.html"><i class="fa fa-check"></i><b>2</b> Обработка пропущенных наблюдений</a></li>
+<li class="chapter" data-level="3" data-path="ch-aggregation.html"><a href="ch-aggregation.html"><i class="fa fa-check"></i><b>3</b> Агрегирование наблюдений</a></li>
+<li class="chapter" data-level="4" data-path="ch-visualisation.html"><a href="ch-visualisation.html"><i class="fa fa-check"></i><b>4</b> Визуализация временных рядов и их свойств</a></li>
+<li class="chapter" data-level="5" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html"><i class="fa fa-check"></i><b>5</b> Извлечение признаков с помощью пакета <code>feasts</code></a><ul>
+<li class="chapter" data-level="5.1" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-function"><i class="fa fa-check"></i><b>5.1</b> Функция <code>features()</code></a></li>
+<li class="chapter" data-level="5.2" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-feasts-embedded-features"><i class="fa fa-check"></i><b>5.2</b> Встроенные функции для расчета признаков</a><ul>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#acf"><i class="fa fa-check"></i>acf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#autocorrelation"><i class="fa fa-check"></i>autocorrelation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#boxcox"><i class="fa fa-check"></i>boxcox</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#coefficients"><i class="fa fa-check"></i>coefficients</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#count"><i class="fa fa-check"></i>count</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#decomposition"><i class="fa fa-check"></i>decomposition</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#intermittent"><i class="fa fa-check"></i>intermittent</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#lumpiness"><i class="fa fa-check"></i>lumpiness</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#optimisation"><i class="fa fa-check"></i>optimisation</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#pacf"><i class="fa fa-check"></i>pacf</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#portmanteau"><i class="fa fa-check"></i>portmanteau</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#rle"><i class="fa fa-check"></i>rle</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#roll"><i class="fa fa-check"></i>roll</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#seasonal"><i class="fa fa-check"></i>seasonal</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#slide"><i class="fa fa-check"></i>slide</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#spectral"><i class="fa fa-check"></i>spectral</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stability"><i class="fa fa-check"></i>stability</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#stl"><i class="fa fa-check"></i>stl</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#test"><i class="fa fa-check"></i>test</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#tile"><i class="fa fa-check"></i>tile</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#trend"><i class="fa fa-check"></i>trend</a></li>
+<li class="chapter" data-level="" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#unitroot"><i class="fa fa-check"></i>unitroot</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="ch-feature-extraction.html"><a href="ch-feature-extraction.html#sec-features-use"><i class="fa fa-check"></i><b>5.3</b> Примеры использования извлеченных признаков</a></li>
+</ul></li>
+<li class="part"><span><b>II Прогнозирование временных рядов</b></span></li>
+<li class="chapter" data-level="6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html"><i class="fa fa-check"></i><b>6</b> Пакет <code>prophet</code></a><ul>
+<li class="chapter" data-level="6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-how-prophet-works"><i class="fa fa-check"></i><b>6.1</b> Методология</a></li>
+<li class="chapter" data-level="6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-first-prophet-example"><i class="fa fa-check"></i><b>6.2</b> Первый простой пример</a></li>
+<li class="chapter" data-level="6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-params"><i class="fa fa-check"></i><b>6.3</b> Функция <code>prophet()</code></a></li>
+<li class="chapter" data-level="6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-changepoints"><i class="fa fa-check"></i><b>6.4</b> Точки излома тренда</a></li>
+<li class="chapter" data-level="6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-holidays"><i class="fa fa-check"></i><b>6.5</b> Эффекты праздников и других важных событий</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#формат-представления"><i class="fa fa-check"></i><b>6.5.1</b> Формат представления</a></li>
+<li class="chapter" data-level="6.5.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#встроенные-даты-праздников"><i class="fa fa-check"></i><b>6.5.2</b> Встроенные даты праздников</a></li>
+<li class="chapter" data-level="6.5.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация"><i class="fa fa-check"></i><b>6.5.3</b> Регуляризация</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-seasonal-components"><i class="fa fa-check"></i><b>6.6</b> Сезонные компоненты</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#годовая-недельная-и-дневная-компоненты"><i class="fa fa-check"></i><b>6.6.1</b> Годовая, недельная и дневная компоненты</a></li>
+<li class="chapter" data-level="6.6.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пользовательские-сезонные-компоненты"><i class="fa fa-check"></i><b>6.6.2</b> Пользовательские сезонные компоненты</a></li>
+<li class="chapter" data-level="6.6.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#условные-режимы-сезонности"><i class="fa fa-check"></i><b>6.6.3</b> Условные режимы сезонности</a></li>
+<li class="chapter" data-level="6.6.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#регуляризация-сезонных-компонент"><i class="fa fa-check"></i><b>6.6.4</b> Регуляризация сезонных компонент</a></li>
+<li class="chapter" data-level="6.6.5" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#аддитивная-и-мультипликативная-сезонности"><i class="fa fa-check"></i><b>6.6.5</b> Аддитивная и мультипликативная сезонности</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-predictors"><i class="fa fa-check"></i><b>6.7</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="6.8" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-prophet-optimal-model"><i class="fa fa-check"></i><b>6.8</b> Выбор оптимальной модели</a><ul>
+<li class="chapter" data-level="6.8.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-shf"><i class="fa fa-check"></i><b>6.8.1</b> Метод имитированных исторических прогнозов</a></li>
+<li class="chapter" data-level="6.8.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#выполнение-перекрестной-проверки"><i class="fa fa-check"></i><b>6.8.2</b> Выполнение перекрестной проверки</a></li>
+<li class="chapter" data-level="6.8.3" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#subsec-perf-metric"><i class="fa fa-check"></i><b>6.8.3</b> Метрики качества модели</a></li>
+<li class="chapter" data-level="6.8.4" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#пример-выбора-оптимальной-модели"><i class="fa fa-check"></i><b>6.8.4</b> Пример выбора оптимальной модели</a></li>
+</ul></li>
+<li class="chapter" data-level="6.9" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#sec-system-capacity"><i class="fa fa-check"></i><b>6.9</b> Моделирование емкости системы</a><ul>
+<li class="chapter" data-level="6.9.1" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#тренд-с-насыщением"><i class="fa fa-check"></i><b>6.9.1</b> Тренд с насыщением</a></li>
+<li class="chapter" data-level="6.9.2" data-path="ch-intro-to-prophet.html"><a href="ch-intro-to-prophet.html#примеры-моделей-с-насыщением-тренда"><i class="fa fa-check"></i><b>6.9.2</b> Примеры моделей с насыщением тренда</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html"><i class="fa fa-check"></i><b>7</b> Пакет <code>bsts</code></a><ul>
+<li class="chapter" data-level="7.1" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-how-bsts-works"><i class="fa fa-check"></i><b>7.1</b> Методология</a></li>
+<li class="chapter" data-level="7.2" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-function"><i class="fa fa-check"></i><b>7.2</b> Функция <code>bsts()</code></a></li>
+<li class="chapter" data-level="7.3" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-add-functions"><i class="fa fa-check"></i><b>7.3</b> Спецификация компонент модели</a></li>
+<li class="chapter" data-level="7.4" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-model-examples"><i class="fa fa-check"></i><b>7.4</b> Примеры моделей без предикторов</a></li>
+<li class="chapter" data-level="7.5" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-models-with-regressors"><i class="fa fa-check"></i><b>7.5</b> Модели с предикторами</a></li>
+<li class="chapter" data-level="7.6" data-path="ch-intro-to-bsts.html"><a href="ch-intro-to-bsts.html#sec-bsts-optimal-model"><i class="fa fa-check"></i><b>7.6</b> Выбор оптимальной модели</a></li>
+</ul></li>
+<li class="part"><span><b>III Структурные изменения и аномалии во временных рядах</b></span></li>
+<li class="chapter" data-level="8" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html"><i class="fa fa-check"></i><b>8</b> Выявление структурных изменений</a><ul>
+<li class="chapter" data-level="8.1" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#метод-edivisive-with-medians-edm"><i class="fa fa-check"></i><b>8.1</b> Метод “E–Divisive with Medians” (EDM)</a></li>
+<li class="chapter" data-level="8.2" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#функция-breakout"><i class="fa fa-check"></i><b>8.2</b> Функция <code>breakout()</code></a></li>
+<li class="chapter" data-level="8.3" data-path="ch-structural-changes.html"><a href="ch-structural-changes.html#примеры-использования-функции-breakout"><i class="fa fa-check"></i><b>8.3</b> Примеры использования функции <code>breakout()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html"><i class="fa fa-check"></i><b>9</b> Выявление аномалий</a><ul>
+<li class="chapter" data-level="9.1" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#автоматическое-обнаружение-аномалий"><i class="fa fa-check"></i><b>9.1</b> Автоматическое обнаружение аномалий</a></li>
+<li class="chapter" data-level="9.2" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#ручная-настройка-параметров-для-обнаружения-аномалий"><i class="fa fa-check"></i><b>9.2</b> Ручная настройка параметров для обнаружения аномалий</a></li>
+<li class="chapter" data-level="9.3" data-path="ch-anomaly-detection.html"><a href="ch-anomaly-detection.html#одновременный-анализ-нескольких-временных-рядов"><i class="fa fa-check"></i><b>9.3</b> Одновременный анализ нескольких временных рядов</a></li>
+</ul></li>
+<li class="part"><span><b>IV Кластеризация</b></span></li>
+<li class="chapter" data-level="10" data-path="ch-ts-clustering-task.html"><a href="ch-ts-clustering-task.html"><i class="fa fa-check"></i><b>10</b> Задача кластеризации временных рядов</a></li>
+<li class="chapter" data-level="11" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html"><i class="fa fa-check"></i><b>11</b> Кластеризация по исходным данным</a><ul>
+<li class="chapter" data-level="11.1" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#dtw-расстояние"><i class="fa fa-check"></i><b>11.1</b> DTW-расстояние</a></li>
+<li class="chapter" data-level="11.2" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пакет-dtwclust"><i class="fa fa-check"></i><b>11.2</b> Пакет <code>dtwclust</code></a></li>
+<li class="chapter" data-level="11.3" data-path="ch-ts-clustering-by-raw-data.html"><a href="ch-ts-clustering-by-raw-data.html#пример-кластеризации-с-использованием-dtwрасстояния"><i class="fa fa-check"></i><b>11.3</b> Пример кластеризации с использованием DTW–расстояния</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ch-features-based-clustering.html"><a href="ch-features-based-clustering.html"><i class="fa fa-check"></i><b>12</b> Кластеризация по описательным признакам</a></li>
+<li class="chapter" data-level="13" data-path="ch-model-based-clustering.html"><a href="ch-model-based-clustering.html"><i class="fa fa-check"></i><b>13</b> Кластеризация по результатам подгонки моделей</a></li>
+<li class="chapter" data-level="14" data-path="ch-literature.html"><a href="ch-literature.html"><i class="fa fa-check"></i><b>14</b> Литература</a></li>
+<li class="divider"></li>
+<li><a href="http://mastitsky.com">
+© 2020, Мастицкий С. Э.</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Анализ временных рядов с помощью R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ch-intro-to-prophet" class="section level1">
+<h1><span class="header-section-number">ГЛАВА 6</span> Пакет <code>prophet</code></h1>
+<p>Прогнозирование — это, пожалуй, самая распространенная задача, возникающая при работе с временными рядами. Однако получить надежные прогнозы непросто — для этого требуется серьезная подготовка специалиста, который решает подобную задачу, а также наличие подходящего (и желательно удобного в использовании) программного обеспечения.</p>
+<p>В R существует <a href="https://cran.r-project.org/web/views/TimeSeries.html">большое количество</a> пакетов для анализа временных рядов (см. также <a href="https://robjhyndman.com/software/">сайт проф. Роба Хиндмана</a>). Например, одним из наиболее популярных является пакет <code>forecast</code>, в котором реализованы как классические (экспоненциальное сглаживание, модель Хольта–Винтерса, ARIMA и др.), так и недавно разработанные методы прогнозирования (модели для сгруппированных временных рядов, рядов с несколькими сезонными компонентами и др.). Такое разнообразие методов является и преимуществом, и недостатком пакета <code>forecast</code>. Другой важный недостаток состоит в том, что все реализованные в <code>forecast</code> методы имеют свои собственные параметры настройки, и даже опытные аналитики не застрахованы от выбора неправильного метода и/или набора параметров для решения стоящей задачи.</p>
+<p>В 2017 г. специалисты компании Facebook <a href="https://research.fb.com/blog/2017/02/prophet-forecasting-at-scale/">объявили</a> о разработанном ими новом пакете для прогнозирования временных рядов — <a href="https://facebook.github.io/prophet/docs/quick_start.html"><code>prophet</code></a> (“пророк”). <code>prophet</code> во многом лишен указанных выше недостатков <code>forecast</code> и других подобных пакетов и позволяет создавать точные прогнозные модели в (полу–)автоматическом режиме. В этой главе мы рассмотрим основные возможности <code>prophet</code> и особенности работы с ним.</p>
+<p>Пакет <code>prophet</code> распространяется бесплатно по <a href="https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F_MIT">лицензии MIT</a>. Его легко установить стандартным образом из хранилища CRAN (на Windows–машинах предварительно нужно будет установить <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a>):</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;prophet&quot;</span>)</a></code></pre></div>
+<p>Если вы работаете на компьютере Mac под управлением OS X, не забудьте добавить аргумент <code>type = "source"</code>:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1"><span class="kw">install.packages</span>(<span class="st">&quot;prophet&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
+<div id="sec-how-prophet-works" class="section level2">
+<h2><span class="header-section-number">6.1</span> Методология</h2>
+<p>Подробное описание реализованной в <code>prophet</code> методологии можно найти в статье <span class="citation">Taylor and Letham (<a href="ch-literature.html#ref-taylor_letham_2017" role="doc-biblioref">2017</a>)</span>. Вкратце, в основе этой методологии лежит процедура подгонки <a href="https://en.wikipedia.org/wiki/Additive_model">аддитивных регрессионных моделей</a> (Generalized Additive Models, GAM) следующего вида: <span class="math display">\[y(t) = g(t) + s(t) + h(t) + \epsilon_t,\]</span> где <span class="math inline">\(g(t)\)</span> и <span class="math inline">\(s(t)\)</span> — функции, аппроксимирующие тренд ряда и сезонные колебания (например, годовые, недельные и т.п.) соответственно, <span class="math inline">\(h(t)\)</span> — функция, отражающая эффекты праздников и других влиятельных событий, а <span class="math inline">\(\epsilon_t\)</span> — нормально распределенные случайные возмущения. Для аппроксимации перечисленных функций используются следующие методы:</p>
+<ul>
+<li><em>тренд</em>: кусочная линейная регрессия или кусочная логистическая кривая роста;</li>
+<li><em>годовая сезонность</em>: <a href="https://ru.wikipedia.org/wiki/%D0%A0%D1%8F%D0%B4_%D0%A4%D1%83%D1%80%D1%8C%D0%B5">частичные суммы</a> ряда Фурье, число членов которого (порядок) определяет гладкость функции;</li>
+<li><em>недельная сезонность</em>: представлена в виде <a href="https://r-analytics.blogspot.com/2015/08/blog-post_13.html">индикаторной переменной</a>;</li>
+<li><em>“праздники”</em> (например, официальные праздничные и выходные дни — Новый год, Рождество и т.п., а также другие дни, во время которых свойства временного ряда могут существенно измениться — спортивные или культурные события, природные явления и т.п.): представлены в виде индикаторных переменных.</li>
+</ul>
+<p>Оценивание параметров подгоняемой модели выполняется с использованием принципов байесовской статистики (либо методом нахождения <a href="https://ru.wikipedia.org/wiki/%D0%9E%D1%86%D0%B5%D0%BD%D0%BA%D0%B0_%D0%B0%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80%D0%B8%D0%BE%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BC%D1%83%D0%BC%D0%B0">апостериорного максимума (MAP)</a>, либо путем полного <a href="https://ru.wikipedia.org/wiki/%D0%91%D0%B0%D0%B9%D0%B5%D1%81%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9_%D0%B2%D1%8B%D0%B2%D0%BE%D0%B4">байесовского вывода</a>). Для этого применяется платформа <a href="https://habr.com/ru/post/244625/">вероятностного программирования</a> <a href="https://mc-stan.org/">Stan</a>. Пакет <code>prophet</code> представляет собой ни что иное, как удобный интерфейс для работы с этой платформой из среды R (имеется также аналогичная библиотека для Python — <a href="https://pypi.org/project/fbprophet/"><code>fbprophet</code></a>).</p>
+</div>
+<div id="sec-first-prophet-example" class="section level2">
+<h2><span class="header-section-number">6.2</span> Первый простой пример</h2>
+<p>Для иллюстрации особенностей работы с пакетом <code>prophet</code> воспользуемся набором данных <code>bitcoin</code>, в котором хранятся исторические данные по стоимости биткоина на момент закрытия торгов (подразд. <a href="intro.html#subsec-bitcoin-price">1.5.2</a>). Стоимость биткоина — не самая простая переменная для моделирования (что справедливо для подавляющего большинства финансовых временных рядов). Этот ряд обладает сложным трендом, дисперсия его значений возрастает со временем, имеют место резкие изменения уровней, вероятно сопряженные с какими–то (в большинстве случаев неизвестными нам) особыми событиями (рис. <a href="intro.html#fig:bitcoin-raw">1.3</a>). Тем не менее, это хороший пример реальных данных, с которыми аналитик может столкнуться на практике. Тем интереснее будет посмотреть, как с задачей прогнозирования этого ряда справится <code>prophet</code>!</p>
+<p>Предположим, что нам необходимо сделать прогноз стоимости биткоина на следующие 90 дней. Приведенный ниже код выполняет подготовку данных для построения подобной модели: сначала присходит логарифмирование значений стоимости биткоина <code>y</code> (для снижения дисперсии), а затем разбиение исходной выборки на обучающую (все наблюдения за исключением последних 90 дней) и проверочную (последние 90 дней).</p>
+<p>Обратите внимание также на замену класса итоговых таблиц <code>bitcoin_train</code> и <code>bitcoin_test</code> с <code>tsibble</code> на стандартный <code>data.frame</code> — это обусловлено тем, что в настоящее время функции пакета <code>prophet</code>, к сожалению, не могут корректно работать с данными в формате <code>tsibble</code>.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">bitcoin_train &lt;-<span class="st"> </span>bitcoin <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">log</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-3" title="3"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span>(<span class="kw">n</span>() <span class="op">-</span><span class="st"> </span><span class="dv">90</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-4" title="4"><span class="st">  </span><span class="kw">as.data.frame</span>()</a>
+<a class="sourceLine" id="cb60-5" title="5"></a>
+<a class="sourceLine" id="cb60-6" title="6">bitcoin_test &lt;-<span class="st"> </span>bitcoin <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">log</span>(y), <span class="dt">ds =</span> <span class="kw">as.Date</span>(ds)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb60-8" title="8"><span class="st">  </span><span class="kw">tail</span>(<span class="dv">90</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb60-9" title="9"><span class="st">  </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
+<p>Подгонку моделей с разными параметрами мы будем выполнять на обучающих данных (<code>bitcoin_train</code>). Проверочная выборка (<code>bitcoin_test</code>) пригодится в самом конце процесса моделирования, чтобы выяснить насколько наши ожидания в отношении качества выбранной оптимальной модели соответствуют действительности. Заметьте, что в обеих этих таблицах столбец с датами обозначен как <code>ds</code>, а столбец со значениями отклика как <code>y</code>. Это условные обозначения, принятые в <code>prophet</code>. Использование каких–либо других имен приведет к ошибке при вызове соответствующих функций.</p>
+<p>Обучающие данные, подготовленные описанным выше способом, представлены на рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-train-df">6.1</a>.</p>
+
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1">bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb61-2" title="2"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(ds, y)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-3" title="3"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb61-4" title="4"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-train-df"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-train-df-1.png" alt="Обучающие данные по стоимости биткоина" width="100%" />
+<p class="caption">
+РИСУНОК 6.1: Обучающие данные по стоимости биткоина
+</p>
+</div>
+<p>Нашу первую модель (обозначим ее <code>M0</code>) мы построим с использованием параметров, принятых в <code>prophet</code> по умолчанию. Для этого потребуется всего одна строка кода:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="kw">require</span>(prophet)</a>
+<a class="sourceLine" id="cb62-2" title="2">M0 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train)</a></code></pre></div>
+<p>Объект <code>M0</code> представляет собой большой список (выполните команду <code>str(M0)</code>, чтобы просмотреть его структуру). Для получения прогноза на основе этой модели необходимо сначала воспользоваться функцией <code>make_future_dataframe()</code> и создать таблицу с датами, охватывающими необходимый временной промежуток в будущем (“горизонт”), а затем подать эту таблицу вместе с модельным объектом на функцию <code>predict()</code>:</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">future_df &lt;-<span class="st"> </span><span class="kw">make_future_dataframe</span>(M0, <span class="dt">periods =</span> <span class="dv">90</span>)</a>
+<a class="sourceLine" id="cb63-2" title="2">forecast_M0 &lt;-<span class="st"> </span><span class="kw">predict</span>(M0, future_df)</a></code></pre></div>
+<p>Объект <code>forecast_M0</code> — это обычная таблица, в которой хранятся значения нескольких рассчитанных на основе модели <code>M0</code> величин, включая компоненты модели (см. разд. <a href="ch-intro-to-prophet.html#sec-how-prophet-works">6.1</a>), предсказанные значения отклика, а также верхние и нижние границы доверительных интервалов соответствующих величин. Вот так, например, выглядят первые несколько предсказанных значений стоимости биткоина и их (принятые по умолчанию) 80%–ные доверительные границы:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">forecast_M0 <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(yhat, yhat_lower, yhat_upper) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>##       yhat yhat_lower yhat_upper
+## 1 6.134964   6.024296   6.230752
+## 2 6.134025   6.034873   6.237148
+## 3 6.127710   6.026591   6.232882
+## 4 6.124329   6.018906   6.227581
+## 5 6.119314   6.008620   6.227911
+## 6 6.111687   6.006040   6.218552</code></pre>
+<p>Таблицу <code>forecast_M0</code> и объект <code>M0</code> далее можно подать на функцию <code>plot()</code>, чтобы изобразить подогнанную модель и прогнозные значения на графике (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m0-forecast">6.2</a>):</p>
+
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1"><span class="kw">plot</span>(M0, forecast_M0)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m0-forecast"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m0-forecast-1.png" alt="Прогноз стоимости биткоина, полученный на основе модели M0" width="100%" />
+<p class="caption">
+РИСУНОК 6.2: Прогноз стоимости биткоина, полученный на основе модели <code>M0</code>
+</p>
+</div>
+<p>Точки на рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m0-forecast">6.2</a> соответствуют (логарифмированным) значениям стоимости биткоина из обучающей выборки. Сплошная голубая линия — это предсказанные моделью значения стоимости, а огибающая эту линию светло–голубая “лента” обозначает 80%–ные доверительные границы предсказанных значений. Прогнозные значения <code>у</code> на следующие 90 дней видны в правой части графика.</p>
+<!-- По стилю графика на рис. \@ref(fig:bitcoin-m0-forecast) легко догадаться, что он является объектом класса `ggplot2`. Это справедливо также и для других графиков, получаемых с помощью функций из пакета `prophet`, которые являются "обертками" для функций `ggplot2`. Ниже мы воспользуемся этим обстоятельством для изменения стандартного "серого" шаблона диаграмм на принятый в этой книге "минимальный" с помощью функции `ggplot2::theme_minimal()`. -->
+<p>С помощью функции <code>prophet_plot_components()</code> мы можем также изобразить отдельные компоненты модели (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m0-components">6.3</a>):</p>
+
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1"><span class="kw">prophet_plot_components</span>(M0, forecast_M0)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m0-components"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m0-components-1.png" alt="Компоненты модели M0" width="100%" />
+<p class="caption">
+РИСУНОК 6.3: Компоненты модели <code>M0</code>
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m0-components">6.3</a> видно, что модель <code>M0</code> хорошо передает имеющийся в данных сложный тренд. Видно также, что в этом временном ряду есть очень слабо выраженные внутригодовые колебания и практически несуществующие колебания в пределах недели (обратите внимание на шкалы ординат этих трех графиков, которые помогают оценить вклад каждой из компонент).</p>
+<p>Для создания модели <code>M0</code> потребовалась всего одна строка кода и процесс подгонки занял пару секунд. Учитывая, что анализируемый нами временной ряд не самый простой для моделирования, полученная модель довольно хорошо передает свойства этого ряда. Возможность быстро и удобно создавать такие качественные модели в автоматическом режиме является основным преимуществом <code>prophet</code>.</p>
+<p>Тем не менее, качество прогноза <code>M0</code> оставляет желать лучшего. На данном этапе моделирования главным признаком неудовлетворительного качества предсказаний <code>M0</code> является чрезмерно расширяющиеся доверительные границы прогнозных значений (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m0-components">6.3</a>). В следующих разделах мы постараемся улучшить эту базовую модель путем добавления предикторов и настройки параметров функции <code>prophet()</code>.</p>
+</div>
+<div id="sec-prophet-params" class="section level2">
+<h2><span class="header-section-number">6.3</span> Функция <code>prophet()</code></h2>
+<p>Ниже приведено описание основных аргументов функции <code>prophet()</code>, с которой мы познакомились в предыдущем разделе:</p>
+<ul>
+<li><code>df</code> — необязательный аргумент, с помощью которого указывают таблицу с историческими данными. Такая таблица должна содержать как минимум два столбца: <code>ds</code> (даты в формате <code>YYYY-MM-DD</code>) и <code>y</code> (значения моделируемого отклика). В случаях, когда тренд в <code>y</code> моделируется как логистический рост, таблица с историческими данными должна также содержать столбец <code>cap</code> (“емкость”), который соответствует максимально достижимым значениям <code>y</code> для соответствующих дат. Если аргумент <code>df</code> не указан (<code>NULL</code>), то произойдет только инициализация модельного объекта, а для непосредственного запуска подгонки модели необходимо будет воспользоваться функцией <code>fit.profit(m, df)</code>.</li>
+<li><code>growth</code> — тип тренда. Принимает два возможных значения: <code>"linear"</code> (“линейный”, присвоено по умолчанию) и <code>"logistic"</code> (“логистический”).</li>
+<li><code>changepoints</code> — текстовый вектор с датами (в формате <code>YYYY-MM-DD</code>), соответствующими “переломным моментам”, или “точкам излома” в <code>y</code> (т.е. датам, когда произошли существенные изменения в тренде временного ряда). Если вектор <code>changepoints</code> не указан, то такие переломные моменты будут оценены автоматически.</li>
+<li><code>n.changepoints</code> — предполагаемое количество “переломных моментов” (25 по умолчанию). Если аргумент <code>changepoints</code> задан, то аргумент <code>n.changepoints</code> будет проигнорирован. Если же <code>changepoints</code> не задан, то <code>n.changepoints</code> потенциальных точек излома будут распределены равномерно в пределах исторического отрезка, задаваемого аргументом <code>changepoint.range</code>.</li>
+<li><code>changepoint.range</code> — <em>доля</em> исторических данных (начиная с самого первого наблюдения), по которым будут оценены точки излома. По умолчанию составляет 0.8 (т.е. 80% наблюдений).</li>
+<li><code>yearly.seasonality</code> — параметр настройки годовой сезонности (т.е. закономерных колебаний в пределах года). Принимает следующие возможные значения: <code>"auto"</code> (автоматический режим, принят по умолчанию), <code>TRUE</code>, <code>FALSE</code> или количество членов ряда Фурье, с помощью которого аппроксимируется компонента годовой сезонности.</li>
+<li><code>weekly.seasonality</code> — параметр настройки недельной сезонности (т.е. закономерных колебаний в пределах недели). Возможные значения те же, что и у <code>yearly.seasonality</code>.</li>
+<li><code>daily.seasonality</code> — параметр настройки дневной сезонности (т.е. закономерных колебаний в пределах дня). Возможные значения те же, что и у <code>yearly.seasonality</code>.</li>
+<li><code>holidays</code> — таблица, содержащая два обязательных столбца: <code>holiday</code> (текстовая переменная с названиями “праздников” и других важных событий, потенциально влияющих на свойства временного ряда) и <code>ds</code> (даты). По желанию в такую таблицу можно добавить еще два столбца — <code>lower_window</code> и <code>upper_window</code>, которые задают отрезок времени вокруг соответствующего события. Так, например, при <code>"lower_window = -2"</code> в модель будут добавлены 2 дня, <em>предшествующие</em> соответствующему событию. По желанию можно также добавить столбец <code>prior_scale</code> — априорное значение стандартного отклонения (нормального) распределения, с помощью которого моделируется эффект того или иного события.</li>
+<li><code>seasonality.mode</code> — режим моделирования сезонных компонент. Принимает два возможных значения: <code>"additive"</code> (аддитивный, задан по умолчанию) и <code>"multiplicative"</code> (мультипликативный).</li>
+<li><code>seasonality.prior.scale</code> — параметр, определяющий выраженность сезонных компонент модели (10 по умолчанию). Более высокие значения приведут к более “гибкой” модели, а низкие — к модели со слабее выраженными сезонными эффектами. Этот параметр можно задать отдельно для каждого типа сезонности с помощью функции <code>add_seasonality()</code>.</li>
+<li><code>holidays.prior.scale</code> — параметр, определяющий выраженность эффектов “праздников” и других важных событий (10 по умолчанию). Если таблица, подаваемая на аргумент <code>holidays</code>, имеет столбец <code>prior_scale</code> (см. выше), то аргумент <code>holidays.prior.scale</code> будет проигнорирован.</li>
+<li><code>changepoint.prior.scale</code> — параметр, задающий чувствительность автоматического механизма обнаружения точек излома в тренде временного ряда <code>y</code> (0.05 по умолчанию). Более высокие значение позволят иметь больше таких точек излома (что одновременно увеличит риск переобучения модели).</li>
+<li><code>mcmc.samples</code> — целое число (0 по умолчанию). Если &gt;0, то параметры модели будут оценены путем полного байесовского анализа с использованием <code>mcmc.samples</code> итераций алгоритма <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">MCMC</a> (процесс подгонки модели при этом может существенно замедлиться).</li>
+<li><code>interval.width</code> — число, определяющее ширину доверительного интервала для предсказанных моделью значений (0.8 по умолчанию, что соответствует 80%–ному интервалу). При <code>"mcmc.samples = 0"</code> этот интервал будет оценен с использованием <a href="https://ru.wikipedia.org/wiki/%D0%9E%D1%86%D0%B5%D0%BD%D0%BA%D0%B0_%D0%B0%D0%BF%D0%BE%D1%81%D1%82%D0%B5%D1%80%D0%B8%D0%BE%D1%80%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BC%D1%83%D0%BC%D0%B0">MAP</a>–метода и только на основе неопределенности в отношении тренда в <code>у</code>. Если же <code>mcmc.samples</code> &gt;0, то доверительные интервалы будут оцениваться с учетом неопределенности в отношении оценок всех параметров модели (включая сезонные компоненты).</li>
+<li><code>uncertainty.samples</code> — число итераций для оценивания доверительных интервалов (1000 по умолчанию).</li>
+<li><code>fit</code> — логическое значение (<code>TRUE</code> по умолчанию). При <code>fit = FALSE</code> произойдет только инициализация модельного объекта, но подгонка модели не запустится.</li>
+<li><code>...</code> — дополнительные параметры, которые передаются на функцию <code>fit.prophet()</code>.</li>
+</ul>
+</div>
+<div id="sec-prophet-changepoints" class="section level2">
+<h2><span class="header-section-number">6.4</span> Точки излома тренда</h2>
+<p>Как было отмечено в предыдущем разделе, аналитик может задать точки излома либо самостоятельно (с помощью аргумента <code>changepoints</code> функции <code>prophet()</code>), либо довериться их автоматическому обнаружению. Рассмотрим, как работает каждый из этих режимов, и что происходит в результате изменения соответствующих аргументов функции <code>prophet()</code>.</p>
+<p>В автоматическом режиме при инициализации модели 25 потенциальных точек излома равномерно распределяются в пределах интервала, который охватывает первые 80% наблюдений из обучающей выборки. Именно это произошло, когда мы построили базовую модель <code>М0</code> в разд. <a href="ch-intro-to-prophet.html#sec-first-prophet-example">6.2</a>. Однако эти 25 точек — лишь предполагаемые места существенных изменений в тренде: в большинстве случаев на практике тренд временного ряда не изменяется так часто. Поэтому в ходе подгонки модели срабатывает механизм регуляризации (подобный <a href="https://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D0%B3%D1%83%D0%BB%D1%8F%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_(%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0)"><span class="math inline">\(l1\)</span>–регуляризации</a>), в результате чего выбирается минимальное необходимое количество точек излома. Изобразить эти автоматически обнаруженные точки излома можно с помощью функции <code>add_changepoints_to_plot()</code>. Так, для модели <code>M0</code> получаем (рис. <a href="ch-intro-to-prophet.html#fig:prophet-m0-changepoints">6.4</a>):</p>
+
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1"><span class="kw">plot</span>(M0, forecast_M0) <span class="op">+</span><span class="st"> </span><span class="kw">add_changepoints_to_plot</span>(M0)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m0-changepoints"></span>
+<img src="time_series_ru_files/figure-html/prophet-m0-changepoints-1.png" alt="Точки излома тренда, оцененные в результате подгонки модели M0. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.4: Точки излома тренда, оцененные в результате подгонки модели <code>M0</code>. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда
+</p>
+</div>
+<p>Судя по полученному графику, модель <code>M0</code> все еще переоценивает количество “переломных моментов” в тренде. Построим новую модель, которая будет инициализирована с меньшим начальным количеством потенциальных точек излома (15 вместо 25; рис. <a href="ch-intro-to-prophet.html#fig:prophet-m1-changepoints">6.5</a>):</p>
+
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">M1 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, <span class="dt">n.changepoints =</span> <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb69-2" title="2"></a>
+<a class="sourceLine" id="cb69-3" title="3">forecast_M1 &lt;-<span class="st"> </span><span class="kw">predict</span>(M1, future_df)</a>
+<a class="sourceLine" id="cb69-4" title="4"><span class="kw">plot</span>(M1, forecast_M1) <span class="op">+</span><span class="st"> </span><span class="kw">add_changepoints_to_plot</span>(M1)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m1-changepoints"></span>
+<img src="time_series_ru_files/figure-html/prophet-m1-changepoints-1.png" alt="Точки излома тренда, оцененные в результате подгонки модели M1. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.5: Точки излома тренда, оцененные в результате подгонки модели <code>M1</code>. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда
+</p>
+</div>
+<p>Как и ожидалось, оцененный тренд получился более гладким, чем в модели <code>M0</code>. Хорошо это или плохо, мы узнаем позже, когда рассмотрим диагностику качества моделей с помощью перекрестной проверки (разд. <a href="ch-intro-to-prophet.html#sec-prophet-optimal-model">6.8</a>).</p>
+<p>Помимо изменения начального количества потенциальных точек излома тренда мы можем также изменить временной интервал, в пределах которого происходит их оценивание. По умолчанию этот интервал охватывает первые 80% наблюдений. Однако из приведенных выше графиков видно, что примерно в начале ноября 2018 г. произошло <a href="https://iz.ru/813033/2018-11-16/ekspert-obiasnil-rezkii-obval-bitkoina">резкое падение</a> стоимости биткоина. Ни одна из построенных нами моделей пока не учла это изменение, поскольку оно не вошло в интервал, в пределах которого происходило оценивание точек излома. Увеличим этот интервал до 90%, воспользовавшись аргументом <code>changepoint.range</code> (одновременно увеличим количество потенциальных точек излома с 15 до 20, поскольку на большем промежутке времени можно ожидать больше перепадов в тренде):</p>
+
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" title="1">M2 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, </a>
+<a class="sourceLine" id="cb70-2" title="2">              <span class="dt">n.changepoints =</span> <span class="dv">20</span>, </a>
+<a class="sourceLine" id="cb70-3" title="3">              <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb70-4" title="4"></a>
+<a class="sourceLine" id="cb70-5" title="5">forecast_M2 &lt;-<span class="st"> </span><span class="kw">predict</span>(M2, future_df)</a>
+<a class="sourceLine" id="cb70-6" title="6"><span class="kw">plot</span>(M2, forecast_M2) <span class="op">+</span><span class="st"> </span><span class="kw">add_changepoints_to_plot</span>(M2)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m2-changepoints"></span>
+<img src="time_series_ru_files/figure-html/prophet-m2-changepoints-1.png" alt="Точки излома тренда, оцененные в результате подгонки модели M2. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.6: Точки излома тренда, оцененные в результате подгонки модели <code>M2</code>. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда
+</p>
+</div>
+<p>Как видно на рис. <a href="ch-intro-to-prophet.html#fig:prophet-m2-changepoints">6.6</a>, полученная модель <code>M2</code> намного лучше передает свойства анализируемого временного ряда. Это касается и получаемого с ее помощью прогноза (как с точки зрения направления тренда, так и с точки зрения ширины доверительных границ предсказанных значений).</p>
+<p>Еще один параметр для настройки гладкости тренда в моделируемом временном ряду — это <code>changepoint.prior.scale</code>. Чем больше значение этого параметра (по сравнению с принятым по умолчанию значением 0.05), тем больше точек излома останется в полученной модели. Рассмотрим эффект действия <code>changepoint.prior.scale</code> на следующем примере (рис. <a href="ch-intro-to-prophet.html#fig:prophet-m3-changepoints">6.7</a>):</p>
+
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1"><span class="co"># В этой модели мы увеличиваем интервал, в пределах которого</span></a>
+<a class="sourceLine" id="cb71-2" title="2"><span class="co"># оцениваются точки излома тренда (до 90%), одновременно увеличивая</span></a>
+<a class="sourceLine" id="cb71-3" title="3"><span class="co"># уровень регуляризации с помощью параметра changepoint.prior.scale.</span></a>
+<a class="sourceLine" id="cb71-4" title="4"><span class="co"># Начальное количество потенциальных точек излома оставим равным </span></a>
+<a class="sourceLine" id="cb71-5" title="5"><span class="co"># значению, принятому по умолчанию (25):</span></a>
+<a class="sourceLine" id="cb71-6" title="6"></a>
+<a class="sourceLine" id="cb71-7" title="7">M3 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, </a>
+<a class="sourceLine" id="cb71-8" title="8">              <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>, </a>
+<a class="sourceLine" id="cb71-9" title="9">              <span class="dt">changepoint.prior.scale =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb71-10" title="10"></a>
+<a class="sourceLine" id="cb71-11" title="11">forecast_M3 &lt;-<span class="st"> </span><span class="kw">predict</span>(M3, future_df)</a>
+<a class="sourceLine" id="cb71-12" title="12"><span class="kw">plot</span>(M3, forecast_M3) <span class="op">+</span><span class="st"> </span><span class="kw">add_changepoints_to_plot</span>(M3)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m3-changepoints"></span>
+<img src="time_series_ru_files/figure-html/prophet-m3-changepoints-1.png" alt="Точки излома тренда, оцененные в результате подгонки модели M3. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.7: Точки излома тренда, оцененные в результате подгонки модели <code>M3</code>. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда
+</p>
+</div>
+<p>Как видим, модели <code>M2</code> и <code>M3</code> дают похожие результаты, что скорее определяется значением параметра <code>changepoint.range</code>, нежели способом регуляризации количества точек излома.</p>
+<p>Наконец, посмотрим, что получится, если задать точки излома тренда “вручную”, а не оценивать их в автоматическом режиме. Для этого служит аргумент <code>changepoints</code> (рис. <a href="ch-intro-to-prophet.html#fig:prophet-m4-changepoints">6.8</a>):</p>
+
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" title="1"><span class="co"># Здесь мы задаем точки излома тренда самостоятельно</span></a>
+<a class="sourceLine" id="cb72-2" title="2"><span class="co"># (выбор дат, подаваемых на аргумент changepoints, основан на</span></a>
+<a class="sourceLine" id="cb72-3" title="3"><span class="co"># визуальном анализе обучающих данных):</span></a>
+<a class="sourceLine" id="cb72-4" title="4"></a>
+<a class="sourceLine" id="cb72-5" title="5">M4 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, </a>
+<a class="sourceLine" id="cb72-6" title="6">              <span class="dt">changepoints =</span> <span class="kw">c</span>(<span class="st">&quot;2016-04-01&quot;</span>, <span class="st">&quot;2016-06-15&quot;</span>,</a>
+<a class="sourceLine" id="cb72-7" title="7">                               <span class="st">&quot;2016-10-01&quot;</span>, <span class="st">&quot;2017-04-01&quot;</span>,</a>
+<a class="sourceLine" id="cb72-8" title="8">                               <span class="st">&quot;2017-07-01&quot;</span>, <span class="st">&quot;2017-09-01&quot;</span>,</a>
+<a class="sourceLine" id="cb72-9" title="9">                               <span class="st">&quot;2017-12-26&quot;</span>, <span class="st">&quot;2018-04-01&quot;</span>,</a>
+<a class="sourceLine" id="cb72-10" title="10">                               <span class="st">&quot;2018-11-13&quot;</span>, <span class="st">&quot;2018-12-15&quot;</span>,</a>
+<a class="sourceLine" id="cb72-11" title="11">                               <span class="st">&quot;2019-04-01&quot;</span>))</a>
+<a class="sourceLine" id="cb72-12" title="12"></a>
+<a class="sourceLine" id="cb72-13" title="13">forecast_M4 &lt;-<span class="st"> </span><span class="kw">predict</span>(M4, future_df)</a>
+<a class="sourceLine" id="cb72-14" title="14"><span class="kw">plot</span>(M4, forecast_M4) <span class="op">+</span><span class="st"> </span><span class="kw">add_changepoints_to_plot</span>(M4)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m4-changepoints"></span>
+<img src="time_series_ru_files/figure-html/prophet-m4-changepoints-1.png" alt="Точки излома тренда, оцененные в результате подгонки модели M4. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.8: Точки излома тренда, оцененные в результате подгонки модели <code>M4</code>. Сплошная красная линия — тренд. Штриховые красные линии — точки излома тренда
+</p>
+</div>
+<p>Модель <code>M4</code> хорошо описывает тренд в анализируемом временном ряду, хотя не исключено что она несколько переобучена.</p>
+</div>
+<div id="sec-prophet-holidays" class="section level2">
+<h2><span class="header-section-number">6.5</span> Эффекты праздников и других важных событий</h2>
+<p>Продолжим начатое ранее знакомство с параметрами функции <code>prophet()</code> и рассмотрим способы моделирования эффектов “праздников”. Употребляемый здесь термин “праздник” — результат прямого перевода термина “holiday”, принятого в пакете <code>prophet</code>. Под этим термином мы будем понимать как настоящие официальные праздничные и выходные дни (например, Новый год, Рождество и т.п.), так и другие события, сопровождающиеся заметными изменениями свойств временного ряда (спортивные или культурные мероприятия, природные явления, политические события и т.п.). Поэтому слова “праздник” и “событие” будут применяться ниже как синонимы.</p>
+<div id="формат-представления" class="section level3">
+<h3><span class="header-section-number">6.5.1</span> Формат представления</h3>
+<p>Как было отмечено в разд. <a href="ch-intro-to-prophet.html#sec-prophet-params">6.3</a>, для добавления эффектов праздников в <code>prophet</code>–модель необходимо сначала создать отдельную таблицу, содержащую как минимум два обязательных столбца: <code>holiday</code> (названия праздников и других событий) и <code>ds</code> (временные метки; обычно это даты в формате <code>YYYY-MM-DD</code>). Важно, чтобы в такую таблицу входил как исторический период, на основе которого происходит обучение модели, так и период в будущем, для которого необходимо сделать прогноз. Например, если какое–то важное событие встречается в обучающих данных, то его следует указать и для прогнозного периода (при условии, конечно, что мы ожидаем повторение этого события в будущем, и что дата этого события входит в прогнозный период).</p>
+<p><a href="https://en.bitcoinwiki.org/wiki/Bitcoin_history">История биткоина</a> полна событий, которые косвенно или непосредственно оказали влияние на стоимость этой криптовалюты (см. также здесь). В качестве примера, возьмем некоторые из этих событий:</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" title="1"><span class="co"># event_1 - cоздание Bitcoin Cash</span></a>
+<a class="sourceLine" id="cb73-2" title="2"><span class="co"># event_2 - запрет ICO в Китае</span></a>
+<a class="sourceLine" id="cb73-3" title="3"><span class="co"># event_3 - новые правила торгов в Ю. Корее</span></a>
+<a class="sourceLine" id="cb73-4" title="4"><span class="co"># event_4 - удаление южнокорейского рынка из трекера CoinMarketCap</span></a>
+<a class="sourceLine" id="cb73-5" title="5"><span class="co"># event_5 - разветвление Bitcoin Cash</span></a>
+<a class="sourceLine" id="cb73-6" title="6"></a>
+<a class="sourceLine" id="cb73-7" title="7">key_dates &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb73-8" title="8">  <span class="dt">holiday =</span> <span class="kw">paste0</span>(<span class="st">&quot;event_&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb73-9" title="9">  <span class="dt">ds =</span> <span class="kw">as.Date</span>(<span class="kw">c</span>(<span class="st">&quot;2017-08-01&quot;</span>,</a>
+<a class="sourceLine" id="cb73-10" title="10">                 <span class="st">&quot;2017-09-04&quot;</span>,</a>
+<a class="sourceLine" id="cb73-11" title="11">                 <span class="st">&quot;2017-12-28&quot;</span>,</a>
+<a class="sourceLine" id="cb73-12" title="12">                 <span class="st">&quot;2018-01-08&quot;</span>,</a>
+<a class="sourceLine" id="cb73-13" title="13">                 <span class="st">&quot;2018-11-15&quot;</span>))</a>
+<a class="sourceLine" id="cb73-14" title="14">  )</a></code></pre></div>
+<p>Теперь добавим эти события в модель (аргумент <code>holidays</code>):</p>
+
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" title="1">M5 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, </a>
+<a class="sourceLine" id="cb74-2" title="2">              <span class="dt">holidays =</span> key_dates,</a>
+<a class="sourceLine" id="cb74-3" title="3">              <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb74-4" title="4"></a>
+<a class="sourceLine" id="cb74-5" title="5">forecast_M5 &lt;-<span class="st"> </span><span class="kw">predict</span>(M5, future_df)</a>
+<a class="sourceLine" id="cb74-6" title="6"><span class="kw">prophet_plot_components</span>(M5, forecast_M5)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-m5"></span>
+<img src="time_series_ru_files/figure-html/prophet-m5-1.png" alt="Оцененные компоненты модели M5" width="100%" />
+<p class="caption">
+РИСУНОК 6.9: Оцененные компоненты модели <code>M5</code>
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:prophet-m5">6.9</a> приведены оцененные компоненты модели <code>M5</code>, включая эффекты событий, которые были добавлены с помощью аргумента <code>holidays</code> (см. второй график сверху). Функция <code>plot_forecast_component()</code> позволяет изобразить эффекты отдельных событий (см. аргумент <code>name</code>; рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m5-component">6.10</a>):</p>
+
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" title="1"><span class="kw">plot_forecast_component</span>(M5, forecast_M5, <span class="dt">name =</span> <span class="st">&quot;event_5&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m5-component"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m5-component-1.png" alt="Эффект разветвления Bitcoin Cash на Bitcoin Cash SV и Bitcoing Cash ABC (event_5), оцененный с помощью модели M5" width="100%" />
+<p class="caption">
+РИСУНОК 6.10: Эффект разветвления Bitcoin Cash на Bitcoin Cash SV и Bitcoing Cash ABC (<code>event_5</code>), оцененный с помощью модели <code>M5</code>
+</p>
+</div>
+<p>На аргумент name функции <code>plot_forecast_component()</code> можно также подать значение <code>"holidays"</code>, что приведет к изображению на отдельном графике эффектов всех включенных в модель событий (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m5-all-hols">6.11</a>):</p>
+
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" title="1"><span class="kw">plot_forecast_component</span>(M5, forecast_M5, <span class="dt">name =</span> <span class="st">&quot;holidays&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m5-all-hols"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m5-all-hols-1.png" alt="Эффекты всех событий, включенных в модель M5" width="100%" />
+<p class="caption">
+РИСУНОК 6.11: Эффекты всех событий, включенных в модель <code>M5</code>
+</p>
+</div>
+<p>О наступлении некоторых событий в истории биткоина было известно заранее, как например о разветвлении Bitcoin Cash на Bitcoin Cash SV и Bitcoin Cash ABC (<code>event_5</code> в модели <code>M5</code>). Поэтому многие <a href="https://www.5-tv.ru/news/228549/pocemu-bitcoin-ruhnul-pocti-natysacu-dollarov/">спекулянты начали скупать</a> Bitcoin Cash за несколько дней до “вилки”, или “форка”, чтобы впоследствии удвоить свой капитал (при наступлении “форка” владелец старой монеты автоматически становится владельцем и новой монеты). В связи с этим имело бы смысл моделировать <code>event_5</code> как событие c “предысторией”, т.е. как событие, чей эффект начал проявлять себя за несколько дней до главной даты (в данном случае 15 ноября 2018 г.). В пакете <code>prophet</code> это можно сделать, добавив в таблицу с моделируемыми событиями столбцы <code>lower_window</code> (определят длительность “предыстории”) и <code>upper_window</code> (определяет длительность эффекта после главной даты). Для примера предположим, что спекулянты начали скупать Bitcoin Cash за две недели до “вилки” (<code>lower_window = -14</code>) и прекратили делать это сразу после “вилки” (<code>upper_window = 0</code>):</p>
+
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">key_dates2 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(key_dates, </a>
+<a class="sourceLine" id="cb77-2" title="2">                               <span class="dt">lower_window =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">-14</span>),</a>
+<a class="sourceLine" id="cb77-3" title="3">                               <span class="dt">upper_window =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb77-4" title="4"></a>
+<a class="sourceLine" id="cb77-5" title="5">M6 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train,</a>
+<a class="sourceLine" id="cb77-6" title="6">              <span class="dt">holidays =</span> key_dates2,</a>
+<a class="sourceLine" id="cb77-7" title="7">              <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb77-8" title="8">forecast_M6 &lt;-<span class="st"> </span><span class="kw">predict</span>(M6, future_df)</a>
+<a class="sourceLine" id="cb77-9" title="9"></a>
+<a class="sourceLine" id="cb77-10" title="10"><span class="co"># Эффект события с &quot;предысторией&quot;:</span></a>
+<a class="sourceLine" id="cb77-11" title="11"><span class="kw">plot_forecast_component</span>(M6, forecast_M6, <span class="dt">name =</span> <span class="st">&quot;event_5&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m6-window"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m6-window-1.png" alt="Эффект события с предысторией" width="100%" />
+<p class="caption">
+РИСУНОК 6.12: Эффект события с предысторией
+</p>
+</div>
+<p>Как видно на рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m6-window">6.12</a>, теперь эффект <code>event_5</code> включает несколько дней до главной даты этого события (сравните с рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m5-component">6.10</a>).</p>
+</div>
+<div id="встроенные-даты-праздников" class="section level3">
+<h3><span class="header-section-number">6.5.2</span> Встроенные даты праздников</h3>
+<p>До этого момента мы моделировали эффекты событий, которые случались только один раз. Однако многие события, такие как официальные государственные праздники и выходные дни, повторяются регулярно и их эффекты также могут оказаться важными для прогноза.</p>
+<p>Конечно, мы могли бы воспользоваться описанным выше способом для включения таких событий в модель, т.е. путем создания таблицы, подобной <code>key_dates</code> или <code>key_dates2</code>. К счастью, в большинстве случаев в этом не будет необходимости — в <code>prophet</code> уже включены даты официальных праздников и выходных дней для более чем 60 стран (полный список можно найти на сайте с <a href="https://facebook.github.io/prophet/docs/seasonality,_holiday_effects,_and_regressors.html#built-in-country-holidays">официальной документацией</a> по пакету). Эти встроенные даты праздников охватывают период с 1995 по 2044 гг. Для их добавления в модель служит функция <code>add_country_holidays()</code>, которая принимает два аргумента: <code>m</code> (модельный объект) и <code>country_name</code> (международное обозначение страны, например <code>"Russia"</code> или <code>"RU"</code>). Для примера построим модель, которая включает как рассмотренные выше важные в истории биткоина разовые события, так и регулярные официальные праздники США:</p>
+
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" title="1"><span class="co"># Обратите внимание: здесь мы инициализируем объект M7,</span></a>
+<a class="sourceLine" id="cb78-2" title="2"><span class="co"># но пока не подаем на него таблицу с обучающими данными</span></a>
+<a class="sourceLine" id="cb78-3" title="3">M7 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">holidays =</span> key_dates2, <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb78-4" title="4"></a>
+<a class="sourceLine" id="cb78-5" title="5"><span class="co"># Добавляем официальные праздничные дни США:</span></a>
+<a class="sourceLine" id="cb78-6" title="6">M7 &lt;-<span class="st"> </span><span class="kw">add_country_holidays</span>(<span class="dt">m =</span> M7, <span class="dt">country_name =</span> <span class="st">&#39;US&#39;</span>)</a>
+<a class="sourceLine" id="cb78-7" title="7"></a>
+<a class="sourceLine" id="cb78-8" title="8"><span class="co"># Обратите внимание на использование функции fit.prophet():</span></a>
+<a class="sourceLine" id="cb78-9" title="9">M7 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M7, bitcoin_train)</a>
+<a class="sourceLine" id="cb78-10" title="10">forecast_M7 &lt;-<span class="st"> </span><span class="kw">predict</span>(M7, future_df)</a>
+<a class="sourceLine" id="cb78-11" title="11"></a>
+<a class="sourceLine" id="cb78-12" title="12"><span class="kw">plot_forecast_component</span>(M7, forecast_M7, <span class="dt">name =</span> <span class="st">&quot;holidays&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m7-usa-hols"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m7-usa-hols-1.png" alt="Эффекты разовых событий и официальных праздников США, оцененные с помощью модели M7" width="100%" />
+<p class="caption">
+РИСУНОК 6.13: Эффекты разовых событий и официальных праздников США, оцененные с помощью модели <code>M7</code>
+</p>
+</div>
+<p>Оцененные эффекты всех событий из модели <code>M7</code> показаны на рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m7-usa-hols">6.13</a>. Просмотреть названия этих событий можно следующим образом:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1">M7<span class="op">$</span>train.holiday.names</a></code></pre></div>
+<pre><code>##  [1] &quot;event_1&quot;                     &quot;event_2&quot;                    
+##  [3] &quot;event_3&quot;                     &quot;event_4&quot;                    
+##  [5] &quot;event_5&quot;                     &quot;New Year&#39;s Day&quot;             
+##  [7] &quot;Martin Luther King, Jr. Day&quot; &quot;Washington&#39;s Birthday&quot;      
+##  [9] &quot;Memorial Day&quot;                &quot;Independence Day&quot;           
+## [11] &quot;Labor Day&quot;                   &quot;Columbus Day&quot;               
+## [13] &quot;Veterans Day&quot;                &quot;Thanksgiving&quot;               
+## [15] &quot;Christmas Day&quot;               &quot;Christmas Day (Observed)&quot;   
+## [17] &quot;New Year&#39;s Day (Observed)&quot;   &quot;Veterans Day (Observed)&quot;</code></pre>
+</div>
+<div id="регуляризация" class="section level3">
+<h3><span class="header-section-number">6.5.3</span> Регуляризация</h3>
+<p>В пакете <code>prophet</code> имеется возможность подавлять величину эффектов “праздников”, что может оказаться полезным при возникновении риска переобучения модели. Такой контроль (<a href="https://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D0%B3%D1%83%D0%BB%D1%8F%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_(%D0%BC%D0%B0%D1%82%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0)">регуляризация</a>) осуществляется одним из двух способов:</p>
+<ul>
+<li>глобальный контроль — распространяется на все моделируемые события;</li>
+<li>контроль на уровне отдельных событий.</li>
+</ul>
+<p>Аргумент <code>holidays.prior.scale</code> функции <code>prophet()</code> позволяет реализовать первый из этих способов. Данный аргумент задает априорное значение стандартного отклонения (нормального) распределения, с помощью которого моделируется эффект того или иного события. По умолчанию <code>holidays.prior.scale = 10</code>, что соответствует незначительной регуляризации. Уменьшение этого заданного по умолчанию значения приведет к подавлению эффектов всех событий, включенных в модель (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-hols-regularisation">6.14</a>):</p>
+
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1"><span class="co"># Для глобальной регуляризации эффектов праздников служит аргумент</span></a>
+<a class="sourceLine" id="cb81-2" title="2"><span class="co"># holidays.prior.scale:</span></a>
+<a class="sourceLine" id="cb81-3" title="3">M8 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">holidays =</span> key_dates2,</a>
+<a class="sourceLine" id="cb81-4" title="4">              <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>,</a>
+<a class="sourceLine" id="cb81-5" title="5">              <span class="dt">holidays.prior.scale =</span> <span class="fl">0.01</span>)</a>
+<a class="sourceLine" id="cb81-6" title="6">M8 &lt;-<span class="st"> </span><span class="kw">add_country_holidays</span>(M8, <span class="dt">country_name =</span> <span class="st">&quot;US&quot;</span>)</a>
+<a class="sourceLine" id="cb81-7" title="7">M8 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M8, bitcoin_train)</a>
+<a class="sourceLine" id="cb81-8" title="8">forecast_M8 &lt;-<span class="st"> </span><span class="kw">predict</span>(M8, future_df)</a>
+<a class="sourceLine" id="cb81-9" title="9"></a>
+<a class="sourceLine" id="cb81-10" title="10"><span class="co"># Эффекты праздников до (модель M7) и после (M8)</span></a>
+<a class="sourceLine" id="cb81-11" title="11"><span class="co"># глобальной регуляризации:</span></a>
+<a class="sourceLine" id="cb81-12" title="12">m7_holidays &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb81-13" title="13"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M7, forecast_M7, <span class="dt">name =</span> <span class="st">&quot;holidays&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb81-14" title="14"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;M7&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.25</span>))</a>
+<a class="sourceLine" id="cb81-15" title="15">m8_holidays &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb81-16" title="16"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M8, forecast_M8, <span class="dt">name =</span> <span class="st">&quot;holidays&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb81-17" title="17"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;M8&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.25</span>))</a>
+<a class="sourceLine" id="cb81-18" title="18">gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(m7_holidays, m8_holidays, <span class="dt">nrow =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-hols-regularisation"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-hols-regularisation-1.png" alt="Эффекты событий до (модель M7) и после (модель M8) глобальной регуляризации" width="100%" />
+<p class="caption">
+РИСУНОК 6.14: Эффекты событий до (модель <code>M7</code>) и после (модель <code>M8</code>) глобальной регуляризации
+</p>
+</div>
+<p>Для управления эффектами отдельных событий в таблицу с перечнем событий необходимо добавить столбец <code>prior_scale.</code> В качестве примера уменьшим величину эффекта события <code>event_5</code>, оставив остальные уровни без изменений (т.е. используя принятое по умолчанию значение параметра <code>prior_scale = 10</code>):</p>
+
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" title="1">key_dates3 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">bind_cols</span>(key_dates2, </a>
+<a class="sourceLine" id="cb82-2" title="2">                               <span class="dt">prior_scale =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">0.01</span>))</a>
+<a class="sourceLine" id="cb82-3" title="3"></a>
+<a class="sourceLine" id="cb82-4" title="4">M9 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">holidays =</span> key_dates3, <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb82-5" title="5"></a>
+<a class="sourceLine" id="cb82-6" title="6">M9 &lt;-<span class="st"> </span><span class="kw">add_country_holidays</span>(M9, <span class="dt">country_name =</span> <span class="st">&#39;US&#39;</span>)</a>
+<a class="sourceLine" id="cb82-7" title="7">M9 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M9, bitcoin_train)</a>
+<a class="sourceLine" id="cb82-8" title="8">forecast_M9 &lt;-<span class="st"> </span><span class="kw">predict</span>(M9, future_df)</a>
+<a class="sourceLine" id="cb82-9" title="9"></a>
+<a class="sourceLine" id="cb82-10" title="10">m9_holidays &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb82-11" title="11"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M9, forecast_M9, <span class="dt">name =</span> <span class="st">&quot;holidays&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb82-12" title="12"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;M9&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.25</span>))</a>
+<a class="sourceLine" id="cb82-13" title="13">gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(m7_holidays, m9_holidays, <span class="dt">nrow =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-individual-regularisation"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-individual-regularisation-1.png" alt="Пример регуляризации эффекта отдельного события" width="100%" />
+<p class="caption">
+РИСУНОК 6.15: Пример регуляризации эффекта отдельного события
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-hols-regularisation">6.14</a> хорошо виден результат подавления эффекта события <code>event_5</code> (сравните уровень самого большого пика на графике слева с уровнем пика в той же позиции на графике справа). При этом эффекты большинства других событий и официальных праздников остались почти неизменными.</p>
+</div>
+</div>
+<div id="sec-prophet-seasonal-components" class="section level2">
+<h2><span class="header-section-number">6.6</span> Сезонные компоненты</h2>
+<p>Как было отмечено в разд. <a href="ch-intro-to-prophet.html#sec-how-prophet-works">6.1</a>, сезонные компоненты аппроксимируются в <code>prophet</code> с помощью <a href="https://ru.wikipedia.org/wiki/%D0%A0%D1%8F%D0%B4_%D0%A4%D1%83%D1%80%D1%8C%D0%B5">частичных сумм</a> ряда Фурье, число членов которого (порядок) определяет гладкость соответствующей функции. Рассмотрим различные способы спецификации сезонных колебаний.</p>
+<div id="годовая-недельная-и-дневная-компоненты" class="section level3">
+<h3><span class="header-section-number">6.6.1</span> Годовая, недельная и дневная компоненты</h3>
+<p>Функция <code>prophet()</code> имеет три аргумента, с помощью которых можно контролировать гладкость функций годовой, недельной и дневной сезонности: <code>yearly.seasonality</code>, <code>weekly.seasonality</code> и <code>daily.seasonality</code> (см. разд. <a href="ch-intro-to-prophet.html#sec-prophet-params">6.3</a>). Увеличение значений этих аргументов приведет к подгонке менее гладких функций соответствующих компонент (что одновременно увеличит риск переобучения модели). На рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m3-yearly-season">6.16</a> для примера показана функция годовой сезонности, оцененная с помощью модели <code>M3</code> из разд. <a href="ch-intro-to-prophet.html#sec-prophet-changepoints">6.4</a> (график этой функции построен с помощью служебной функции <code>plot_yearly()</code>, которую можно вызвать только обычным в таких случаях образом, т.е. указав имя пакета в сочетании с тройным двоеточем перед именем скрытой функции).</p>
+
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1">prophet<span class="op">:::</span><span class="kw">plot_yearly</span>(M3)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m3-yearly-season"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m3-yearly-season-1.png" alt="Функция годовой сезонности, оцененная с помощью модели M3" width="100%" />
+<p class="caption">
+РИСУНОК 6.16: Функция годовой сезонности, оцененная с помощью модели <code>M3</code>
+</p>
+</div>
+<p>Увеличив значение аргумента <code>yearly.seasonality</code> с заданного по умолчанию 10 до 20, мы получим менее гладкую кривую (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m3-yearly-season-wiggly">6.17</a>):</p>
+
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" title="1">M3B &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, </a>
+<a class="sourceLine" id="cb84-2" title="2">               <span class="dt">yearly.seasonality =</span> <span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb84-3" title="3">               <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>, </a>
+<a class="sourceLine" id="cb84-4" title="4">               <span class="dt">changepoint.prior.scale =</span> <span class="fl">0.02</span>)</a>
+<a class="sourceLine" id="cb84-5" title="5"></a>
+<a class="sourceLine" id="cb84-6" title="6">prophet<span class="op">:::</span><span class="kw">plot_yearly</span>(M3B)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m3-yearly-season-wiggly"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m3-yearly-season-wiggly-1.png" alt="Функция годовой сезонности, оцененная с помощью модели M3B" width="100%" />
+<p class="caption">
+РИСУНОК 6.17: Функция годовой сезонности, оцененная с помощью модели <code>M3B</code>
+</p>
+</div>
+</div>
+<div id="пользовательские-сезонные-компоненты" class="section level3">
+<h3><span class="header-section-number">6.6.2</span> Пользовательские сезонные компоненты</h3>
+<p>Для данных, охватывающих как минимум два года, функция <code>prophet()</code> автоматически добавит в модель компоненты годовой и недельной сезонности. Если гранулярность данных превышает дневную (например, когда имеются почасовые наблюдения зависимой переменной), то в модель автоматически будет добавлена также и компонента дневной сезонности. Помимо этого, пользователи имеют возможность добавить и любые другие сезонные компоненты с помощью функции <code>add_seasonality()</code> (например, часовую, месячную, квартальную и т.п.). Эта функция имеет следующие аргументы:</p>
+<ul>
+<li><code>m</code> — модельный объект;</li>
+<li><code>name</code> — название сезонной компоненты;</li>
+<li><code>period</code> — число (необязательно целое), соответствующее количеству временных интервалов в одном сезонном цикле;</li>
+<li><code>fourier.order</code> — порядок (количество членов) ряда Фурье (по умолчанию равен 3 для недельной сезонности и 10 для годовой);</li>
+<li><code>mode</code> — тип модели; принимает два возможных значения — <code>"additive"</code> (аддитивная; выбирается по умолчанию) и <code>"multiplicative"</code> (мультипликативная);</li>
+<li><code>condition.name</code> — название сторонней переменной, которая задает разные режимы моделируемой сезонности (см. ниже).</li>
+</ul>
+<p>Рассмотрим примеры использования функции <code>add_seasonality()</code> и ее аргументов.</p>
+<p>В приведенном ниже коде мы сначала отключаем автоматически добавляемую в модель недельную сезонность и вместо нее добавляем месячную (допустив, что один месячный период составляет 30.5 дней). На рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m10-components">6.18</a> представлены все сезонные компоненты полученной модели (тренд, годовая сезонность и месячная сезонность).</p>
+
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">M10 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">weekly.seasonality =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb85-2" title="2">M10 &lt;-<span class="st"> </span><span class="kw">add_seasonality</span>(<span class="dt">m =</span> M10,</a>
+<a class="sourceLine" id="cb85-3" title="3">                       <span class="dt">name =</span> <span class="st">&quot;monthly&quot;</span>,</a>
+<a class="sourceLine" id="cb85-4" title="4">                       <span class="dt">period =</span> <span class="fl">30.5</span>,</a>
+<a class="sourceLine" id="cb85-5" title="5">                       <span class="dt">fourier.order =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb85-6" title="6">M10 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M10, bitcoin_train)</a>
+<a class="sourceLine" id="cb85-7" title="7">forecast_M10 &lt;-<span class="st"> </span><span class="kw">predict</span>(M10, future_df)</a>
+<a class="sourceLine" id="cb85-8" title="8"><span class="kw">prophet_plot_components</span>(M10, forecast_M10)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m10-components"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m10-components-1.png" alt="Компоненты модели M10" width="100%" />
+<p class="caption">
+РИСУНОК 6.18: Компоненты модели <code>M10</code>
+</p>
+</div>
+<p>Аналогичным образом вместо компоненты месячных колебаний мы могли бы добавить, например, компоненту квартальной сезонности (задав период длиной 365.25/4 дней):</p>
+
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1">M11 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">weekly.seasonality =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb86-2" title="2">M11 &lt;-<span class="st"> </span><span class="kw">add_seasonality</span>(<span class="dt">m =</span> M11,</a>
+<a class="sourceLine" id="cb86-3" title="3">                       <span class="dt">name =</span> <span class="st">&quot;quarter&quot;</span>,</a>
+<a class="sourceLine" id="cb86-4" title="4">                       <span class="dt">period =</span> <span class="fl">365.25</span><span class="op">/</span><span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb86-5" title="5">                       <span class="dt">fourier.order =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb86-6" title="6">M11 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M11, bitcoin_train)</a>
+<a class="sourceLine" id="cb86-7" title="7">forecast_M11 &lt;-<span class="st"> </span><span class="kw">predict</span>(M11, future_df)</a>
+<a class="sourceLine" id="cb86-8" title="8"><span class="kw">prophet_plot_components</span>(M11, forecast_M11)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m11-quarter"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m11-quarter-1.png" alt="Компоненты модели M11" width="100%" />
+<p class="caption">
+РИСУНОК 6.19: Компоненты модели <code>M11</code>
+</p>
+</div>
+</div>
+<div id="условные-режимы-сезонности" class="section level3">
+<h3><span class="header-section-number">6.6.3</span> Условные режимы сезонности</h3>
+<p>В ряде случаев функция, аппроксимирующая ту или иную сезонную составляющую, может изменять свои свойства в зависимости от каких–то сторонних факторов. Например, колебания в течение рабочих дней могут иметь характер, сильно отличающийся от такового в выходные дни. Пакет <code>prophet</code> позволяет моделировать такие <em>условные режимы</em> сезонности (т.е. режимы, которые зависят от сторонних факторов) с помощью аргумента <code>condition.name</code> функции <code>add_seasonality()</code>. Как следует из названия, на этот аргумент подается имя (булевой) переменной, которая определяет соответствующий режим. Такие переменные должны хранится в той же таблице, что и основные данные по временному ряду.</p>
+<p>Исключительно в качестве примера предположим, что недельные колебания стоимости биткоина в летние месяцы отличаются от таковых в другие месяцы. Чтобы смоделировать такое различие добавим в таблицу с данными <code>bitcoin_train</code> две новые индикаторные переменные: <code>summer</code> (принимает значение <code>TRUE</code> в летние месяцы и <code>FALSE</code> в другие месяцы) и <code>not_summer</code> (<code>TRUE</code> в нелетние месяцы и <code>FALSE</code> летом). Важно помнить, что такие же переменные нужно добавить и в таблицу с будущими датами <code>future_df</code> — иначе прогнозные значения рассчитать не получится:</p>
+
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1"><span class="co"># Функция для удобного добавления переключателей режимов:</span></a>
+<a class="sourceLine" id="cb87-2" title="2">is_summer &lt;-<span class="st"> </span><span class="cf">function</span>(ds) {</a>
+<a class="sourceLine" id="cb87-3" title="3">    month &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format</span>(ds, <span class="st">&#39;%m&#39;</span>))</a>
+<a class="sourceLine" id="cb87-4" title="4">    <span class="kw">return</span>(month <span class="op">&gt;</span><span class="st"> </span><span class="dv">5</span> <span class="op">&amp;</span><span class="st"> </span>month <span class="op">&lt;</span><span class="st"> </span><span class="dv">9</span>)</a>
+<a class="sourceLine" id="cb87-5" title="5">}</a>
+<a class="sourceLine" id="cb87-6" title="6"></a>
+<a class="sourceLine" id="cb87-7" title="7"><span class="co"># Добавляем переключатели режима в данные:</span></a>
+<a class="sourceLine" id="cb87-8" title="8">bitcoin_train<span class="op">$</span>summer &lt;-<span class="st"> </span><span class="kw">is_summer</span>(bitcoin_train<span class="op">$</span>ds)</a>
+<a class="sourceLine" id="cb87-9" title="9">bitcoin_train<span class="op">$</span>not_summer &lt;-<span class="st"> </span><span class="op">!</span>bitcoin_train<span class="op">$</span>summer</a>
+<a class="sourceLine" id="cb87-10" title="10">future_df<span class="op">$</span>summer &lt;-<span class="st"> </span><span class="kw">is_summer</span>(future_df<span class="op">$</span>ds)</a>
+<a class="sourceLine" id="cb87-11" title="11">future_df<span class="op">$</span>not_summer &lt;-<span class="st"> </span><span class="op">!</span>future_df<span class="op">$</span>summer</a>
+<a class="sourceLine" id="cb87-12" title="12"></a>
+<a class="sourceLine" id="cb87-13" title="13"><span class="co"># Подгоняем модель:</span></a>
+<a class="sourceLine" id="cb87-14" title="14">M12 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">weekly.seasonality =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb87-15" title="15">M12 &lt;-<span class="st"> </span><span class="kw">add_seasonality</span>(M12, <span class="dt">name =</span> <span class="st">&#39;weekly_summer&#39;</span>, </a>
+<a class="sourceLine" id="cb87-16" title="16">                       <span class="dt">period =</span> <span class="dv">7</span>,</a>
+<a class="sourceLine" id="cb87-17" title="17">                       <span class="dt">fourier.order =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb87-18" title="18">                       <span class="dt">condition.name =</span> <span class="st">&#39;summer&#39;</span>) </a>
+<a class="sourceLine" id="cb87-19" title="19">M12 &lt;-<span class="st"> </span><span class="kw">add_seasonality</span>(M12, <span class="dt">name =</span> <span class="st">&quot;weekly_not_summer&quot;</span>,</a>
+<a class="sourceLine" id="cb87-20" title="20">                       <span class="dt">period =</span> <span class="dv">7</span>, </a>
+<a class="sourceLine" id="cb87-21" title="21">                       <span class="dt">fourier.order =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb87-22" title="22">                       <span class="dt">condition.name =</span> <span class="st">&quot;not_summer&quot;</span>)</a>
+<a class="sourceLine" id="cb87-23" title="23">M12 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M12, bitcoin_train)</a>
+<a class="sourceLine" id="cb87-24" title="24"></a>
+<a class="sourceLine" id="cb87-25" title="25">forecast_M12 &lt;-<span class="st"> </span><span class="kw">predict</span>(M12, future_df)</a>
+<a class="sourceLine" id="cb87-26" title="26"><span class="kw">prophet_plot_components</span>(M12, forecast_M12)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m12-components"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m12-components-1.png" alt="Оцененные компоненты модели M12" width="100%" />
+<p class="caption">
+РИСУНОК 6.20: Оцененные компоненты модели <code>M12</code>
+</p>
+</div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1"><span class="co"># Удалим переменные `summer` и `not_summer` из таблицы</span></a>
+<a class="sourceLine" id="cb88-2" title="2"><span class="co"># `bitcoin_train` - в будущем они нам не понадобятся:</span></a>
+<a class="sourceLine" id="cb88-3" title="3">bitcoin_train<span class="op">$</span>summer &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb88-4" title="4">bitcoin_train<span class="op">$</span>not_summer &lt;-<span class="st"> </span><span class="ot">NULL</span></a></code></pre></div>
+<p>Согласно полученной модели, в нелетние месяцы стоимость биткоина в течение недели обычно достигает максимума по средам, тогда как в летние месяцы по средам обычно наблюдается противоположная картина (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m12-components">6.20</a>).</p>
+</div>
+<div id="регуляризация-сезонных-компонент" class="section level3">
+<h3><span class="header-section-number">6.6.4</span> Регуляризация сезонных компонент</h3>
+<p>Подобно тому, как это было с эффектами праздников и других важных событий (разд. <a href="ch-intro-to-prophet.html#sec-prophet-holidays">6.5</a>), мы можем контролировать уровень вклада сезонных компонент. Глобальный контроль выполняется с помощью аргумента <code>seasonality.prior.scale</code> функции <code>prophet()</code> (разд. <a href="ch-intro-to-prophet.html#sec-prophet-params">6.3</a>). Контроль на уровне отдельных сезонных компонент возможен с помощью аргумента <code>prior.scale</code> функции <code>add_seasonality()</code>. По умолчанию <code>prior.scale = 10</code>. Уменьшение этого значения приведет к подавлению вклада соответствующей компоненты.</p>
+</div>
+<div id="аддитивная-и-мультипликативная-сезонности" class="section level3">
+<h3><span class="header-section-number">6.6.5</span> Аддитивная и мультипликативная сезонности</h3>
+<p>Как было отмечено в разд. <a href="intro.html#sec-main-concepts">1.3</a>, по характеру функциональной связи между своими компонентами модели временных рядов делятся на два основных типа — <em>аддитивные</em> и <em>мультипликативные</em>. Первый из них применяется в случаях, когда амплитуда сезонных колебаний приблизительно постоянна. Если же эта амплитуда заметно изменяется во времени (обычно возрастает), то строят мультипликативную модель.</p>
+<p>В пакете <code>prophet</code> по умолчанию подгоняются аддитивные модели временных рядов (разд. <a href="ch-intro-to-prophet.html#sec-how-prophet-works">6.1</a>). В мультипликативных моделях, как следует из их названия, сезонная компонента умножается на тренд (в связи с этим вклад сезонных колебаний моделируется в виде <em>доли</em> (%) от уровня тренда):</p>
+<p><span class="math display">\[y(t) = g(t) \times s(t) + h(t) + \epsilon_t.\]</span></p>
+<p>В приведенном уравнении предполагается, что амплитуда <em>всех</em> сезонных компонент существенно изменяется во времени. Для подгонки соответствующих моделей необходимо воспользоваться аргументом <code>seasonality.mode</code> функции <code>prophet()</code> (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m12-components">6.20</a>):</p>
+
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">M14 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train, <span class="dt">seasonality.mode =</span> <span class="st">&quot;multiplicative&quot;</span>)</a>
+<a class="sourceLine" id="cb89-2" title="2">forecast_M14 &lt;-<span class="st"> </span><span class="kw">predict</span>(M14, future_df)</a>
+<a class="sourceLine" id="cb89-3" title="3"><span class="kw">plot</span>(M14, forecast_M14)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m14"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m14-1.png" alt="Прогноз стоимости биткоина, полученный на основе модели M14" width="100%" />
+<p class="caption">
+РИСУНОК 6.21: Прогноз стоимости биткоина, полученный на основе модели <code>M14</code>
+</p>
+</div>
+<p>Однако в пакете <code>prophet</code> имеется возможность и более тонкого контроля над аддитивностью сезонных компонент. Так, например, можно построить модели, в которых недельная колебания представлены в аддитивном виде, а годовые — в мультипликативном. Вероятно, вы уже догадались, что для этого применяется функция <code>add_seasonality()</code>:</p>
+
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" title="1">M15 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">yearly.seasonality =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb90-2" title="2">M15 &lt;-<span class="st"> </span><span class="kw">add_seasonality</span>(M15, <span class="dt">name =</span> <span class="st">&#39;yearly&#39;</span>, </a>
+<a class="sourceLine" id="cb90-3" title="3">                       <span class="dt">period =</span> <span class="fl">365.25</span>,</a>
+<a class="sourceLine" id="cb90-4" title="4">                       <span class="dt">fourier.order =</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb90-5" title="5">                       <span class="dt">mode =</span> <span class="st">&quot;multiplicative&quot;</span>)</a>
+<a class="sourceLine" id="cb90-6" title="6">M15 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M15, bitcoin_train)</a>
+<a class="sourceLine" id="cb90-7" title="7"></a>
+<a class="sourceLine" id="cb90-8" title="8">forecast_M15 &lt;-<span class="st"> </span><span class="kw">predict</span>(M15, future_df)</a>
+<a class="sourceLine" id="cb90-9" title="9"><span class="kw">prophet_plot_components</span>(M15, forecast_M15)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m15"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m15-1.png" alt="Оцененные компоненты модели M15" width="100%" />
+<p class="caption">
+РИСУНОК 6.22: Оцененные компоненты модели <code>M15</code>
+</p>
+</div>
+</div>
+</div>
+<div id="sec-prophet-predictors" class="section level2">
+<h2><span class="header-section-number">6.7</span> Модели с предикторами</h2>
+<p>Поскольку модели временных рядов, построенные с помощью пакета <code>prophet</code>, представляют собой одну из разновидностей регрессионных моделей (разд. <a href="ch-intro-to-prophet.html#sec-how-prophet-works">6.1</a>), то помимо обычных компонент и эффектов “праздников” в такие модели можно добавить и любые другие предикторы. Для этого служит функция <code>add_regressor()</code>, которая имеет следующие аргументы:</p>
+<ul>
+<li><code>m</code> — модельный объект;</li>
+<li><code>name</code> — название добавляемого предиктора;</li>
+<li><code>prior.scale</code> — параметр, используемый для регуляризации эффекта добавляемого предиктора (здесь не рассматривается, однако см., например, разд. <a href="ch-intro-to-prophet.html#sec-prophet-holidays">6.5</a>);</li>
+<li><code>standardize</code> — позволяет стандартизовать значения добавляемого предиктора перед подгонкой модели (по умолчанию принимает значение <code>"auto"</code> — в этом случае предиктор будет стандартизован, если только он не является индикаторной переменной со значениями 1 и 0; другие возможные значения этого аргумента: <code>TRUE</code> и <code>FALSE</code>);</li>
+<li><code>mode</code> — необязательный параметр, определяющий характер сезонности добавляемого предиктора (по умолчанию равен <code>m$seasonality.mode</code>).</li>
+</ul>
+<p>Все предикторы, добавляемые в модель с помощью функции <code>add_regressor()</code>, должны присутствовать в таблице с обучающими данными. Для расчета предсказаний будущие значения каждого предиктора должны присутствовать также в таблице с датами, задающими прогнозный отрезок времени. Последнее обстоятельство делает расчет прогноза с использованием количественных предикторов и многих качественных переменных проблематичным: будущие значения таких предикторов (в отличие, например, от дат официальных праздников и других регулярных событий) обычно исследователю не известны. Как правило, для решения этой проблемы сначала строят отдельные модели временных рядов для каждого предиктора, а затем используют предсказанные с помощью таких моделей будущие значения предикторов для получения искомого прогноза. Конечно, такой подход существенно усложняет весь процесс моделирования (поскольку возникает необходимость построения надежных моделей для отдельных предикторов) и потенциально увеличивает неточность прогноза, однако в большинстве случаев это — лучшее, что можно сделать. Именно такой стратегией мы воспользуемся в описанном ниже примере.</p>
+<p>Добавим в модель стоимости биткоина три предиктора: цены на акции компаний Amazon, Google и Facebook, хранящиеся в таблице <code>shares_na_filled</code> (гл. <a href="ch-missing-values.html#ch-missing-values">2</a>). Нужно подчеркнуть, что выбор цен на акции в качестве предикторов, равно как и выбор именно этих компаний, ни с чем не связаны — просто такие данные легко получить из публично доступных источников. Добавим этим данные в таблицу <code>bitcoin_train</code>:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" title="1"><span class="kw">require</span>(tidyr)</a>
+<a class="sourceLine" id="cb91-2" title="2"></a>
+<a class="sourceLine" id="cb91-3" title="3"><span class="co"># Размах дат в таблицах:</span></a>
+<a class="sourceLine" id="cb91-4" title="4">bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">range</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;2016-01-01&quot; &quot;2019-05-26&quot;</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" title="1">shares_na_filled <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ds) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">range</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;2016-01-01&quot; &quot;2019-05-26&quot;</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" title="1"><span class="co"># Объединение таблиц (по ключу `ds`):</span></a>
+<a class="sourceLine" id="cb95-2" title="2">bitcoin_train &lt;-<span class="st"> </span>bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb95-3" title="3"><span class="st">  </span><span class="kw">left_join</span>(., shares_na_filled, <span class="dt">by =</span> <span class="st">&quot;ds&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb95-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price =</span> <span class="kw">log</span>(price)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb95-5" title="5"><span class="st">  </span><span class="kw">pivot_wider</span>(., <span class="dt">names_from =</span> share, <span class="dt">values_from =</span> price)</a></code></pre></div>
+<p>Обратите внимание: даты в обеих объединенных нами таблицах лежат в пределах от <code>2016-01-01</code> до <code>2019-05-26</code> (включительно), что соответствует периоду обучающих данных. Важно также понимать, что на момент написания этого раздела (октябрь 2019 г.) интересующий нас прогнозный период (c <code>2019-05-27</code> по <code>2019-08-24</code>) уже стал историей и, соответственно, цены на акции для этого периода были известны. Но, конечно же, мы не можем использовать эти ставшие историей данные для прогнозирования стоимости биткоина на период с <code>2019-05-27</code> по <code>2019-08-24</code>: в реальной ситуации при расчете прогноза подобное “заглядывание в будущее” было бы невозможно.</p>
+<p>Следует также отметить, что хотя <code>prophet</code>–модели мало чувствительны к наличию пропущенных значений в зависимой переменной, пропущенные значения в предикторах недопустимы. Поэтому в приведенном выше коде мы добавили в исходные данные таблицу <code>shares_na_filled</code>, в которой пропущенные наблюдения уже были восстановлены (методом LOCF, см. гл. <a href="ch-missing-values.html#ch-missing-values">2</a>).</p>
+<p>Как отмечено выше, цены на акции Amazon, Google и Facebook выбраны в качестве предикторов исключительно из удобства. Тем не менее, все три переменные демонстрируют определенную (нелинейную) связь со стоимостью биткоина и, соответственно, вполне подходят для наших целей (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-shares-cor">6.23</a>):</p>
+
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" title="1">bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb96-2" title="2"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span><span class="kw">c</span>(y, ds), <span class="dt">names_to =</span> <span class="st">&quot;share&quot;</span>,</a>
+<a class="sourceLine" id="cb96-3" title="3">               <span class="dt">values_to =</span> <span class="st">&quot;price&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb96-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(., <span class="kw">aes</span>(price, y)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb96-5" title="5"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb96-6" title="6"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb96-7" title="7"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>share, <span class="dt">scales =</span> <span class="st">&quot;free_x&quot;</span>, <span class="dt">ncol =</span> <span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb96-8" title="8"><span class="st">  </span><span class="kw">theme_minimal</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-shares-cor"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-shares-cor-1.png" alt="Связь между ценой акций трех компаний и стоимостью биткоина" width="100%" />
+<p class="caption">
+РИСУНОК 6.23: Связь между ценой акций трех компаний и стоимостью биткоина
+</p>
+</div>
+<p>Однако прежде, чем перейти к построению модели стоимости биткоина, нам необходимо решить проблему с будущими значениями предикторов. Для этого мы построим отдельные модели для каждого предиктора, а затем рассчитаем их предсказанные значения для интересующего нас прогнозного периода:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1"><span class="co"># Функция, которая поможет нам получить прогнозные значения</span></a>
+<a class="sourceLine" id="cb97-2" title="2"><span class="co"># цены акций одновременно для всех трех компаний </span></a>
+<a class="sourceLine" id="cb97-3" title="3">get_price_futures &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</a>
+<a class="sourceLine" id="cb97-4" title="4">  df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(df, <span class="op">-</span>share) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">y =</span> price)</a>
+<a class="sourceLine" id="cb97-5" title="5">  m &lt;-<span class="st"> </span><span class="kw">prophet</span>(df,</a>
+<a class="sourceLine" id="cb97-6" title="6">               <span class="dt">n.changepoints =</span> <span class="dv">15</span>, </a>
+<a class="sourceLine" id="cb97-7" title="7">               <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>,</a>
+<a class="sourceLine" id="cb97-8" title="8">               <span class="dt">weekly.seasonality =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb97-9" title="9">  future_df_shares &lt;-<span class="st"> </span>future_df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(ds)</a>
+<a class="sourceLine" id="cb97-10" title="10">  price_forecast &lt;-<span class="st"> </span><span class="kw">predict</span>(m, future_df_shares)</a>
+<a class="sourceLine" id="cb97-11" title="11">  </a>
+<a class="sourceLine" id="cb97-12" title="12">  future_df_shares <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-13" title="13"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">price =</span> price_forecast<span class="op">$</span>yhat) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">return</span>()</a>
+<a class="sourceLine" id="cb97-14" title="14">}</a>
+<a class="sourceLine" id="cb97-15" title="15"></a>
+<a class="sourceLine" id="cb97-16" title="16">future_share_price &lt;-<span class="st"> </span>bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-17" title="17"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span><span class="kw">c</span>(y, ds), <span class="dt">names_to =</span> <span class="st">&quot;share&quot;</span>, </a>
+<a class="sourceLine" id="cb97-18" title="18">               <span class="dt">values_to =</span> <span class="st">&quot;price&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-19" title="19"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>y) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(share) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-20" title="20"><span class="st">  </span><span class="kw">do</span>(<span class="kw">get_price_futures</span>(.)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb97-21" title="21"><span class="st">  </span><span class="kw">pivot_wider</span>(., <span class="dt">names_from =</span> share, <span class="dt">values_from =</span> price)</a>
+<a class="sourceLine" id="cb97-22" title="22"><span class="kw">head</span>(future_share_price)</a></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   ds                   amzn    fb  goog
+##   &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01 00:00:00  6.34  4.55  6.55
+## 2 2016-01-02 00:00:00  6.35  4.55  6.55
+## 3 2016-01-03 00:00:00  6.35  4.55  6.55
+## 4 2016-01-04 00:00:00  6.35  4.55  6.56
+## 5 2016-01-05 00:00:00  6.36  4.55  6.56
+## 6 2016-01-06 00:00:00  6.36  4.56  6.56</code></pre>
+<p>Исходные данные и прогнозные значения цен на акции показаны на рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-shares-models">6.24</a>).</p>
+
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1">future_share_price <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_longer</span>(<span class="op">-</span>ds, <span class="dt">names_to =</span> <span class="st">&quot;share&quot;</span>, </a>
+<a class="sourceLine" id="cb99-2" title="2">                                    <span class="dt">values_to =</span> <span class="st">&quot;price&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb99-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">period =</span> <span class="kw">ifelse</span>(ds <span class="op">&gt;</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2019-05-26&quot;</span>),</a>
+<a class="sourceLine" id="cb99-4" title="4">                         <span class="st">&quot;future&quot;</span>, <span class="st">&quot;history&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb99-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(ds, price, <span class="dt">col =</span> period)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb99-6" title="6"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb99-7" title="7"><span class="st">  </span><span class="kw">scale_colour_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;gray70&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb99-8" title="8"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>share, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="dt">ncol =</span> <span class="dv">3</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb99-9" title="9"><span class="st">  </span><span class="kw">theme_minimal</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-shares-models"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-shares-models-1.png" alt="Исторические данные по цене акций (серые линии) и предсказанные значения (красные линии)" width="100%" />
+<p class="caption">
+РИСУНОК 6.24: Исторические данные по цене акций (серые линии) и предсказанные значения (красные линии)
+</p>
+</div>
+<p>Теперь у нас есть все, чтобы построить модель стоимости биткоина с тремя предикторами и рассчитать прогнозные значения (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m16">6.25</a>):</p>
+
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" title="1">M16 &lt;-<span class="st"> </span><span class="kw">prophet</span>(<span class="dt">n.changepoints =</span> <span class="dv">15</span>, <span class="dt">changepoint.range =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb100-2" title="2">M16 &lt;-<span class="st"> </span><span class="kw">add_regressor</span>(M16, <span class="st">&#39;amzn&#39;</span>)</a>
+<a class="sourceLine" id="cb100-3" title="3">M16 &lt;-<span class="st"> </span><span class="kw">add_regressor</span>(M16, <span class="st">&#39;goog&#39;</span>)</a>
+<a class="sourceLine" id="cb100-4" title="4">M16 &lt;-<span class="st"> </span><span class="kw">add_regressor</span>(M16, <span class="st">&#39;fb&#39;</span>)</a>
+<a class="sourceLine" id="cb100-5" title="5">M16 &lt;-<span class="st"> </span><span class="kw">fit.prophet</span>(M16, bitcoin_train)</a>
+<a class="sourceLine" id="cb100-6" title="6">forecast_M16 &lt;-<span class="st"> </span>future_share_price <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict</span>(M16, .)</a>
+<a class="sourceLine" id="cb100-7" title="7"><span class="kw">plot</span>(M16, forecast_M16)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m16"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m16-1.png" alt="Прогноз стоимости биткоина, полученный на основе модели M16" width="100%" />
+<p class="caption">
+РИСУНОК 6.25: Прогноз стоимости биткоина, полученный на основе модели <code>M16</code>
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m16-components">6.26</a> представлены оцененные компоненты модели <code>M16</code>. Заметьте, что эффекты всех трех предикторов объединены в одную компоненту (см. <code>extra_regressors_additive</code> на графике внизу):</p>
+
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1"><span class="kw">prophet_plot_components</span>(M16, forecast_M16)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m16-components"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m16-components-1.png" alt="Оцененные компоненты модели M16" width="100%" />
+<p class="caption">
+РИСУНОК 6.26: Оцененные компоненты модели <code>M16</code>
+</p>
+</div>
+<p>С помощью рассмотренной ранее функции <code>plot_forecast_component()</code> (разд. <a href="ch-intro-to-prophet.html#sec-prophet-holidays">6.5</a>) мы можем также изобразить эффекты отдельных предикторов (рис. <a href="ch-intro-to-prophet.html#fig:bitcoin-m16-predictor-effects">6.27</a>):</p>
+
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" title="1">amzn_comp &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb102-2" title="2"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M16, forecast_M16, <span class="dt">name =</span> <span class="st">&quot;amzn&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb102-3" title="3"><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Amazon&quot;</span>)</a>
+<a class="sourceLine" id="cb102-4" title="4">fb_comp &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb102-5" title="5"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M16, forecast_M16, <span class="dt">name =</span> <span class="st">&quot;fb&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb102-6" title="6"><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Facebook&quot;</span>)</a>
+<a class="sourceLine" id="cb102-7" title="7">goog_comp &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb102-8" title="8"><span class="st">  </span><span class="kw">plot_forecast_component</span>(M16, forecast_M16, <span class="dt">name =</span> <span class="st">&quot;goog&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb102-9" title="9"><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Google&quot;</span>)</a>
+<a class="sourceLine" id="cb102-10" title="10">gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(amzn_comp, fb_comp, goog_comp, <span class="dt">ncol =</span> <span class="dv">3</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:bitcoin-m16-predictor-effects"></span>
+<img src="time_series_ru_files/figure-html/bitcoin-m16-predictor-effects-1.png" alt="Оцененные эффекты предикторов, включенных в модель M16" width="100%" />
+<p class="caption">
+РИСУНОК 6.27: Оцененные эффекты предикторов, включенных в модель <code>M16</code>
+</p>
+</div>
+<p>Согласно полученной модели, эффект переменной <code>amzn</code> оказался сильнее (примерный диапазон значений от –0.2 до 0.2), чем эффекты <code>goog</code> (от –0.005 до 0.005) и <code>fb</code> (от –0.06 до 0.06). Мы можем сделать такое заключение благодаря тому, что эффекты всех трех предикторов представлены на одной шкале и поэтому сравнимы (значения всех этих переменных перед подгонкой модели были стандартизованы — см. выше описание аргумента <code>standardize</code> функции <code>add_regressor()</code>). Интересно также, что характер изменения эффекта <code>amzn</code> во времени почти зеркально отличается от такового у переменных <code>goog</code> и <code>fb</code>. Оставим читателям возможность подумать над интерпретацией этого наблюдения самостоятельно.</p>
+<p>В рассмотренном нами примере все добавленные в модель независимые переменные были количественными. В случае с качественными предикторами у исследователя есть два варианта на выбор: либо представить значения таких переменных в виде “праздников” (разд. <a href="ch-intro-to-prophet.html#sec-prophet-holidays">6.5</a>), либо воспользоваться описанной выше более общей функцией <code>add_regressor()</code>. В обоих случаях качественные переменные необходимо преобразовать в <em>индикаторные</em> (т.е. создать отдельные столбцы для <em>каждого</em> уровня переменной со значениями 1 и 0).</p>
+</div>
+<div id="sec-prophet-optimal-model" class="section level2">
+<h2><span class="header-section-number">6.8</span> Выбор оптимальной модели</h2>
+<p>В предыдущих разделах этой главы мы построили целый ряд моделей для прогнозирования стоимости биткоина. Но какая из этих моделей лучше? Стандартным методом оценки качества нескольких альтернативных моделей является <em>перекрестная проверка</em>. Суть этого метода сводится к тому, что исходные обучающие данные случайным образом разбиваются на <span class="math inline">\(K\)</span> частей (блоков), после чего модель
+<span class="math inline">\(k\)</span> раз подгоняется по <span class="math inline">\(K - 1\)</span> блокам, а оставшийся блок каждый раз используется для проверки качества предсказаний на основе той или иной подходящей случаю метрики. Полученная таким образом средняя метрика будет хорошей оценкой качества предсказаний модели на новых данных.</p>
+<p>К сожалению, в случае с моделями временных рядов такой способ выполнения перекрестной проверки не имеет смысла и не отвечает стоящей задаче. Поскольку во временных рядах, как правило, имеет место значительная автокорреляция (гл. <a href="ch-visualisation.html#ch-visualisation">4</a>), то мы не можем просто разбить такой ряд случайным образом на <span class="math inline">\(K\)</span> частей — это приведет к потере указанной корреляции. Более того, в результате случайного разбиения данных на несколько блоков может получиться так, что в какой–то из итераций мы построим модель преимущественно по недавним наблюдениям, а затем оценим ее качество на блоке из давних наблюдений. Другими словами, мы построим модель, которая будет предсказывать прошлое, что не имеет никакого смысла — ведь мы пытаемся решить задачу по предсказанию будущего!</p>
+<p>Для решения описанной проблемы при работе с временными рядами применяют несколько модификаций перекрестной проверки <span class="citation">(Hyndman and Athanasopoulos <a href="ch-literature.html#ref-hyndman_athanasopoulos_2019" role="doc-biblioref">2019</a>; Tashman <a href="ch-literature.html#ref-tashman_2000" role="doc-biblioref">2000</a>)</span>. В пакете <code>prophet</code>, в частности, реализован т.н. метод <em>“имитированных исторических прогнозов”</em> (Simulated Historical Forecasts, SHF). Рассмотрим, что этот метод собой представляет, и как им пользоваться для выбора оптимальной модели.</p>
+<div id="subsec-shf" class="section level3">
+<h3><span class="header-section-number">6.8.1</span> Метод имитированных исторических прогнозов</h3>
+<p>Любая модель временного ряда строится на основе данных, собранные в течение некоторого периода в прошлом. Далее по полученной модели рассчитываются прогнозные значения для интересующего нас промежутка времени (<em>горизонта</em>) в будущем. Такая процедура повторяется каждый раз, когда необходимо сделать новый прогноз (рис. <a href="ch-intro-to-prophet.html#fig:shf-forecasting">6.28</a>).</p>
+
+<div class="figure" style="text-align: center"><span id="fig:shf-forecasting"></span>
+<img src="figures/timeline.png" alt="Стандартная процедура построения моделей для прогнозирования временных рядов" width="100%" />
+<p class="caption">
+РИСУНОК 6.28: Стандартная процедура построения моделей для прогнозирования временных рядов
+</p>
+</div>
+<p>Метод SHF (рис. <a href="ch-intro-to-prophet.html#fig:shf-method">6.29</a>) пытается сымитировать описанную выше процедуру. В пределах отрезка с исходными обучающими данными выбирают <span class="math inline">\(K\)</span> <em>“точек отсчета”</em> (“cut–off points” по терминологии <code>prophet</code>), на основе которых формируются блоки данных для выполнения перекрестной проверки: все исторические наблюдения, предшествующие <span class="math inline">\(k\)</span>–й точке отсчета (а также сама эта точка), образуют обучающие данные для подгонки соответствующей модели, а <span class="math inline">\(H\)</span> исторических наблюдений, следующих за точкой отсчета, образуют прогнозный горизонт. Расстояние между точками отсчета называется <em>“периодом”</em> (“period”) и по умолчанию составляет <span class="math inline">\(H / 2\)</span>. Обучающие наблюдения в первом из <span class="math inline">\(K\)</span> блоков образуют т.н. “initial period” (<em>“начальный отрезок”</em>). В <code>prophet</code> длина этого отрезка по умолчанию составляет <span class="math inline">\(3 \times H\)</span>, однако исследователь при желании может ее изменить.</p>
+<p>Каждый раз после подгонки модели на обучающих данных из <span class="math inline">\(k\)</span>–го блока рассчитываются предсказания для прогнозного горизонта того же блока, что позволяет оценить качество прогноза с помощью подходящей случаю метрики (например, RMSE; см. ниже). Значения этой метрики, усредненные по каждой дате прогнозных горизонтов каждого блока, в итоге дают оценку качества предсказаний, которую можно ожидать от модели, построенной по всем исходным обучающим данным. Это в свою очередь позволяет сравнить несколько альтернативных моделей и выбрать оптимальную.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:shf-method"></span>
+<img src="figures/shf.png" alt="Процедура, лежащая в основе метода имитированных исторических прогнозов" width="100%" />
+<p class="caption">
+РИСУНОК 6.29: Процедура, лежащая в основе метода имитированных исторических прогнозов
+</p>
+</div>
+<p>Таким образом, SHF близок к классическому способу выполнения перекрестной проверки моделей временных рядов по методу <em>“скользящей точки отсчета”</em> <span class="citation">(“rolling origin evaluation”; Tashman <a href="ch-literature.html#ref-tashman_2000" role="doc-biblioref">2000</a>)</span>, однако отличается от последнего тем, что для оценивания качества предсказаний используется меньше блоков и прогнозные горизонты этих блоков удалены друг от друга на некоторое расстояние. С одной стороны, это является преимуществом метода SHF, поскольку он требует меньше вычислений и получаемые оценки качества предсказаний не так сильно коррелируют друг с другом, как в случае с перекрестной проверкой по методу “скользящей точки отсчета”. С другой стороны, при небольшом количестве блоков <span class="math inline">\(K\)</span> оценка качества модели может оказаться ненадежной. С решением последней проблемы отчасти помогает увеличение отрезка исходных исторических данных (поскольку чем он длиннее, тем больше блоков можно в него вместить). Однако следует помнить, что модели, построенные на длинных временных рядах, часто демонстрируют низкое качество прогнозов, поскольку параметры таких моделей задать труднее и возрастает риск переобучения.</p>
+</div>
+<div id="выполнение-перекрестной-проверки" class="section level3">
+<h3><span class="header-section-number">6.8.2</span> Выполнение перекрестной проверки</h3>
+<p>В пакете <code>prophet</code> перекрестная проверка по методу имитированных исторических прогнозов выполняется с помощью функции <code>cross_validation()</code>, которая имеет следующие аргументы:</p>
+<ul>
+<li><code>model</code> — модельный объект;</li>
+<li><code>horizon</code> — длина прогнозного горизонта в каждом блоке данных, используемом для выполнения перекрестной проверки;</li>
+<li><code>units</code> — название единицы измерения времени (например, <code>"days"</code>, <code>"hours"</code>, <code>"secs"</code> — см. справочный файл по базовой функции <code>difftime()</code>);</li>
+<li><code>initial</code> — длина начального отрезка с обучающими данными в первом блоке.</li>
+</ul>
+<p>Функция <code>cross_validation()</code> возвращает таблицу c наблюденными (<code>y</code>) и оцененными (<code>yhat</code>) значениями моделируемой переменной, а также доверительными границами предсказанных значений (<code>yhat_lower</code> и <code>yhat_upper</code>) для каждой точки отсчета <code>cutoff</code> и каждой даты <code>ds</code> соответствующего прогнозного периода (в примере используется модель <code>M3</code> из разд. <a href="ch-intro-to-prophet.html#sec-prophet-changepoints">6.4</a>):</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1">M3_cv &lt;-<span class="st"> </span><span class="kw">cross_validation</span>(M3, <span class="dt">initial =</span> <span class="dv">730</span>,</a>
+<a class="sourceLine" id="cb103-2" title="2">                          <span class="dt">period =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb103-3" title="3">                          <span class="dt">horizon =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb103-4" title="4">                          <span class="dt">units =</span> <span class="st">&quot;days&quot;</span>)</a>
+<a class="sourceLine" id="cb103-5" title="5"></a>
+<a class="sourceLine" id="cb103-6" title="6"><span class="kw">head</span>(M3_cv)</a></code></pre></div>
+<pre><code>##          y         ds     yhat yhat_lower yhat_upper     cutoff
+## 1 9.349206 2018-03-03 9.226595   9.113810   9.338773 2018-03-02
+## 2 9.351197 2018-03-04 9.212202   9.108078   9.321019 2018-03-02
+## 3 9.356456 2018-03-05 9.206319   9.096260   9.311673 2018-03-02
+## 4 9.285439 2018-03-06 9.193538   9.085362   9.307952 2018-03-02
+## 5 9.206891 2018-03-07 9.181843   9.069791   9.287407 2018-03-02
+## 6 9.147934 2018-03-08 9.171255   9.056305   9.283333 2018-03-02</code></pre>
+</div>
+<div id="subsec-perf-metric" class="section level3">
+<h3><span class="header-section-number">6.8.3</span> Метрики качества модели</h3>
+<p>Как следует из ее названия, функция <code>performance_metrics()</code> позволяет рассчитать метрики, характеризующие качество предсказаний моделей. В частности, имеется возможность рассчитать следующие показатели:</p>
+<ul>
+<li>Среднеквадратичная ошибка (mean squared error, MSE):</li>
+</ul>
+<p><span class="math display">\[MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2 \]</span></p>
+<ul>
+<li>Квадратный корень из среднеквадратичной ошибки (root mean squared error, RMSE):</li>
+</ul>
+<p><span class="math display">\[RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2}\]</span></p>
+<ul>
+<li>Средняя абсолютная ошибка (mean absolute error, MAE):</li>
+</ul>
+<p><span class="math display">\[MAE = \sum_{i=1}^n |y_i - \hat{y}_i| \]</span></p>
+<ul>
+<li>Средняя абсолютная удельная ошибка (mean absolute percentage error, MAPE):</li>
+</ul>
+<p><span class="math display">\[MAPE = \sum_{i=1}^n |\frac{y_i - \hat{y}_i}{y_i}|\]</span></p>
+<ul>
+<li>“Покрытие” (coverage): доля истинных значений моделируемой переменной, которые находятся в пределах доверительных границ прогноза.</li>
+</ul>
+<p>В приведенных формулах <span class="math inline">\(y_i\)</span> и <span class="math inline">\(\hat{y}_i\)</span> — это истинное и предсказанное значения моделируемой переменной соответственно, а <span class="math inline">\(n\)</span> — количество наблюдений.</p>
+<p>Функция <code>performance_metrics()</code> имеет следующие аргументы:</p>
+<ul>
+<li><code>df</code> — таблица, полученная с помощью функции <code>cross_validation()</code>;</li>
+<li><code>metrics</code> — вектор с названиями метрик качества модели (по умолчанию этот аргумент принимает значение <code>NULL</code>, что приводит к расчету всех перечисленных выше метрик, т.е. <code>c("mse", "rmse", "mae", "mape", "coverage")</code>);</li>
+<li><code>rolling_window</code> — размер “скользящего окна”, в пределах которого происходит усреднение каждой метрики (по умолчанию принимает значение 0.1, т.е. 10% от длины прогнозного горизонта; см. пояснения ниже).</li>
+</ul>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:perf-metrics">6.30</a> представлено схематичное изображение того, как функция <code>performance_metrics()</code> рассчитывает метрики качества модели в случае с перекрестной проверкой по 5 блокам данных с длиной прогнозного горизонта <span class="math inline">\(H = 100\)</span> и аргументом <code>rolling_window = 0.1</code>.</p>
+
+<div class="figure" style="text-align: center"><span id="fig:perf-metrics"></span>
+<img src="figures/performance_metrics_calculation.png" alt="Процедура расчета метрик качества моделей при выполнении перекрестной проверки по методу SHF" width="100%" />
+<p class="caption">
+РИСУНОК 6.30: Процедура расчета метрик качества моделей при выполнении перекрестной проверки по методу SHF
+</p>
+</div>
+<p>В приведенном ниже примере функция <code>performance_metrics()</code> применена для расчета среднеквадратичной ошибки прогноза построенной нами ранее модели <code>M3</code>:</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1"><span class="kw">performance_metrics</span>(M3_cv, <span class="dt">metrics =</span> <span class="st">&quot;mse&quot;</span>,</a>
+<a class="sourceLine" id="cb105-2" title="2">                    <span class="dt">rolling_window =</span> <span class="fl">0.1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>##   horizon        mse
+## 1  9 days 0.06424673
+## 2 10 days 0.07572021
+## 3 11 days 0.08695892
+## 4 12 days 0.09707747
+## 5 13 days 0.10990773
+## 6 14 days 0.12260315</code></pre>
+<p>Как видно из полученного результата, первое усредненное значение MSE приходится на 9–й день прогнозного горизонта, поскольку длина этого горизонта для модели <code>M3</code> составляет 90 дней (см. выше код для создания таблицы <code>M3_cv</code>), а 9 - это 10% от этой длины (размер скользящего окна, задаваемый аргументом <code>rolling_window</code>).</p>
+<p>Если аргументу <code>rolling_window</code> присвоить значение 0, то запрашиваемые метрики качества будут рассчитаны для каждой даты прогнозного горизонта (т.е. размер скользящего окна в данном случае фактически равен 1):</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="kw">performance_metrics</span>(M3_cv, <span class="dt">metrics =</span> <span class="st">&quot;mse&quot;</span>,</a>
+<a class="sourceLine" id="cb107-2" title="2">                    <span class="dt">rolling_window =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>##   horizon        mse
+## 1  1 days 0.03595728
+## 2  2 days 0.03941046
+## 3  3 days 0.05343681
+## 4  4 days 0.05035319
+## 5  5 days 0.05454100
+## 6  6 days 0.07256616</code></pre>
+<p>Если же аргументу <code>rolling_window</code> присвоить значение 1, то запрашиваемые метрики качества будут усреднены по всему прогнозному горизонту:</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1"><span class="kw">performance_metrics</span>(M3_cv, <span class="dt">metrics =</span> <span class="st">&quot;mse&quot;</span>,</a>
+<a class="sourceLine" id="cb109-2" title="2">                    <span class="dt">rolling_window =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre><code>##   horizon      mse
+## 1 90 days 0.192834</code></pre>
+<p>Метрики качества моделей, полученные в ходе перекрестной проверки, можно визуализировать с помощью функции <code>plot_cross_validation_metric()</code>, которая имеет следующие аргументы:</p>
+<ul>
+<li><code>df_cv</code> — таблица, полученная с помощью функции <code>cross_validation()</code>;</li>
+<li><code>metric</code> — название метрики;</li>
+<li><code>rolling_window</code> — размер “скользящего окна”, в пределах которого происходит усреднение метрики (см. рис. <a href="ch-intro-to-prophet.html#fig:perf-metrics">6.30</a> и описание функции <code>performance_metrics()</code>).</li>
+</ul>
+<p>Функция <code>plot_cross_validation_metric()</code> возвращает объект класса <code>ggplot</code>:</p>
+
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1"><span class="kw">plot_cross_validation_metric</span>(M3_cv, <span class="dt">metric =</span> <span class="st">&quot;mse&quot;</span>,</a>
+<a class="sourceLine" id="cb111-2" title="2">                             <span class="dt">rolling_window =</span> <span class="fl">0.1</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:perf-metrics-viz"></span>
+<img src="time_series_ru_files/figure-html/perf-metrics-viz-1.png" alt="Визуализация метрики качества предсказаний (MSE), полученной по результатам перекрестной проверки модели M3" width="100%" />
+<p class="caption">
+РИСУНОК 6.31: Визуализация метрики качества предсказаний (MSE), полученной по результатам перекрестной проверки модели <code>M3</code>
+</p>
+</div>
+<p>На рис. <a href="ch-intro-to-prophet.html#fig:perf-metrics-viz">6.31</a> приведены оценки MSE для каждой из дат прогнозного горизонта (<span class="math inline">\(H = 90\)</span>) каждого из <span class="math inline">\(K = 5\)</span> блоков данных, участвовавших в перекрестной проверке. Голубая линия соответствует усредненным значениям в пределах каждого скользящего окна размером в 9 наблюдений. Судя по большому разбросу полученных оценок MSE, качество модели <code>M3</code> желает оставлять лучшего.</p>
+</div>
+<div id="пример-выбора-оптимальной-модели" class="section level3">
+<h3><span class="header-section-number">6.8.4</span> Пример выбора оптимальной модели</h3>
+<p>Рассмотрим теперь, как описанную выше методологию выполнения перекрестной проверки можно применить для выбора оптимальной модели из нескольких альтернативных. Предположим, что перед нами стоит задача выбрать оптимальную модель стоимости биткоина из построенных ранее моделей <code>M4</code>, <code>M5</code> и <code>M12</code>. Для описания качества этих моделей воспользуемся двумя метриками: MAPE и покрытие (подразд. <a href="ch-intro-to-prophet.html#subsec-perf-metric">6.8.3</a>). Для упрощения примера предположим также, что нас интересует качество предсказаний в целом для 90–дневного прогнозного горизонта (т.е. нам неинтересны отдельные даты этого горизонта). Рассчитаем обе метрики качества для каждой из моделей–кандидатов:</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">M4_cv &lt;-<span class="st"> </span><span class="kw">cross_validation</span>(M4, <span class="dt">initial =</span> <span class="dv">730</span>,</a>
+<a class="sourceLine" id="cb112-2" title="2">                          <span class="dt">period =</span> <span class="dv">180</span>, </a>
+<a class="sourceLine" id="cb112-3" title="3">                          <span class="dt">horizon =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb112-4" title="4">                          <span class="dt">units =</span> <span class="st">&quot;days&quot;</span>)</a>
+<a class="sourceLine" id="cb112-5" title="5">M5_cv &lt;-<span class="st"> </span><span class="kw">cross_validation</span>(M5, <span class="dt">initial =</span> <span class="dv">730</span>,</a>
+<a class="sourceLine" id="cb112-6" title="6">                          <span class="dt">period =</span> <span class="dv">180</span>,</a>
+<a class="sourceLine" id="cb112-7" title="7">                          <span class="dt">horizon =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb112-8" title="8">                          <span class="dt">units =</span> <span class="st">&quot;days&quot;</span>)</a>
+<a class="sourceLine" id="cb112-9" title="9">M12_cv &lt;-<span class="st"> </span><span class="kw">cross_validation</span>(M12, <span class="dt">initial =</span> <span class="dv">730</span>,</a>
+<a class="sourceLine" id="cb112-10" title="10">                           <span class="dt">period =</span> <span class="dv">180</span>,</a>
+<a class="sourceLine" id="cb112-11" title="11">                           <span class="dt">horizon =</span> <span class="dv">90</span>,</a>
+<a class="sourceLine" id="cb112-12" title="12">                           <span class="dt">units =</span> <span class="st">&quot;days&quot;</span>)</a>
+<a class="sourceLine" id="cb112-13" title="13">M4_perf &lt;-<span class="st"> </span><span class="kw">performance_metrics</span>(M4_cv,</a>
+<a class="sourceLine" id="cb112-14" title="14">                               <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;mape&quot;</span>, <span class="st">&quot;coverage&quot;</span>),</a>
+<a class="sourceLine" id="cb112-15" title="15">                               <span class="dt">rolling_window =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb112-16" title="16">M5_perf &lt;-<span class="st"> </span><span class="kw">performance_metrics</span>(M5_cv,</a>
+<a class="sourceLine" id="cb112-17" title="17">                               <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;mape&quot;</span>, <span class="st">&quot;coverage&quot;</span>),</a>
+<a class="sourceLine" id="cb112-18" title="18">                               <span class="dt">rolling_window =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb112-19" title="19">M12_perf &lt;-<span class="st"> </span><span class="kw">performance_metrics</span>(M12_cv,</a>
+<a class="sourceLine" id="cb112-20" title="20">                                <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;mape&quot;</span>, <span class="st">&quot;coverage&quot;</span>),</a>
+<a class="sourceLine" id="cb112-21" title="21">                                <span class="dt">rolling_window =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb112-22" title="22">M4_perf</a></code></pre></div>
+<pre><code>##   horizon       mape  coverage
+## 1 90 days 0.03214045 0.2851852</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1">M5_perf</a></code></pre></div>
+<pre><code>##   horizon       mape coverage
+## 1 90 days 0.03717749 0.462963</code></pre>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1">M12_perf</a></code></pre></div>
+<pre><code>##   horizon       mape coverage
+## 1 90 days 0.02347762 0.637037</code></pre>
+<p>Как видим, <code>M12</code> лучше других моделей по обеим выбранным метрикам качества. Это можно видеть также из графиков, построенных с помощью функции <code>plot_cross_validation_metric()</code> (рис. <a href="ch-intro-to-prophet.html#fig:m12-best-cv">6.32</a>):</p>
+
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" title="1">M4_cv_plot &lt;-<span class="st"> </span><span class="kw">plot_cross_validation_metric</span>(M4_cv,</a>
+<a class="sourceLine" id="cb118-2" title="2">                                           <span class="dt">metric =</span> <span class="st">&quot;mape&quot;</span>,</a>
+<a class="sourceLine" id="cb118-3" title="3">                                           <span class="dt">rolling_window =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb118-4" title="4"><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;M4&quot;</span>)</a>
+<a class="sourceLine" id="cb118-5" title="5"></a>
+<a class="sourceLine" id="cb118-6" title="6">M5_cv_plot &lt;-<span class="st"> </span><span class="kw">plot_cross_validation_metric</span>(M5_cv,</a>
+<a class="sourceLine" id="cb118-7" title="7">                                           <span class="dt">metric =</span> <span class="st">&quot;mape&quot;</span>,</a>
+<a class="sourceLine" id="cb118-8" title="8">                                           <span class="dt">rolling_window =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb118-9" title="9"><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;M5&quot;</span>)</a>
+<a class="sourceLine" id="cb118-10" title="10"></a>
+<a class="sourceLine" id="cb118-11" title="11">M12_cv_plot &lt;-<span class="st"> </span><span class="kw">plot_cross_validation_metric</span>(M12_cv,</a>
+<a class="sourceLine" id="cb118-12" title="12">                                            <span class="dt">metric =</span> <span class="st">&quot;mape&quot;</span>,</a>
+<a class="sourceLine" id="cb118-13" title="13">                                            <span class="dt">rolling_window =</span> <span class="fl">0.1</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb118-14" title="14"><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.15</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ggtitle</span>(<span class="st">&quot;M12&quot;</span>)</a>
+<a class="sourceLine" id="cb118-15" title="15"></a>
+<a class="sourceLine" id="cb118-16" title="16">gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(M4_cv_plot, M5_cv_plot, M12_cv_plot, <span class="dt">ncol =</span> <span class="dv">3</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:m12-best-cv"></span>
+<img src="time_series_ru_files/figure-html/m12-best-cv-1.png" alt="Сравнение качества предсказаний трех моделей по метрике MAPE" width="100%" />
+<p class="caption">
+РИСУНОК 6.32: Сравнение качества предсказаний трех моделей по метрике MAPE
+</p>
+</div>
+<p>Вспомним, что до сих пор мы строили все модели по обучающим данным из таблицы <code>bitcoin_train</code>. Однако у нас есть и проверочный набор данных — <code>bitcoin_test</code> (см. разд. <a href="ch-intro-to-prophet.html#sec-first-prophet-example">6.2</a>). Посмотрим, как выбранная нами оптимальная модель <code>M12</code> сработает на этой проверочной выборке. На рис. <a href="ch-intro-to-prophet.html#fig:prophet-test-data">6.33</a> представлены обучающие данные (черные точки; для удобства показаны наблюдения только за 2019 г.) и истинные значения стоимости биткоина в прогнозном периоде (красные точки). Голубая сплошная линия на этом графике соответствует предсказанным моделью значениям, а светло–голубая полоса вокруг нее — 80%–ной доверительной области предсказанных значений:</p>
+
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" title="1"><span class="kw">plot</span>(M12, forecast_M12) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb119-2" title="2"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="kw">as.POSIXct</span>(<span class="st">&quot;2019-01-01&quot;</span>),</a>
+<a class="sourceLine" id="cb119-3" title="3">                             <span class="kw">as.POSIXct</span>(<span class="st">&quot;2019-08-24&quot;</span>))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb119-4" title="4"><span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data =</span> bitcoin_test, </a>
+<a class="sourceLine" id="cb119-5" title="5">               <span class="kw">aes</span>(<span class="kw">as.POSIXct</span>(ds), y), <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:prophet-test-data"></span>
+<img src="time_series_ru_files/figure-html/prophet-test-data-1.png" alt="Сравнение истинных значений стоимости биткоина и прогнозных значений, полученных с помощью модели M12. См. пояснения в тексте" width="100%" />
+<p class="caption">
+РИСУНОК 6.33: Сравнение истинных значений стоимости биткоина и прогнозных значений, полученных с помощью модели <code>M12</code>. См. пояснения в тексте
+</p>
+</div>
+<p>Хотя выбранная нами в качестве оптимальной модель <code>M12</code> не смогла правильно предсказать некоторые локальные колебания стоимости биткоина в прогнозном периоде, в целом она дала неплохой результат: большинство истинных значений стоимости оказалось в пределах 80%–ной доверительной полосы. Однако следует подчеркнуть, что это всего лишь <em>пример</em> использования перекрестной проверки для сравнения качества предсказаний нескольких моделей: совершенно точно не стоит разрабатывать стратегию торговли биткоином на основе приведенных здесь результатов!</p>
+</div>
+</div>
+<div id="sec-system-capacity" class="section level2">
+<h2><span class="header-section-number">6.9</span> Моделирование емкости системы</h2>
+<p>Во всех примерах из предыдущих разделов этой главы предполагалось, что моделируемая переменная может расти во времени бесконечно. Однако многие системы имеют естественную “емкость”, выше которой рост невозможен. Классическим примером здесь будет численность популяции какого–либо биологического вида, которая ограничена имеющимися в среде обитания ресурсами. Другой пример — количество пользователей какой–либо онлайн–услуги, которое органичено доступом в Интернет. Важно отметить, что емкость системы может иметь ограничения и по нижнему порогу (например, численность населения не может быть отрицательной). Одной из особенностей пакета <code>prophet</code> является возможность моделировать временные ряды для подобных систем. Рассмотрим, как это происходит.</p>
+<div id="тренд-с-насыщением" class="section level3">
+<h3><span class="header-section-number">6.9.1</span> Тренд с насыщением</h3>
+<p>Стандартным подходом для описания роста в системе с ограниченной емкостью является использование <a href="https://ru.wikipedia.org/wiki/%D0%9B%D0%BE%D0%B3%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5_%D1%83%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5">логистической функции</a> следующего вида: <span class="math display">\[g(t) = \frac{C}{1 + \exp(-k(t-m))},\]</span> где <span class="math inline">\(C\)</span> — это верхний порог (емкость системы), <span class="math inline">\(k\)</span> — скорость роста, <span class="math inline">\(t\)</span> — время, а <span class="math inline">\(m\)</span> — параметр, позволяющий “сдвигать” функцию вдоль оси времени. На рис. <a href="ch-intro-to-prophet.html#fig:logistic-functions">6.34</a> показаны примеры логистической функции с разными значениями параметров.</p>
+
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" title="1">logistic_growth &lt;-<span class="st"> </span><span class="cf">function</span>(x) {C <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>k<span class="op">*</span>(x <span class="op">-</span><span class="st"> </span>m)))}</a>
+<a class="sourceLine" id="cb120-2" title="2"></a>
+<a class="sourceLine" id="cb120-3" title="3"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb120-4" title="4"></a>
+<a class="sourceLine" id="cb120-5" title="5"><span class="co"># Пример 1:</span></a>
+<a class="sourceLine" id="cb120-6" title="6">C &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb120-7" title="7">k &lt;-<span class="st"> </span><span class="fl">0.1</span></a>
+<a class="sourceLine" id="cb120-8" title="8">m &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb120-9" title="9"><span class="kw">curve</span>(<span class="kw">logistic_growth</span>(x), <span class="dt">from =</span> <span class="dv">-100</span>, <span class="dt">to =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb120-10" title="10"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-11" title="11"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-12" title="12"><span class="kw">title</span>(<span class="st">&quot;C=10, k=0.1, m=0&quot;</span>)</a>
+<a class="sourceLine" id="cb120-13" title="13"></a>
+<a class="sourceLine" id="cb120-14" title="14"><span class="co"># Пример 2:</span></a>
+<a class="sourceLine" id="cb120-15" title="15">C &lt;-<span class="st"> </span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb120-16" title="16">k &lt;-<span class="st"> </span><span class="fl">0.1</span></a>
+<a class="sourceLine" id="cb120-17" title="17">m &lt;-<span class="st"> </span><span class="dv">20</span></a>
+<a class="sourceLine" id="cb120-18" title="18"><span class="kw">curve</span>(<span class="kw">logistic_growth</span>(x), <span class="dt">from =</span> <span class="dv">-100</span>, <span class="dt">to =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb120-19" title="19"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">20</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-20" title="20"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">10</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-21" title="21"><span class="kw">title</span>(<span class="st">&quot;C=10, k=0.1, m=10&quot;</span>)</a>
+<a class="sourceLine" id="cb120-22" title="22"></a>
+<a class="sourceLine" id="cb120-23" title="23"><span class="co"># Пример 3:</span></a>
+<a class="sourceLine" id="cb120-24" title="24">C &lt;-<span class="st"> </span><span class="dv">8</span></a>
+<a class="sourceLine" id="cb120-25" title="25">k &lt;-<span class="st"> </span><span class="fl">0.05</span></a>
+<a class="sourceLine" id="cb120-26" title="26">m &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb120-27" title="27"><span class="kw">curve</span>(<span class="kw">logistic_growth</span>(x), <span class="dt">from =</span> <span class="dv">-100</span>, <span class="dt">to =</span> <span class="dv">100</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">10</span>))</a>
+<a class="sourceLine" id="cb120-28" title="28"><span class="kw">abline</span>(<span class="dt">v =</span> <span class="dv">0</span>, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-29" title="29"><span class="kw">abline</span>(<span class="dt">h =</span> <span class="dv">8</span>, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb120-30" title="30"><span class="kw">title</span>(<span class="st">&quot;C=8, k=0.05, m=0&quot;</span>)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:logistic-functions"></span>
+<img src="time_series_ru_files/figure-html/logistic-functions-1.png" alt="Примеры логистической функции с разными значениями параметров" width="100%" />
+<p class="caption">
+РИСУНОК 6.34: Примеры логистической функции с разными значениями параметров
+</p>
+</div>
+<p>Есть два важных аспекта, которые не отражены в приведенном выше уравнении логистической функции <span class="citation">(Taylor and Letham <a href="ch-literature.html#ref-taylor_letham_2017" role="doc-biblioref">2017</a>)</span>. Во–первых, емкость многих систем непостоянна. Например, число людей, имеющих доступ в Интернет (равно как и количество потенциальных пользователей того или иного онлайн–ресурса) со временем возрастает. Поэтому в пакете <code>prophet</code> постоянная емкость системы <span class="math inline">\(C\)</span> заменена на динамическую <span class="math inline">\(C(t)\)</span>.</p>
+<p>Во–вторых, непостоянной обычно бывает и скорость роста <span class="math inline">\(k\)</span>. Например, выход новой версии продукта может значительно ускорить рост числа его потребителей. В <code>prophet</code> для моделирования такого рода изменений вводится понятие точек излома тренда (разд. <a href="ch-intro-to-prophet.html#sec-prophet-changepoints">6.4</a>). Предположим, что <span class="math inline">\(S\)</span> таких точек приходятся на временные отметки <span class="math inline">\(s_j\)</span>, <span class="math inline">\(j = 1, 2, \dots, S\)</span>. Совокупность всех изменений скорости роста <span class="math inline">\(\delta_j\)</span> можно представить в виде вектора <span class="math inline">\(\boldsymbol \delta \in \mathbb{R}^S\)</span>. Тогда скорость роста в любой точке времени <span class="math inline">\(t\)</span> будет равна сумме базовой скорости <span class="math inline">\(k\)</span> и всех изменений, предшествовавших этой точке: <span class="math inline">\(k + \sum_{j:t &gt; s_j} \delta_j\)</span>. Более наглядно это можно представить с помощью такого вектора <span class="math inline">\(\boldsymbol{a}(t) \in \left\{0, 1\right\}^S\)</span>, что <span class="math display">\[ a_j(t) = \begin{cases} 1 \; \text{если} \; t \ge s_j \\ 0 \; \text{в остальных случаях} \end{cases} \]</span> Тогда скорость роста в момент времени <span class="math inline">\(t\)</span> составит <span class="math inline">\(k + \boldsymbol{a}(t)^\intercal \boldsymbol{\delta}\)</span>. При изменении скорости роста необходимо также изменить параметр сдвига <span class="math inline">\(m\)</span> (см. уравнение выше), чтобы обеспечить гладкий стык сегментов кривой тренда на соответствующей временной отметке. Такая поправка рассчитывается следующим образом: <span class="math display">\[\gamma_j = \left(s_j - m -\sum_{l &lt; j}\gamma_l \right) \left(1 - \frac{k + \sum_{l &lt; j} \delta_l}{k + \sum_{l \le j} \delta_l} \right).\]</span> В результате <em>кусочная логистическая функция</em> (piecewise logistic growth model), которая используется в пакете <code>prophet</code> для моделирования <em>тренда с насыщением</em> (saturating growth), принимает вид <span class="math display">\[g(t) = \frac{C(t)}{1 + \exp( -(k + \boldsymbol{a}(t)^\intercal \boldsymbol{\delta})(t - (m + \boldsymbol{a}(t)^\intercal \boldsymbol{\gamma})) )}.\]</span> Важным параметром в приведенном уравнении является <span class="math inline">\(C(t)\)</span> — емкость системы в каждый момент времени. Как задать этот параметр для подгонки модели? Часто у исследователя уже будет хорошее представление о емкости моделируемой системы (например, компании обычно хорошо знают размер рынка, на котором они работают). Если же такого понимания нет, то придется потратить некоторое время на поиск дополнительной информации из сторонних источников (например, прогнозы роста численности населения от Всемирного Банка, тренды в Google–запросах и т.п.).</p>
+<p>При неограниченном росте моделируемой системы вместо представленной выше логистической функции в пакете <code>prophet</code> используется <a href="https://ru.wikipedia.org/wiki/%D0%9A%D1%83%D1%81%D0%BE%D1%87%D0%BD%D0%BE-%D0%BB%D0%B8%D0%BD%D0%B5%D0%B9%D0%BD%D0%B0%D1%8F_%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8F">кусочно–линейная функция</a> следующего вида (обозначения те же): <span class="math display">\[ g(t) = (k + \boldsymbol{a}(t)^\intercal \boldsymbol{\delta})t  + (m + \boldsymbol{a}(t)^\intercal \boldsymbol{\gamma}).\]</span> Именно такого рода рост по умолчанию предполагался во всех моделях, которые мы рассматривали в предыдущих разделах этой главы.</p>
+</div>
+<div id="примеры-моделей-с-насыщением-тренда" class="section level3">
+<h3><span class="header-section-number">6.9.2</span> Примеры моделей с насыщением тренда</h3>
+<p>Для начала построим модель, в которой рост зависимой переменной ограничен по некоторому верхнему порогу. Для этого воспользуемся данными по стоимости биткоина за период с января 2016 г. по середину декабря 2017 г., когда наблюдался практически экспоненциальный рост этой переменной (см. рис. <a href="intro.html#fig:bitcoin-raw">1.3</a>). Предположим, что несмотря на свой экспоненциальный характер роста стоимость биткоина в будущем не могла превысить 11.5 (на логарифмической шкале, что соответствует почти 99000$ (!) на исходной шкале). Для введения этого верхнего порога в модель необходимо добавить новый столбец с (обязательным) именем <code>cap</code> в таблицу с обучающими данными:</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" title="1">bitcoin_train_cap &lt;-<span class="st"> </span>bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb121-2" title="2"><span class="st">  </span><span class="kw">filter</span>(ds <span class="op">&lt;=</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2017-12-15&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb121-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cap =</span> <span class="fl">11.5</span>)</a></code></pre></div>
+<p>Теперь построим модель по этим обучающим данным (обратите внимание использование аргумента <code>growth = "logistic"</code> при вызове функции <code>prophet()</code>), рассчитаем прогноз на следующие 180 дней и изобразим полученный результат (рис. <a href="ch-intro-to-prophet.html#fig:trend-upper-limit">6.35</a>):</p>
+
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1">M17 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train_cap, <span class="dt">growth =</span> <span class="st">&quot;logistic&quot;</span>,</a>
+<a class="sourceLine" id="cb122-2" title="2">               <span class="dt">changepoint.range =</span> <span class="fl">0.95</span>,</a>
+<a class="sourceLine" id="cb122-3" title="3">               <span class="dt">changepoint.prior.scale =</span> <span class="fl">0.15</span>)</a>
+<a class="sourceLine" id="cb122-4" title="4"></a>
+<a class="sourceLine" id="cb122-5" title="5"><span class="co"># Таблица с датами прогнозного периода (180 дней):</span></a>
+<a class="sourceLine" id="cb122-6" title="6">future_df_cap &lt;-<span class="st"> </span><span class="kw">make_future_dataframe</span>(M17, <span class="dt">periods =</span> <span class="dv">180</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb122-7" title="7"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap =</span> <span class="fl">11.5</span>)</a>
+<a class="sourceLine" id="cb122-8" title="8"></a>
+<a class="sourceLine" id="cb122-9" title="9">forecast_M17 &lt;-<span class="st"> </span><span class="kw">predict</span>(M17, future_df_cap)</a>
+<a class="sourceLine" id="cb122-10" title="10"><span class="kw">plot</span>(M17, forecast_M17)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:trend-upper-limit"></span>
+<img src="time_series_ru_files/figure-html/trend-upper-limit-1.png" alt="Пример модели с верхним порогом тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.35: Пример модели с верхним порогом тренда
+</p>
+</div>
+<p>Как видим, несмотря на экспоненциальный рост в историческом периоде, предсказанные значения стоимости биткоина постепенно выходят на плато, что обусловлено введенным в модель ограничением на рост.</p>
+<p>Многие естественные системы имеют ограничения емкости не только по верхнему, но и нижнему порогу (подобно упомянутой выше численности населения). В <code>prophet</code> имеется возможность учесть это обстоятельство путем добавления еще одного столбца — <code>floor</code> — в таблицы с обучающими данными и данными для расчета прогноза (верхний порог при этом также должен присутствовать в обеих таблицах). Для демонстрации этой возможности воспользуемся данными по стоимости биткоина в 2018 г., когда наблюдался выраженный тренд на ее снижение, и построим модель с верхним ограничением тренда <code>cap = 10</code> и нижним ограничением <code>floor = 7</code> (рис. <a href="ch-intro-to-prophet.html#fig:trend-lower-limit">6.36</a>):</p>
+
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" title="1">bitcoin_train_cap_floor &lt;-<span class="st"> </span>bitcoin_train <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb123-2" title="2"><span class="st">  </span><span class="kw">filter</span>(ds <span class="op">&gt;=</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2018-01-01&quot;</span>) <span class="op">&amp;</span><span class="st"> </span>ds <span class="op">&lt;=</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2018-12-31&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb123-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cap =</span> <span class="dv">10</span>, <span class="dt">floor =</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb123-4" title="4"></a>
+<a class="sourceLine" id="cb123-5" title="5">M18 &lt;-<span class="st"> </span><span class="kw">prophet</span>(bitcoin_train_cap_floor, <span class="dt">growth =</span> <span class="st">&quot;logistic&quot;</span>,</a>
+<a class="sourceLine" id="cb123-6" title="6">               <span class="dt">changepoint.range =</span> <span class="fl">0.85</span>,</a>
+<a class="sourceLine" id="cb123-7" title="7">               <span class="dt">changepoint.prior.scale =</span> <span class="fl">0.15</span>)</a>
+<a class="sourceLine" id="cb123-8" title="8"></a>
+<a class="sourceLine" id="cb123-9" title="9">future_df_both &lt;-<span class="st"> </span><span class="kw">make_future_dataframe</span>(M18, <span class="dt">periods =</span> <span class="dv">180</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb123-10" title="10"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">floor =</span> <span class="dv">7</span>, <span class="dt">cap =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb123-11" title="11"></a>
+<a class="sourceLine" id="cb123-12" title="12">forecast_M18 &lt;-<span class="st"> </span><span class="kw">predict</span>(M18, future_df_both)</a>
+<a class="sourceLine" id="cb123-13" title="13"><span class="kw">plot</span>(M18, forecast_M18)</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:trend-lower-limit"></span>
+<img src="time_series_ru_files/figure-html/trend-lower-limit-1.png" alt="Пример модели с нижним порогом тренда" width="100%" />
+<p class="caption">
+РИСУНОК 6.36: Пример модели с нижним порогом тренда
+</p>
+</div>
+<p>В рассмотренных выше примерах предполагалось, что и верхний, и нижний пороги емкости системы постоянны. Если в моделируемой вами системе это не так, то в таблицы с данными для соответствующих дат просто необходимо внести подходящие значения <code>cap</code> и/или <code>floor</code>.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ch-feature-extraction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ch-intro-to-bsts.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": true,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": true,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["time_series_ru.epub"],
+"toc": {
+"collapse": "subsection"
+},
+"search": false,
+"info": false
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
