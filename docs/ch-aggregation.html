@@ -322,7 +322,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">cryptos_ma &lt;-<span class="st"> </span>cryptos <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb30-2" title="2"><span class="st">  </span><span class="kw">group_by_key</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">moving_avg_y =</span> <span class="kw">slide_dbl</span>(y, <span class="op">~</span><span class="kw">mean</span>(.), <span class="dt">.size =</span> <span class="dv">14</span>, <span class="dt">.step =</span> <span class="dv">1</span>))</a></code></pre></div>
-<p>На рис. <a href="ch-aggregation.html#fig:cryptos-ma">3.2</a> показаны результы вычисления скользящей средней для двух случайно выбранных криптовалют:</p>
+<p>На рис. <a href="ch-aggregation.html#fig:cryptos-ma">3.2</a> показаны результаты вычисления скользящей средней для двух случайно выбранных криптовалют:</p>
 
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="kw">set.seed</span>(<span class="dv">1984</span>)</a>
 <a class="sourceLine" id="cb31-2" title="2">cryptos_ma <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
