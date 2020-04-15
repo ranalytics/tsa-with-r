@@ -622,8 +622,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 РИСУНОК 5.3: Динамика стоимости криптовалюты <code>qtum</code>
 </p>
 </div>
-<p>Мы можем пойти еще дальше и проанализировать данные из таблицы <code>cryptos</code> с помощью <a href="https://ranalytics.github.io/data-mining/024-Projecting-Data-onto-a-Plane.html">метода главных компонент (PCA)</a> одновременно по всем признакам с ненулевой дисперсией (обратите внимание на логарифмирование исходных значений <code>y</code>, выполнененное для снижения дисперсии в отдельных рядах и различий между рядами):</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="co"># Функция для нахождения признаки c нулевой дисперсией:</span></a>
+<p>Мы можем пойти еще дальше и проанализировать данные из таблицы <code>cryptos</code> с помощью <a href="https://ranalytics.github.io/data-mining/024-Projecting-Data-onto-a-Plane.html">метода главных компонент (PCA)</a> одновременно по всем признакам с ненулевой дисперсией (обратите внимание на логарифмирование исходных значений <code>y</code>, выполненное для снижения дисперсии в отдельных рядах и различий между рядами):</p>
 <a class="sourceLine" id="cb56-2" title="2">zero_var_cols &lt;-<span class="st"> </span><span class="cf">function</span>(dat) {</a>
 <a class="sourceLine" id="cb56-3" title="3">    checks &lt;-<span class="st"> </span><span class="kw">lapply</span>(dat, <span class="cf">function</span>(x) <span class="kw">length</span>(<span class="kw">unique</span>(x)))</a>
 <a class="sourceLine" id="cb56-4" title="4">    keep &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="op">!</span>checks <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a>
