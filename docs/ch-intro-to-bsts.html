@@ -573,7 +573,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## [1] 78</code></pre>
 <div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" title="1">(burn_<span class="dv">83045</span> &lt;-<span class="st"> </span><span class="kw">SuggestBurn</span>(<span class="dt">proportion =</span> <span class="fl">0.1</span>, M83045))</a></code></pre></div>
 <pre><code>## [1] 112</code></pre>
-<p>Рассчитаем предсказанные моделями <code>M13252</code> и <code>M83045</code> наиболее вероятные значения стоимости гостиничных номеров, отбросив первые 78 и 112 МСМС–оценок соответственно, и изообразим результаты на графиках (рис. <a href="ch-intro-to-bsts.html#fig:hotel-predictor-means">7.13</a>):</p>
+<p>Рассчитаем предсказанные моделями <code>M13252</code> и <code>M83045</code> наиболее вероятные значения стоимости гостиничных номеров, отбросив первые 78 и 112 МСМС–оценок соответственно, и изобразим результаты на графиках (рис. <a href="ch-intro-to-bsts.html#fig:hotel-predictor-means">7.13</a>):</p>
 
 <div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" title="1">fitted_M13252 &lt;-<span class="st"> </span>M13252<span class="op">$</span>state.contributions <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb150-2" title="2"><span class="st">  </span><span class="kw">apply</span>(., <span class="dt">MARGIN =</span> <span class="dv">3</span>, <span class="dt">FUN =</span> rowSums) <span class="op">%&gt;%</span><span class="st"> </span></a>
