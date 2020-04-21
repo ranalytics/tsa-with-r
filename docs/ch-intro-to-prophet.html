@@ -1010,7 +1010,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4 12 days 0.09707747
 ## 5 13 days 0.10990773
 ## 6 14 days 0.12260315</code></pre>
-<p>Как видно из полученного результата, первое усредненное значение MSE приходится на 9–й день прогнозного горизонта, поскольку длина этого горизонта для модели <code>M3</code> составляет 90 дней (см. выше код для создания таблицы <code>M3_cv</code>), а 9 - это 10% от этой длины (размер скользящего окна, задаваемый аргументом <code>rolling_window</code>).</p>
+<p>Как видно из полученного результата, первое усредненное значение MSE приходится на 9–й день прогнозного горизонта, поскольку длина этого горизонта для модели <code>M3</code> составляет 90 дней (см. выше код для создания таблицы <code>M3_cv</code>), а 9 — это 10% от этой длины (размер скользящего окна, задаваемый аргументом <code>rolling_window</code>).</p>
 <p>Если аргументу <code>rolling_window</code> присвоить значение 0, то запрашиваемые метрики качества будут рассчитаны для каждой даты прогнозного горизонта (т.е. размер скользящего окна в данном случае фактически равен 1):</p>
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="kw">performance_metrics</span>(M3_cv, <span class="dt">metrics =</span> <span class="st">&quot;mse&quot;</span>,</a>
 <a class="sourceLine" id="cb107-2" title="2">                    <span class="dt">rolling_window =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
